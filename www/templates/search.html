@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>商品搜索</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no, email=no">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/qxv3.css" />
+		<link rel="stylesheet" type="text/css" href="css/dialog.css" />
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular-touch.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var access_token = "fb735d44f4b8572da52648564312f17a05339490-1480";
+		</script>
+	</head>
+
+	<body ng-app="searchApp" class="bg_f navbtm" ng-controller="searchController">
+		<div id="header">
+			<a href="" class="header_back"><i class="qx qx-back"></i></a>
+			<span class="header_title">商品搜索</span>
+		</div>
+		<div class="pd bg_gray">
+			<form ng-submit="searchByword()">
+				<div id="search_form">
+					<input type="search" ng-model="keyword" placeholder="请输入关键词" />
+					<button type="submit" class="btn btn_o">
+						<i class="qx qx-search"></i>
+					</button>
+				</div>
+			</form>
+		</div>
+
+		<div id="seach_listwrap">
+			<!-- loading -->
+			<div class="pd txt-c" ng-show="isloading">
+				<img src="images/loading.gif" alt="" />
+			</div>
+			<dl id="hotwords" class="hide" ng-class="{'block':hotwords&&!prolist.length&&!isloading}">
+				<dt>热门搜索</dt>
+				<dd ng-repeat='word in hotwords' ng-click="searchByword(word.key_word)"><span ng-bind="word.key_word"></span>
+				</dd>
+			</dl>
+			<div id="prolist_wrap">
+				<prolist plst="prolist"></prolist>
+			</div>
+		</div>
+		<!-- 底部导航 -->
+		<div id="nav" class="c">
+			<a class="cur" href="index.html"><i class="qx qx-index "></i><i class="qx nav-fill qx-indexfill "></i><span>首页</span></a>
+			<a href="service.html"><i class="qx qx-survice "></i><i class="qx nav-fill qx-survicefill "></i><span>服务</span></a>
+			<a href="bag.html"><i class="qx qx-bag "></i><i class="qx nav-fill qx-bagfill "></i><span>购物袋</span></a>
+			<a href="order/orderlist.html"><i class="qx qx-order "></i><i class="qx nav-fill qx-orderfill "></i><span>订单</span></a>
+			<a href="user.html"><i class="qx qx-user "></i><i class="qx nav-fill qx-userfill "></i><span>我的</span></a>
+		</div>
+		<script src="js/artDialog.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/iframeTools.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/commservice.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var searchApp = angular.module('searchApp', ['app.service']);
+			var searchController = searchApp.controller('searchController', ['$scope', '$http', 'updateCart',
+				function($scope, $http, updateCart) {
+					$scope.isloading = false;
+					//热门搜索关键词
+					$http({
+						method: 'get',
+						url: basepath + "product/search_words/?access_token=" + access_token
+					}).success(function(data) {
+						$scope.hotwords = data.data;
+					});
+					//搜索
+					$scope.searchByword = function(word) {
+						$scope.keyword=word||$scope.keyword;
+						if (!$scope.keyword) {
+							artDialog.alert('请输入关键词');
+							return;
+						}
+						$scope.prolis = [];
+						$scope.isloading = true;
+						$http({
+							method: 'get',
+							url: basepath + "product/search3/?access_token=" + access_token + "&name=" +
+								encodeURIComponent(encodeURIComponent($scope.keyword))
+						}).success(function(data) {
+							$scope.isloading = false;
+							$scope.prolist = data.data;
+							if (!$scope.prolist.length) {
+								$scope.keyword="";
+								artDialog.alert('暂无商品，换个关键词试试');
+							}
+						}).error(function(a, b, c, d) {
+							$scope.isloading = false;
+							artDialog.alert('搜索失败');
+						})
+					}
+				}
+			])
+		</script>
+	</body>
+
+</html>

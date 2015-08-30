@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>小区定位</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no, email=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/qxv3.css" />
+		<link rel="stylesheet" type="text/css" href="css/dialog.css" />
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
+		<style>
+		body{overflow: hidden;height: 100%;}
+			#index_prolist{position: absolute;height: 100%;left: 0;padding-top: 44px;width:100%;padding: 0;overflow: auto;}
+		</style>
+	</head>
+
+	<body data-ng-init="load()" ng-app="indexApp" ng-controller="MainController">
+		<div id="header">
+			<span class="header_title"><i class="qx qx-location fs_6"></i>选择您居住的小区</span>
+			<span class="fr hide" ng-class="{block:locationload}"><i class="qx qx-dingwei  spinner"></i></span>
+		</div>
+		<!-- 主商品列表 -->
+		<div id="index_prolist" class="c">
+			<div id="pl_nav">
+				<ul>
+					<!-- 市别导航列表 -->
+					<li ng-repeat="city in citylist" ng-click="togglenav(city.city_id)" ng-class="{cur:city.city_id==loc_area.city}">　{{city.city_name}}
+					</li>
+				</ul>
+			</div>
+			<div id="pl_content">
+				<div id="prolist_wrap">
+					<ul>
+						<li ng-repeat="area in arealist" >
+							<a class="arealist" ng-class="{fc_r:(loc_area.community_id==area.community_id)}" ng-href="index.html?area={{area.community_id}}" ><i class="qx qx-location fs_5 fc_r disvisible" ng-class="{visible:loc_area.community_id==area.community_id}"></i>{{area.community_nanme}}</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<script src="js/artDialog.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/iframeTools.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/commservice.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var indexApp = angular.module('indexApp', []);
+			indexApp.run(function($rootScope) {})
+			var MainController = indexApp.controller('MainController', ['$scope', '$http',
+				function($scope, $http) {
+					$scope.loc_area={};
+					//city list
+					$http({
+						method: 'get',
+						url: basepath + 'community/listcity/'
+					}).success(function(data) {
+						$scope.citylist = data.data.citys;
+						$scope.arealist = data.data.communitys;
+						$scope.loc_area.city=$scope.loc_area.city||data.data.citys[0].city_id
+					});
+					//area list by cityid
+					$scope.$watch('loc_area', function() {
+						$http({
+							method: 'get',
+							url: basepath + 'user/communitylist/?city_id='+$scope.loc_area.city
+						}).success(function(data) {
+							$scope.arealist = data.data;
+						})
+					},true);
+					//切换导航
+					$scope.togglenav = function(navid) {
+							$scope.loc_area.city=navid
+						}
+						//get geolocation
+					$scope.load = function() {
+						$scope.locationload = true;
+						navigator.geolocation.getCurrentPosition(function(p) {
+								//var loc = "118.786502,31.93437"; //
+								var loc=p.coords.latitude + ',' + p.coords.longitude;//当前位置
+								$http({
+									method: 'get',
+									url: basepath + 'lbs/Service/getNearShop/?location=' + loc
+								}).success(function(data) {
+									$scope.locationload = false;
+									if (data.data.count != '0') {
+										$scope.cur_cityid=data.data.city;
+										$scope.loc_area = {
+											city: data.data.city,
+											community_id: data.data.community_id
+										}
+									}else{
+										artDialog.tips('您所在的位置暂无区享门店');
+									}
+								}).error(function(a, b, c, d) {
+									artDialog.tips('定位失败');
+									$scope.locationload = false;
+								});
+							},
+							function(error) {
+								$scope.locationload = false;
+								var msg = '';
+								switch (error.code) {
+									case error.PERMISSION_DENIED:
+										msg = "您拒绝了自动获取位置"
+										break;
+									case error.POSITION_UNAVAILABLE:
+										msg = "获取位置信息失败"
+										break;
+									case error.TIMEOUT:
+										msg = "获取位置信息超时"
+										break;
+									case error.UNKNOWN_ERROR:
+										msg = "未知错误"
+										break;
+								};
+								artDialog.tips(msg);
+							});
+					};
+				}
+			]);
+		</script>
+	</body>
+
+</html>

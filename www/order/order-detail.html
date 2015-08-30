@@ -1,0 +1,90 @@
+<ion-view view-title="订单详情">
+	<ion-content>
+		<div class="cart havepro">
+			<cartprolist plist="orderinfo.products" pronum="{{orderinfo.products.length}}"></cartprolist>
+			<!-- 信息 -->
+			<div id="cart_act" class="c">
+				<div class="cart_price fr pw">商品总额：<span ng-bind="plcount|currency:'￥'"></span>
+				</div>
+			</div>
+		</div>
+		<!-- 配送方式 -->
+		<div class="drawerbox_outer" ng-class="{openout:(orderinfo.delivery_type=='2')}">
+			<div class="dbout_header c">
+				<span class="fl dboh_title">配送方式</span>
+				<b class="fr" ng-if="orderinfo.delivery_type=='2'">送货上门</b>
+				<b class="fr" ng-if="orderinfo.delivery_type=='1'">自提</b>
+			</div>
+			<div class="dbout_cnt pt" ng-if="orderinfo.delivery_type=='2'">
+				<ul class="bdt_list c">
+					<li class="mw"><i class="qx qx-location fs_6 fc_o fl"></i><span> 上门地址：</span><span class="fc_gray" ng-bind="orderinfo.delivery_addr "></span>
+					</li>
+					<li class="mw c"><i class="qx qx-phone fs_6 fc_o fl"></i><span> 联系电话：</span><span class="fc_gray" ng-bind="orderinfo.delivery_phone"></span>
+					</li>
+					<li class="mw c"><i class="qx qx-time fs_6 fc_o fl"></i><span> 送货时间：</span><span class="fc_gray" ng-bind="orderinfo.delivery_time"></span>
+					</li>
+					<li class="mw c"><i class="fl qx qx-recharge fs_6 fc_o"></i><span> 送货费用：</span><span class="fc_gray">￥{{orderinfo.delivery_price}}</span>
+					</li>
+					<li class="pw c">
+						<a href="#tab/shangmen" class="block c">
+							<i class="qx qx-deliver fs_6 fc_o fl"></i><span> 查看配送状态</span><span class="fr fc_gray"><i class="qx qx-right"></i></span>
+						</a>
+					</li>
+					<li class="pw c" ng-click="gethe_deliver()">
+						<i class="qx qx-my fs_6 fc_o fl pt"></i><span class="fl pt"> 配送人</span>
+						<span class="fr fc_gray pt"><i class="qx qx-right"></i></span>
+						<span class="fr usericon">
+							<span ng-repeat="d in orderinfo.distri_workers|limitTo:3" ng-class="{busy:d.distri_worker_status=='2',off:d.distri_worker_status=='3'}"><img width="40" ng-src="{{d.distri_worker_img}}" alt="" /><i class="qx qx-dot"></i></span>
+						</span>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="drawerbox_outer openout">
+			<div class="dbout_header c">
+				<span class="fl dboh_title">支付方式</span>
+				<b class="fr" ng-if="orderinfo.pay_type=='2'">在线支付</b>
+				<b class="fr" ng-if="orderinfo.pay_type=='1'">线下支付</b>
+			</div>
+			<div class="dbout_cnt pw">
+				<ul class="bdt_list orderpaylist">
+					<li class="c">
+						<span class="fl pay-icon">
+							<i class="qx" ng-class="{'qx-alipay':(orderinfo.pay_type_ext=='22'),'qx-qxcard':(orderinfo.pay_type_ext=='21'),'qx-weixin':(orderinfo.pay_type_ext=='23'),'qx-qianbao':(orderinfo.pay_type_ext=='11')}"></i>
+						</span>
+						<span class="fl" ng-if="orderinfo.pay_type_ext=='22'">支付宝支付</span>
+						<span class="fl" ng-if="orderinfo.pay_type_ext=='21'">区享卡支付</span>
+						<span class="fl" ng-if="orderinfo.pay_type_ext=='23'">微信支付</span>
+						<span class="fl" ng-if="orderinfo.pay_type_ext=='11'">现金支付</span>
+						<span class="fr fc_r" ng-bind="orderinfo.order_price|currency:'￥'"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- 活动 -->
+		<div class="drawerbox_outer openout" ng-if="orderinfo.ads.length">
+			<div class="dbout_header c">
+				<span class="fl dboh_title">最新活动</span>
+			</div>
+			<div class="dbout_cnt pw">
+				<ul class="bdt_list">
+					<li ng-repeat="a in orderinfo.ads">
+						<a ng-href="a.ad_url" class="fc_r" ng-bind="a.ad_dec"></a>
+					</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="hide" id="deliverlist">
+			<ul class="deliverplist bdt_list pd">
+				<li class="c ng-scope" ng-repeat="d in orderinfo.distri_workers"><span class="usericon fl"><span ng-class="{busy:(d.distri_worker_status=='2')}"><img ng-src="{{d.distri_worker_img}}"><i class="qx qx-dot"></i></span></span>
+					<span class="fl">{{d.distri_worker_name}}<br/>{{d.distri_worker_phone}}</span>
+					<span class="fr fc_gr pt" ng-if="d.distri_worker_status==1">空闲</span>
+					<span class="fr fc_o pt" ng-if="d.distri_worker_status==2">忙碌</span>
+					<span class="fr fc_gray pt" ng-if="d.distri_worker_status==3">休息</span>
+				</li>
+			</ul>
+		</div>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,22 @@
+<div class="cart_pl_wrap c transition" ng-swipe-left="prosL()" ng-swipe-right="prosR()">
+	<span class="arrow fl" ng-click="prosL()" ng-if="protypesize>4"><i class="qx qx-back"></i></span>
+	<span class="arrow fr" ng-click="prosR()" ng-if="protypesize>4"><i class="qx qx-right"></i></span>
+	<div class="cartpl_scroll" ng-style="{height:lih+22+'px'}">
+		<ul ng-style="{width:(lih*protypesize)+'px','-webkit-transform':'translateX('+(lih*scrollStep)+'px)',transform:'translateX('+(lih*scrollStep)+'px)'}">
+			<li ng-repeat="pro in plist" ng-style="{width:lih+'px'}" ng-if="pro.product_amount*1">
+				<dl>
+					<dt ng-if="(!pro.thumbnail&&!pro.product_pic)"></dt>
+					<dt ng-if="(pro.thumbnail||pro.product_pic)" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
+						<img ng-src="{{pro.thumbnail||pro.product_pic}}" class="hide"></dt>
+					<dd><span>￥{{pro.product_price|number}} *</span><b>{{pro.product_amount|number}}</b>
+					</dd>
+					<dd ng-show="needel" class="close" ng-click="removeFcart(pro)"><i class="qx qx-close"></i>
+					</dd>
+				</dl>
+			</li>
+		</ul>
+	</div>
+</div>
+<!-- 滚动条 -->
+<div class="cart_scrollbar" ng-show="protypesize>4"><span ng-style="{width:(4/protypesize*4*sbwidth)+'px','-webkit-transform':'translateX('+((-scrollStep/protypesize*4)*sbwidth)+'px)',transform:'translateX('+((-scrollStep/protypesize*4)*sbwidth)+'px)'}"></span>
+</div>

@@ -1,0 +1,74 @@
+  <ion-view view-title="用户中心">
+  <ion-content>
+		<div id="usercenter" ng-show="info">
+			<div id="user_info" class="txt-c c" style="background-image: {{info.bgpic}};">
+				<a href="#/tab/account/userinfo" class="ui_gravter" style="background-image:url({{info.avatar}});">
+				</a>
+				<p class="ui_name"><i class="qx fs_4" ng-class="{'qx-male fc_gr':info.sex==1,'qx-female fc_r':info.sex==2}"></i> {{info.nick}}</p>
+				<p>{{info.sign}}</p>
+
+			</div>
+			<div class="icon_navlist" id="uc_nav">
+				<ul>
+					<li>
+						<a href="#/tab/account/qxcard">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-star"></i></dt>
+								<dd class="nav_name">我的区享卡</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+						<a href="#/tab/user/msg">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-user"></i></dt>
+								<dd class="nav_name">我的消息</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+						<a href="#/tab/user/myarea">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-village"></i></dt>
+								<dd class="nav_name">我的小区</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+						<a href="#/tab/user/ss">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-msg"></i></dt>
+								<dd class="nav_name">我的说说</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+						<a href="#/tab/user/group">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-group"></i></dt>
+								<dd class="nav_name">发现邻里</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+					<li>
+						<a href="#/tab/user/setting">
+							<dl>
+								<dt class="nav_icon"><i class="qx qx-setting"></i></dt>
+								<dd class="nav_name">设置</dd>
+								<dd class="nav_des">傻傻分不清楚哦</dd>
+							</dl>
+						</a>
+					</li>
+				</ul>
+				<div class="ph">
+					<a ng-click="logout()" class="btn btn_r block btn_big">退出</a>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

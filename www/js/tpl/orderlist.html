@@ -1,0 +1,79 @@
+<div class="orderlist">
+	<div class="order_title"><a ng-href="#tab/orderdetail/{{order.order_serial}}" class="odt_name"><i class="qx qx-time"></i>{{order.order_time}}</a>
+		<span class="fr">
+		<span class="btn btn_msg_o" ng-if="orderstatus(order.order_status,1)">待发货</span>
+		<span class="btn btn_msg_o hide" ng-if="orderstatus(order.order_status,0)">待支付</span>
+		<span class="btn btn_msg_o" ng-if="orderstatus(order.order_status,4)">未到货</span>
+		<span class="btn btn_msg_o" ng-if="orderstatus(order.order_status,2)">已完成</span>
+		<span class="btn btn_dis" ng-if="orderstatus(order.order_status,3)">已取消</span>
+		<span ng-if="orderstatus(order.order_status,0)">
+					<a ng-click="topay()" class="btn btn_r">立即支付</a>
+					<a ng-click="delorder()" class="btn btn_g">
+						<i class="qx qx-delete fz_2"></i>
+					</a>
+		</span>
+	</div>
+	<div class="order_cnt">
+		<!-- 订单商品列表 -->
+		<div class="cart bg_gray">
+			<cartprolist plist="order.products" pronum="{{order.products.length}}"></cartprolist>
+		</div>
+		<!-- 订单信息 -->
+		<ul class="bdt_list">
+			<li class="pw c" ng-click="payinfo()">
+				支付总额：<span class="fc_gray" ng-bind="order.order_price|currency:'￥'"></span>
+				<i class="qx qx-right fr"></i>
+			</li>
+			<li class="pw c">
+				支付方式：<span class="fc_gray"><b ng-bind="paytype(order.pay_type_ext)"></b>
+				</span>
+			</li>
+			<li class="pw c" ng-if="order.delivery_type=='1'">
+				配送方式：<span class="fc_gray" ng-bind="order.delivery_type_dec"></span>
+			</li>
+		</ul>
+		<!-- 配送方式 -->
+		<div class="drawerbox_inner" ng-class="{openinner:!destatus}" ng-if="(order.delivery_type=='2')">
+			<div class="dbinner_title" ng-click="destatus=!destatus"><span class="bdhb_title">配送方式：<span class="fc_gray">{{order.delivery_type_dec}}</span></span><span class="box_arrow"><i class="qx qx-unfold"></i></span>
+			</div>
+			<div class="dbinner_cnt pw">
+				<ul class="bdt_list c">
+					<li><i class="qx qx-location fs_6 fc_o"></i><span> 上门地址：</span><span class="fc_gray ">{{order.delivery_addr }}</span>
+					</li>
+					<li><i class="qx qx-phone fs_6 fc_o"></i><span> 联系电话：</span><span class="fc_gray">{{order.delivery_phone}}</span>
+					</li>
+					<li><i class="qx qx-time fs_6 fc_o"></i><span> 送货时间：</span><span class="fc_gray" ng-bind="order.delivery_time"></span>
+					</li>
+					<li><i class=" qx qx-recharge fs_6 fc_o"></i><span> 送货费用：</span><span class="fc_gray" ng-bind="order.delivery_price|currency:'￥'"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!-- 配送信息 -->
+		<div class="drawerbox_inner " ng-if="(order.delivery_type=='2')&&(orderstatus(order.order_status,1)||orderstatus(order.order_status,2))" ng-class="{'openinner':(order.distri_staus!='-1')&&(!order.dinfo)}">
+			<!-- 配送已经接单和订单待收货状态显示配送信息 -->
+			<div class="dbinner_title">
+				<span class="bdhb_title">配送信息：</span>
+				<span class="box_arrow" ng-click="order.dinfo=!order.dinfo" ng-if="order.distri_staus!='-1'"><i class="qx qx-unfold"></i></span>
+				<span class="fr">
+						<b class="btn btn_small fc_gray" ng-if="order.distri_staus=='-1'">待配送</b>
+						<b class="btn btn_small fc_gr" ng-if="order.distri_staus=='0'">开始配送</b>
+						<b class="btn btn_small fc_o" ng-if="order.distri_staus=='1'">配送完成</b>
+					</span>
+			</div>
+			<div class="dbinner_cnt pw" ng-if="order.distri_staus!='-1'">
+				<ul class="bdt_list c">
+					<li><span class="pt"><i class="qx qx-my fs_6 fc_o"></i> 配送人员：</span>
+						<span class="usericon"><span><img ng-src="{{order.distri_worker_img}}"></span></span>
+						<a class="ph fs_3" ng-if="order.distri_worker_phone" ng-href="tel:{{order.distri_worker_phone}}"><i class="qx qx-telephone fs_7 fc_gr"></i>呼叫</a>
+						<a class="pd fs_3" ng-click="stardworker()"><i class="qx qx-survice fc_o fs_7" ng-class="{fc_gray:order.distri_worker_isPraised=='1'}"></i>{{order.distri_worker_praise}}</a>
+					</li>
+					<li ng-if="order.distri_start_time"><i class="qx qx-time fs_6 fc_o"></i><span> 开始配送时间：</span><span class="fc_gray" ng-bind="order.distri_start_time"></span>
+					</li>
+					<li ng-if="order.distri_finish_time"><i class="qx qx-time fs_6 fc_o"></i><span> 配送完成时间：</span><span class="fc_gray" ng-bind="order.distri_finish_time"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,26 @@
+<ion-view view-title="区享服务">
+	<ion-content>
+		<div class="icon_navlist" id="service_nav">
+			<ul>
+				<li>
+					<a href="#/tab/shangmen">
+						<dl>
+							<dt class="nav_icon mr"><img src="img/service_sm.jpg" alt="区享上门" /></dt>
+							<dd class="nav_name">区享上门</dd>
+							<dd class="nav_des">区享上门</dd>
+						</dl>
+					</a>
+				</li>
+				<li ng-repeat="s in service">
+					<a ng-href="{{s.service_url}}">
+						<dl>
+							<dt class="nav_icon mr"><img ng-src="{{s.service_img}}" /></dt>
+							<dd class="nav_name" ng-bind="s.service_name"></dd>
+							<dd class="nav_des" ng-bind="s.service_dec"></dd>
+						</dl>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,9 @@
+<div class="drawerbox_outer" ng-class="{openout:toggle}">
+	<div class="dbout_header c">
+		<span class="fl dboh_title">{{title}}</span> {{title_txt}}
+		<span class="fr box_arrow" ng-if="needtoggle" ng-click="togglebox()"><i class="qx qx-unfold"></i></span>
+	</div>
+	<div class="dbout_cnt">
+		<div ng-transclude></div>
+	</div>
+</div>

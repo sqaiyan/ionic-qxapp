@@ -1,0 +1,93 @@
+
+@font-face {font-family: "qx";
+  src: url('iconfont.eot'); /* IE9*/
+  src: url('iconfont.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('iconfont.woff') format('woff'), /* chrome、firefox */
+  url('iconfont.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/
+  url('iconfont.svg#qx') format('svg'); /* iOS 4.1- */
+}
+
+.qx {
+  font-family:"qx" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+ /* -webkit-text-stroke-width: 0.2px;*/
+  -moz-osx-font-smoothing: grayscale;
+}
+.qx-telcom:before { content: "\e62a"; }
+.qx-radio-check:before { content: "\e600"; }
+.qx-radio:before { content: "\e601"; }
+.qx-village:before { content: "\e62b"; }
+.qx-setting:before { content: "\e62c"; }
+.qx-star:before { content: "\e62d"; }
+.qx-roundwx:before { content: "\e62f"; }
+.qx-check:before { content: "\e602"; }
+.qx-close:before { content: "\e603"; }
+.qx-locationfill:before { content: "\e604"; }
+.qx-roundclosefill:before { content: "\e608"; }
+.qx-roundclose:before { content: "\e609"; }
+.qx-search:before { content: "\e60a"; }
+.qx-time:before { content: "\e60b"; }
+.qx-unfold:before { content: "\e60c"; }
+.qx-warnfill:before { content: "\e60d"; }
+.qx-warn:before { content: "\e60e"; }
+.qx-back:before { content: "\e60f"; }
+.qx-right:before { content: "\e611"; }
+.qx-refresh:before { content: "\e612"; }
+.qx-cart:before { content: "\e613"; }
+.qx-delete:before { content: "\e614"; }
+.qx-password:before { content: "\e626"; }
+.qx-square:before { content: "\e615"; }
+.qx-squarecheck:before { content: "\e616"; }
+.qx-infofill:before { content: "\e610"; }
+.qx-like:before { content: "\e607"; }
+.qx-recharge:before { content: "\e617"; }
+.qx-vipcard:before { content: "\e618"; }
+.qx-waimai:before { content: "\e62e"; }
+.qx-roundqq:before { content: "\e630"; }
+.qx-kuaidi:before { content: "\e631"; }
+.qx-dingwei:before { content: "\e649"; }
+.qx-female:before { content: "\e619"; }
+.qx-male:before { content: "\e61a"; }
+.qx-phone:before { content: "\e632"; }
+.qx-dot:before { content: "\e61e"; }
+.qx-deliver:before { content: "\e61c"; }
+.qx-my:before { content: "\e61d"; }
+.qx-telephone:before { content: "\e61f"; }
+.qx-loading2:before { content: "\e64a"; }
+.qx-roundclose1:before { content: "\e634"; }
+.qx-pen:before { content: "\e61b"; }
+.qx-roundcheckfill:before { content: "\e606"; }
+.qx-exit:before { content: "\e633"; }
+.qx-clothe:before { content: "\e635"; }
+.qx-roundwb:before { content: "\e643"; }
+.qx-alipay:before { content: "\e620"; }
+.qx-add:before { content: "\e641"; }
+.qx-group:before { content: "\e636"; }
+.qx-shangcheng:before { content: "\e637"; }
+.qx-zhuanjia:before { content: "\e645"; }
+.qx-del:before { content: "\e642"; }
+.qx-roundaplipay:before { content: "\e644"; }
+.qx-qianbao:before { content: "\e638"; }
+.qx-wuye:before { content: "\e639"; }
+.qx-msg:before { content: "\e63a"; }
+.qx-jiazheng:before { content: "\e63b"; }
+.qx-location:before { content: "\e64b"; }
+.qx-unicom:before { content: "\e63c"; }
+.qx-weixin:before { content: "\e63d"; }
+.qx-bag:before { content: "\e621"; }
+.qx-bagfill:before { content: "\e622"; }
+.qx-index:before { content: "\e623"; }
+.qx-indexfill:before { content: "\e624"; }
+.qx-survice:before { content: "\e625"; }
+.qx-user:before { content: "\e627"; }
+.qx-userfill:before { content: "\e628"; }
+.qx-order:before { content: "\e629"; }
+.qx-orderfill:before { content: "\e63e"; }
+.qx-qxcard:before { content: "\e63f"; }
+.qx-survicefill:before { content: "\e640"; }
+.qx-roundcheck:before { content: "\e646"; }
+.qx-pifa:before { content: "\e647"; }
+.qx-chengzhong:before { content: "\e648"; }
+.qx-loading:before { content: "\e64c"; }

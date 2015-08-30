@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="deliverapp">
+
+	<head>
+		<meta charset="utf-8">
+		<title>配送员</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no, email=no">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/qxv3.css" />
+		<link rel="stylesheet" type="text/css" href="css/dialog.css" />
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/common/commservice.js" type="text/javascript" charset="utf-8"></script>
+	</head>
+
+	<body ng-controller="dlController">
+		<div id="header">
+			<a class="header_back" href=""><i class="qx qx-back"></i>
+			</a>
+			<span class="header_title">快递配送</span>
+			<a href="" class="fr"><i class="qx qx-exit"></i></a>
+			<a href="" class="fr"><i class="qx qx-refresh"></i></a>
+		</div>
+		<div class="tab c tab-c2">
+			<a ng-click="toggled(1)" ng-class="{cur:tgld==1}"><span>待接单</span></a>
+			<a ng-click="toggled(2)" ng-class="{cur:tgld==2}"><span>已接单</span></a>
+		</div>
+		<div ng-if="tgld==1">
+			<div class="txt-c pd fc_gray" ng-if="!deliverlist.length">暂无待接单</div>
+			<ul class="bdt_list deliverlist">
+				<li class="c" ng-repeat="d in deliverlist">
+					<div class="deliver_act pt">
+						<a ng-click="acceptorder($index)" class="btn btn_r btn_big">接单</a>
+					</div>
+					<div class="deliver_info" ng-click="orderinfo($index)">
+						<p>手机号：{{d.deliverphone}}</p>
+						<p>配送地址：{{d.deliveraddress}}</p>
+						<p>配送时间：{{d.delivertime}}</p>
+						<p>订单号：{{d.orderid}} <i class="qx qx-infofill fs_5 fc_gray"></i>
+						</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div ng-if="tgld==2">
+			<div class="txt-c pd fc_gray" ng-if="!receivelst.length">暂无已接单</div>
+			<ul class="bdt_list deliverlist">
+				<li class="c" ng-repeat="d in receivelst" ng-click="actorder($index)">
+					<div class="deliver_act pt">
+						<span class="btn btn_msg_r" ng-if="d.paytype=='olpay'">已支付</span>
+						<span class="btn btn_msg_gr" ng-if="d.paytype=='cashpay'">现金收费{{d.orderprice|currency:'￥'}}</span>
+					</div>
+					<div class="deliver_info">
+						<p>手机号：{{d.deliverphone}}</p>
+						<p>配送地址：{{d.deliveraddress}}</p>
+						<p>配送时间：{{d.delivertime}}</p>
+						<p>订单号：{{d.orderid}} <i class="qx qx-infofill fs_5 fc_gray"></i>
+						</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<div id="loading" ng-show="loading"></div>
+		<!-- 订单详情 -->
+		<div id="dorderinfo" class="hide">
+			<ul class="bdt_list">
+				<li class="pd">
+					<p class="ng-binding">手机号： {{dorder.deliverphone}}
+					</p>
+					<p class="ng-binding">配送地址： {{dorder.deliveraddress}}
+					</p>
+					<p class="ng-binding">配送时间： {{dorder.delivertime}}
+					</p>
+					<p class="ng-binding">订单号： {{dorder.orderid}}
+					</p>
+				</li>
+				<li class="pd">
+					<p class="fc_r">商品清单</p>
+					<div class="dl_plst">
+						<p ng-repeat="a in dorder.orderplst" class='c'>
+							{{dorder.orderplst[$index].proname}}* {{a.pronum}}
+							<span class='fr fc_r'>￥{{a.proprice}}</span>
+						</p>
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script src="js/artDialog.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/iframeTools.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			var userid = 14123; //配送员id
+			var deliverapp = angular.module('deliverapp', []);
+			var dlController = deliverapp.controller('dlController',
+				function($scope, $http) {
+					$scope.loading=false;//ajax loading遮罩
+					$scope.tgld = 1;
+					$scope.toggled = function(t) {
+						$scope.tgld = t;
+					};
+					//待接单
+					$scope.deliverlist = [{
+						orderid: 11,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}]
+					}, {
+						orderid: 22,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}]
+					}, {
+						orderid: 33,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}, {
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}, {
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}]
+					}];
+					//已接单
+					$scope.receivelst = [{
+						orderid: 11,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}],
+						paytype: 'cashpay',
+						orderprice: 1242
+					}, {
+						orderid: 22,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}],
+						paytype: 'olpay',
+						orderprice: 1242
+					}, {
+						orderid: 33,
+						deliveraddress: '我也不知道送到哪里哈',
+						delivertime: '上午10点',
+						deliverphone: '12312413',
+						orderplst: [{
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}, {
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}, {
+							proname: '山东红富士',
+							pronum: 10,
+							proprice: 142
+						}],
+						paytype: 'cashpay',
+						orderprice: 1242
+					}];
+					$scope.dorder={}
+					//订单详情
+					$scope.orderinfo = function(i) {
+						var d = $scope.deliverlist[i];
+						$scope.dorder=$scope.deliverlist[i];
+						artDialog({
+							title: '订单详情',
+							width: '92%',
+							maxHeight: '80%',
+							padding: 0,
+							content: document.getElementById("dorderinfo")
+						})
+					};
+					//接单
+					$scope.acceptorder = function(i) {
+						$scope.loading=true;
+						$http({
+							method: 'get',
+							url: '',
+							params: {
+								orderid: $scope.deliverlist[i].orderid,
+								userid: userid
+							}
+						}).success(function(data) {
+							$scope.loading=false;
+							artDialog.tips('接单成功',1);
+							$scope.deliverlist.splice(i, 1);
+						}).error(function() {
+							$scope.loading=false;
+							artDialog.tips('接单失败', 1);
+						})
+					};
+					//配送操作
+					$scope.actorder = function(i) {
+						$scope.dorder= $scope.receivelst[i];
+//						var detail = template('odetail_tpl', d);
+						artDialog({
+							title: '订单详情',
+							width: '92%',
+							max_Height: '50%',
+							padding: 0,
+							content:document.getElementById("dorderinfo"),
+							button: [{
+								name: '配送完成',
+								className: 'btn_bd_r',
+								callback: function() {
+									$scope.loading=true;
+									$http({
+										method: 'get',//post
+										url: '',
+										params: {
+											orderid:$scope.dorder.orderid,
+											userid: userid,
+											delivertype:1
+										}
+									}).success(function() {
+										$scope.loading=false;
+										artDialog.tips('修改配送状态成功', 1)
+										$scope.receivelst.splice(i, 1);
+									}).error(function() {
+										$scope.loading=false;
+										artDialog.tips('修改配送状态失败', 1)
+									})
+								}
+							}, {
+								name: '退货',
+								className: 'btn_bd_o',
+								callback: function() {
+									$scope.loading=true;
+									$http({
+										method: 'get',
+										url: '',
+										params: {
+											orderid:$scope.dorder.orderid,
+											userid: userid,
+											delivertype:1
+										}
+									}).success(function() {
+										$scope.loading=false;
+										artDialog.tips('修改配送状态成功', 1)
+										$scope.receivelst.splice(i, 1);
+									}).error(function() {
+										$scope.loading=false;
+										artDialog.tips('修改配送状态失败', 1)
+									})
+								}
+							}, {
+								name: '取消'
+							}]
+						})
+					};
+				});
+		</script>
+	</body>
+
+</html>

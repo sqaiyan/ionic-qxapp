@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+		<title>新闻</title>
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="format-detection" content="telephone=no, email=no">
+		<meta http-equiv="Pragma" content="no-cache">
+		<meta http-equiv="Cache-Control" content="no-cache">
+		<meta http-equiv="Expires" content="0">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<link rel="stylesheet" type="text/css" href="css/qxv3.css" />
+		<style>
+			.news {} .news li {
+				margin-bottom: 10px;
+				border: 1px solid #ddd;
+				border-radius: 3px;
+				padding: 10px;
+				margin: 10px;
+				background-color: #fff;
+				color: #888;
+				font-size: 14px;
+				font-size: .875rem;
+				line-height: 2;
+			}
+			.news dt {
+				padding-bottom: 5px;
+			}
+			.news .title {
+				color: #333;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="newslist">
+			<ul class="news">
+			</ul>
+		</div>
+		<div id="scrolladd-loading" class="txt-c hide">
+			<img src="images/loading.gif" alt="" />
+		</div>
+		<script type="text/tpl" id="newstlp">
+			{{each list as value i}}
+			<li>
+				<dl>
+					<dt class="c"><span class="title">{{value.title}}</span><span class="fr">{{value.time}}</span></dt>
+					<dd class="newscnt">{{value.content}}</dd>
+				</dl>
+			</li>
+			{{/each}}
+		</script>
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/scroladd.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/template.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+		template.config("escape",false)
+			$(function() {
+				//				$("#newslist ul").scroladd({
+				//					api: 'api/get_shopro', //url
+				//					tpl: 'shopro_listpl', //模板id
+				//					max_page: 5, //最多加载4页
+				//					auto_load: true,
+				//					ishowno: true,
+				//					loading_id: 'scrolladd-loading',
+				//					params: {
+				//						page: 1,
+				//						per_page: 20 //每页20条数据
+				//					}
+				//				});
+				//用上面的哦
+
+				var nlist = {
+					"list": [{
+						"title": '1123132',
+						"time": '2015-12-11',
+						"content": 'dfsfsf'
+					}, {
+						"title": '1123132',
+						"time": '2015-12-12',
+						"content": 'dfsfsf'
+					}, {
+						"title": '1123132',
+						"time": '2015-12-13',
+						"content": 'dfsfsf'
+					}, {
+						"title": '1123132',
+						"time": '2015-12-14',
+						"content": '<a class="fc_r">在经历漫长的等待之后</a>，区享翠屏国际服务站终于要开始正式营业了。从2015年5月6日起接受订单，愿所有关注区享的朋友鼎力支持。 <br/>服务站地址：江宁区将军大道翠屏国际城水杉苑12幢101 <br>电话：13347719096/84146869 <br/>非常期待您成为我们的第一批客人。 '
+					}]
+				}
+				$("#newslist ul").append(template('newstlp', nlist))
+			})
+		</script>
+	</body>
+
+</html>

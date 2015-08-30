@@ -1,0 +1,88 @@
+<ul ng-if="navcur">
+	<li ng-repeat="pro in prolist" ng-if="(pro.service_id==navcur)&&(pro.amount!=0)">
+		<div class="pl_promain c">
+			<a ng-click="proinfo(pro)" class="pl_proimg" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
+				<img data-src="{{pro.thumbnail}}" class="hide" alt="{{pro.product_name}}" />
+			</a>
+			<p class="pl_proname" ng-bind="pro.product_name"></p>
+			<p class="pl_sale_tip">
+				<span ng-if="transtags(pro.tags*1,0)">称重</span>
+				<span ng-if="transtags(pro.tags*1,1)">APP专享价</span>
+				<span ng-if="transtags(pro.tags*1,2)">满减</span>
+				<span ng-if="transtags(pro.tags*1,3)">不支持区享卡</span>
+				<span ng-if="transtags(pro.tags*1,4)">特价</span>
+				<span ng-if="transtags(pro.tags*1,5)">预售</span>
+				<span ng-if="transtags(pro.tags*1,6)">无货</span>
+			</p>
+		</div>
+
+		<div class="pl_proprice c" ng-if="!transtags(pro.tags*1,0)">
+			<!-- 普通商品 -->
+			<div class="fl pro_proprice"><span class="fc_r">￥{{pro.product_price}}</span>/{{pro.product_unit}}</div>
+			<div class="pro_act fr" data-amout="{{pro.amount}}" data-proamount="{{pro.product_amount}}">
+				<button class="del" ng-class="{disabled:pro.product_amount*1==0}" ng-disabled="pro.product_amount*1==0" ng-click="removeFcart(pro)">
+					<i class="qx qx-del"></i>
+				</button>
+				<span class="pronumber" ng-class="{fc_gray:pro.product_amount*1==0}" ng-bind="pro.product_amount"></span>
+				<button class="add" ng-class="{disabled:(!(pro.amount*1)||(pro.product_amount*1>=pro.amount*1))}" ng-click="addTocart(pro)" ng-disabled="!(pro.amount*1)||(pro.product_amount*1>=pro.amount*1)">
+					<i class="qx qx-add"></i>
+				</button>
+			</div>
+		</div>
+		<div class="pl_proprice c" ng-if="transtags(pro.tags*1,0)">
+			<!-- 称重商品 -->
+			<div class="fl pro_proprice"><span class="fc_r">￥{{pro.product_price}}</span>/{{pro.product_unit}}</div>
+			<div class="pro_act fr">
+				<button class="add" ng-click="addTocart(pro)" ng-if="!(pro.product_amount*1)">
+					<i class="qx qx-cart"></i>
+				</button>
+				<button class="add" ng-click="removeFcart(pro)" ng-if="(pro.product_amount*1)">
+					<i class="qx qx-close"></i>
+				</button>
+			</div>
+		</div>
+
+	</li>
+</ul>
+<ul ng-if="!navcur">
+	<li ng-repeat="pro in prolist" ng-if="pro.amount!=0">
+		<div class="pl_promain c">
+			<a ng-click="proinfo(pro)" class="pl_proimg" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
+				<img data-src="{{pro.thumbnail}}" class="hide" alt="{{pro.product_name}}" />
+			</a>
+			<p class="pl_proname" ng-bind="pro.product_name"></p>
+			<p class="pl_sale_tip">
+				<span ng-if="transtags(pro.tags*1,0)">称重</span>
+				<span ng-if="transtags(pro.tags*1,1)">APP专享价</span>
+				<span ng-if="transtags(pro.tags*1,2)">满减</span>
+				<span ng-if="transtags(pro.tags*1,3)">不支持区享卡</span>
+				<span ng-if="transtags(pro.tags*1,4)">特价</span>
+				<span ng-if="transtags(pro.tags*1,5)">预售</span>
+				<span ng-if="transtags(pro.tags*1,6)">无货</span>
+			</p>
+		</div>
+		<div class="pl_proprice c" ng-if="!transtags(pro.tags*1,0)">
+			<div class="fl pro_proprice"><span class="fc_r">￥{{pro.product_price}}</span>/{{pro.product_unit}}</div>
+			<div class="pro_act fr" data-amout="{{pro.amount}}" data-proamount="{{pro.product_amount}}">
+				<button class="del" ng-class="{disabled:pro.product_amount*1==0}" ng-disabled="pro.product_amount*1==0" ng-click="removeFcart(pro)">
+					<i class="qx qx-del"></i>
+				</button>
+				<span class="pronumber" ng-class="{fc_gray:pro.product_amount*1==0}" ng-bind="pro.product_amount"></span>
+				<button class="add" ng-class="{disabled:(!(pro.amount*1)||(pro.product_amount*1>=pro.amount*1))}" ng-click="addTocart(pro)" ng-disabled="!(pro.amount*1)||(pro.product_amount*1>=pro.amount*1)">
+					<i class="qx qx-add"></i>
+				</button>
+			</div>
+		</div>
+		<div class="pl_proprice c" ng-if="transtags(pro.tags*1,0)">
+			<div class="fl pro_proprice"><span class="fc_r">￥{{pro.product_price}}</span>/{{pro.product_unit}}</div>
+			<div class="pro_act fr">
+				<button class="add" ng-click="addTocart(pro)" ng-if="!(pro.product_amount*1)">
+					<i class="qx qx-cart"></i>
+				</button>
+				<button class="add" ng-click="removeFcart(pro)" ng-if="(pro.product_amount*1)">
+					<i class="qx qx-close"></i>
+				</button>
+			</div>
+		</div>
+	</li>
+</ul>

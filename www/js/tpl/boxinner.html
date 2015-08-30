@@ -1,0 +1,10 @@
+<div class="drawerbox_inner" ng-class="{openinner:toggle}">
+	<div class="dbinner_title">
+		<span class="bdhb_title" ng-bind="title"></span>
+		<span class="box_arrow" ng-if="needtoggle" ng-click="togglebox()"><i class="qx qx-unfold"></i></span>
+		{{title_txt}}
+	</div>
+	<div class="dbinner_cnt pw">
+		<div ng-transclude></div>
+	</div>
+</div>

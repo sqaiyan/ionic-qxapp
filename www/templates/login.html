@@ -1,0 +1,45 @@
+<ion-view view-title="登录">
+	<ion-content>
+		<div id="header" class="hide">
+			<a href="" class="header_back"><i class="qx qx-back"></i></a>
+			<span class="header_title">登录</span>
+			<a href="find_pwd1.html" class="fr">忘记密码？</a>
+		</div>
+
+		<div id="text_form">
+			<!-- 手机号登录 -->
+			<div class="tab_cnt" id="login_phone">
+				<form ng-submit="login()" name="loginform">
+					<ul>
+						<li class="mt"><i class="qx qx-phone"></i>
+							<input type="text" ng-model="models.name" name="name" autofocus="autofocus" required="required" placeholder="用户名/手机号/邮箱" />
+						</li>
+						<li class="mt"><i class="qx qx-password"></i>
+							<input type="password" ng-model="models.pwd" name="pwd" required="required" placeholder="用户密码" />
+						</li>
+						<li class="mt">
+							<button style="width: 100%;" type="submit" ng-class="{btn_dis:!loginform.$valid}" class="btn btn_r  block  btn_big">登　录</button>
+						</li>
+					</ul>
+				</form>
+			</div>
+		</div>
+		<div class="fc_gray pw">温馨提示：如果您使用未注册的手机号登录将代表您已经同意了 <a ng-class="xydetail()" style="text-decoration: underline;" class="fc_r">《区享用户协议》</a>
+		</div>
+		<fieldset id="other_login_list" class="hide">
+			<legend id="olist_title">使用第三方账号登录</legend>
+			<div id="olist_cnt">
+				<ul>
+					<li><a href=""><i class="qx qx-roundwx icon-wx"></i><span>微信账号</span></a>
+					</li>
+					<li><a href=""><i class="qx qx-roundqq icon-qq"></i><span>QQ账号</span></a>
+					</li>
+					<li><a href=""><i class="qx qx-roundwb icon-wb"></i><span>微博账号</span></a>
+					</li>
+					<li><a href=""><i class="qx qx-roundaplipay icon-alipay"></i><span>支付宝账号</span></a>
+					</li>
+				</ul>
+			</div>
+		</fieldset>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,23 @@
+<ion-view view-title="我的区享卡">
+	<ion-content>
+		<div id="bonus_list">
+			<ul ng-if="cards.length">
+				<li ng-repeat='card in cards'>
+					<div class="bonus" ng-class="{card1:card.qxcard_value==100,card2:card.qxcard_value==300,card3:card.qxcard_value==500,card4:card.qxcard_value==1000}">
+						<dl>
+							<dt class="card_count"><span>余额</span>
+							<p>￥{{card.qxcard_balance|number}}</p>
+						</dt>
+							<dd class="card_num">卡号：{{card.qxcard_no}}</dd>
+							<dd class="card_name">面值：￥{{card.qxcard_value}}</dd>
+							<dd class="fc_gray">过期时间：{{card.expire_time}}</dd>
+						</dl>
+					</div>
+				</li>
+			</ul>
+		</div>
+	</ion-content>
+</ion-view>
+<ion-footer-bar class="row-no-padding bar-subfooter">
+<a class="btn btn_big block button-full btn_r" ng-click="jh()">激活区享卡</a>
+</ion-footer-bar>
