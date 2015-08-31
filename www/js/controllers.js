@@ -1,9 +1,9 @@
-angular.module('starter.controllers', ['app.service']).run(function($rootScope) {
-		$rootScope.access_token = localStorage.getItem('access_token');
-	})
-	.controller('MainCtrl', function($scope, $http, $ionicLoading, $location,$state, updateCart, user) { //首页
-		if (!$scope.access_token) {
-			$state.go("login",{'from':$state.current.name});
+angular.module('starter.controllers', ['ionic','app.service'])
+	.controller('MainCtrl', function($scope, $http, $ionicLoading, $location, $state, updateCart) { //首页
+		if (!access_token) {
+			$state.go("login", {
+				'from': $state.current.name
+			});
 			return;
 		}
 		$ionicLoading.show();
@@ -16,10 +16,14 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		//商品类别
 		$http({
 			method: 'get',
-			url: basepath + 'product/tlist3/?access_token=' + $scope.access_token
+			url: basepath + 'product/tlist3/?access_token=' + access_token
 		}).success(function(data) {
-			$scope.navlist = data.data;
-			$scope.navcur_id = $scope.navcur_id ? $scope.navcur_id : $scope.navlist[0].service_id
+			if (data.result_code == '0') {
+				$scope.navlist = data.data;
+				$scope.navcur_id = $scope.navcur_id ? $scope.navcur_id : $scope.navlist[0].service_id;
+			} else {
+				artDialog.tips(data.result_dec);
+			}
 		});
 		$scope.tad = function() {
 			$scope.openmsg = !$scope.openmsg
@@ -31,14 +35,14 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		//小区信息
 		$http({
 			method: 'get',
-			url: basepath + 'community/contact/?access_token=' + $scope.access_token
+			url: basepath + 'community/contact/?access_token=' + access_token
 		}).success(function(data) {
 			$scope.area_name = data.data.community_nanme;
 		});
 		//广告
 		$http({
 			method: 'get',
-			url: basepath + 'service/ad3/?access_token=' + $scope.access_token + '&type=1'
+			url: basepath + 'service/ad3/?access_token=' + access_token + '&type=1'
 		}).success(function(data) {
 			if (data.result_dec == 'OK') {
 				$scope.ad = data.data;
@@ -47,7 +51,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		//所有商品列表
 		$http({
 			method: 'get',
-			url: basepath + 'product/list3/?access_token=' + $scope.access_token
+			url: basepath + 'product/list3/?access_token=' + access_token
 		}).success(function(data) {
 			$ionicLoading.hide();
 			$scope.prolist = data.data;
@@ -69,7 +73,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			//获取购物车列表
 			$http({
 				method: 'get',
-				url: basepath + 'cart/list3/?access_token=' + $scope.access_token
+				url: basepath + 'cart/list3/?access_token=' + access_token
 
 			}).success(function(data) {
 				if (data.result_dec == 'OK') {
@@ -77,7 +81,6 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 					//称重商品跳转到购物车
 					for (var i = 0; i < clist.length; i++) {
 						if ('2' == clist[i].type) {
-							console.log("2222");
 							$location.path('tab/bag');
 							return;
 						}
@@ -89,12 +92,10 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 							proidlist.push(data.product_id);
 						}
 					});
-					console.log("1111");
 					$location.path('tab/suborder');
 					$location.orderlist = proidlist.join(',');
 				} else {
 					artDialog.alert(data.result_dec)
-					console.log(data.result_dec);
 				}
 			}).error(function(a, b, c, d) {
 				console.log(b);
@@ -106,7 +107,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		$ionicLoading.show();
 		$http({
 			method: 'get',
-			url: basepath + 'service/list3/?access_token=' + $scope.access_token
+			url: basepath + 'service/list3/?access_token=' + access_token
 		}).success(function(data) {
 			$ionicLoading.hide();
 			$scope.service = data.data;
@@ -115,16 +116,18 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			$ionicLoading.hide();
 		});
 	})
-	.controller('shangmenctrl', function($scope,$state, $http, $ionicLoading) {
+	.controller('shangmenctrl', function($scope, $state, $http, $ionicLoading) {
 		//区享上门
-		if (!$scope.access_token) {
-			$state.go("login",{'from':$state.current.name});
+		if (!access_token) {
+			$state.go("login", {
+				'from': $state.current.name
+			});
 			return;
 		}
 		$ionicLoading.show();
 		$http({
 			method: 'get',
-			url: basepath + 'order/getDeliveryList/?accsess_token=' + $scope.access_token
+			url: basepath + 'order/getDeliveryList/?accsess_token=' + access_token
 		}).success(function(data) {
 			$ionicLoading.hide();
 			if (data.result_code == '0') {
@@ -136,13 +139,16 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			$ionicLoading.hide();
 			artDialog.alert(b)
 		})
-	}).controller('OrderlistCtrl', function($scope, $http,$state, $ionicLoading, orderact) {
+	}).controller('OrderlistCtrl', function($scope, $http,$state,$ionicLoading, orderact) {
 		//订单列表
-		if (!$scope.access_token) {
-			$state.go("login",{from:$state.current.name});
+		if (!access_token) {
+			$state.go("login", {
+				from: $state.current.name
+			});
 			return;
 		};
-		$scope.tabs = localStorage.getItem('ordertype') || 1;
+		//$scope.tabs = localStorage.getItem('ordertype') || 1;
+		$scope.tabs = 1;
 		$scope.curtab = function(t) {
 			return $scope.tabs == t;
 		};
@@ -155,6 +161,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			$ionicLoading.show();
 			orderact.orderlist($scope.tabs, 100).success(function(data) {
 				$ionicLoading.hide();
+				$scope.$broadcast('scroll.refreshComplete');
 				if (data.result_code != '0') {
 					artDialog.alert(data.result_dec);
 				} else {
@@ -162,74 +169,79 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 					$scope.orderlist = data.data.orders;
 				}
 			}).error(function() {
+				$scope.$broadcast('scroll.refreshComplete');
 				$ionicLoading.hide();
 				artDialog.alert('订单获取异常');
-			}).finally(function() {
-				$scope.$broadcast('scroll.refreshComplete');
 			});
 		};
-	}).controller('bagCtrl', function($scope, $http, updateCart) {
+	}).controller('bagCtrl', function($scope, $http, $state,$location, updateCart) {
 		//购物袋
-		$scope.cart_count = $scope.price_count = 0; //商品数量和总价
+		if (!access_token) {
+			$state.go("login", {
+				'from': $state.current.name
+			});
+			return;
+		};
+		$scope.models = {};
+		$scope.models.cart_count = $scope.models.price_count = 0; //商品数量和总价
 		$scope.checkall = false;
-		$scope.$watch('commonpro', function() {
-			$scope.cart_count = $scope.price_count = 0;
-			for (i in $scope.commonpro) {
-				if ($scope.commonpro[i].selected == 'true') {
-					$scope.cart_count++;
-					var procountprice = $scope.commonpro[i].product_amount * 1 * $scope.commonpro[i].product_price;
-					if ($scope.commonpro[i].wholesale_price) {
-						procountprice = (procountprice >= $scope.commonpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.commonpro[i].wholesale_price.split('|')[1]) : procountprice;
+		$scope.$watch('models.commonpro', function() {
+			console.log("1");
+			$scope.models.cart_count = $scope.models.price_count = 0;
+			for (i in $scope.models.commonpro) {
+				if ($scope.models.commonpro[i].selected == 'true') {
+					$scope.models.cart_count++;
+					var procountprice = $scope.models.commonpro[i].product_amount * 1 * $scope.models.commonpro[i].product_price;
+					if ($scope.models.commonpro[i].wholesale_price) {
+						procountprice = (procountprice >= $scope.models.commonpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.models.commonpro[i].wholesale_price.split('|')[1]) : procountprice;
 					}
-					$scope.price_count = $scope.price_count + procountprice;
+					$scope.models.price_count = $scope.models.price_count + procountprice;
 				} else {
-					$scope.checkall = false;
+					$scope.models.checkall = false;
 				}
 			};
-			for (i in $scope.weightpro) {
-				if ($scope.weightpro[i].selected == 'true') {
+			for (i in $scope.models.weightpro) {
+				if ($scope.models.weightpro[i].selected == 'true') {
 					$scope.cart_count++;
-					var procountprice = $scope.weightpro[i].product_amount * 1 * $scope.weightpro[i].product_price;
-					if ($scope.weightpro[i].wholesale_price) {
-						procountprice = (procountprice >= $scope.weightpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.weightpro[i].wholesale_price.split('|')[1]) : procountprice;
+					var procountprice = $scope.models.weightpro[i].product_amount * 1 * $scope.weightpro[i].product_price;
+					if ($scope.models.weightpro[i].wholesale_price) {
+						procountprice = (procountprice >= $scope.models.weightpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.models.weightpro[i].wholesale_price.split('|')[1]) : procountprice;
 					}
-					$scope.price_count = $scope.price_count + procountprice;
+					$scope.models.price_count = $scope.models.price_count + procountprice;
 				} else {
-					if ($scope.weightpro[i].status == '3') {
-						if ($scope.weightpro[i].selected == 'false') {
-							$scope.checkall = false;
+					if ($scope.models.weightpro[i].status == '3') {
+						if ($scope.models.weightpro[i].selected == 'false') {
+							$scope.models.checkall = false;
 						}
 					}
 				}
 			}
 		}, true);
-		$scope.$watch('weightpro', function() {
-			$scope.cart_count = $scope.price_count = 0;
-			for (i in $scope.commonpro) {
-				if ($scope.commonpro[i].selected == 'true') {
-					$scope.cart_count++;
-					var procountprice = $scope.commonpro[i].product_amount * 1 * $scope.commonpro[i].product_price;
-					if ($scope.commonpro[i].wholesale_price) {
-						procountprice = (procountprice >= $scope.commonpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.commonpro[i].wholesale_price.split('|')[1]) : procountprice;
+		$scope.$watch('models.weightpro', function() {
+			$scope.models.cart_count = $scope.models.price_count = 0;
+			for (i in $scope.models.commonpro) {
+				if ($scope.models.commonpro[i].selected == 'true') {
+					$scope.models.cart_count++;
+					var procountprice = $scope.models.commonpro[i].product_amount * 1 * $scope.models.commonpro[i].product_price;
+					if ($scope.models.commonpro[i].wholesale_price) {
+						procountprice = (procountprice >= $scope.models.commonpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.models.commonpro[i].wholesale_price.split('|')[1]) : procountprice;
 					}
-					$scope.price_count = $scope.price_count + procountprice;
+					$scope.models.price_count = $scope.models.price_count + procountprice;
 				} else {
-					$scope.checkall = false;
+					$scope.models.checkall = false;
 				}
 			};
-			for (i in $scope.weightpro) {
-				if ($scope.weightpro[i].selected == 'true') {
-					$scope.cart_count++;
-					var procountprice = $scope.weightpro[i].product_amount * 1 * $scope.weightpro[i].product_price;
-					if ($scope.weightpro[i].wholesale_price) {
-						procountprice = (procountprice >= $scope.weightpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.weightpro[i].wholesale_price.split('|')[1]) : procountprice;
+			for (i in $scope.models.weightpro) {
+				if ($scope.models.weightpro[i].selected == 'true') {
+					$scope.models.cart_count++;
+					var procountprice = $scope.models.weightpro[i].product_amount * 1 * $scope.weightpro[i].product_price;
+					if ($scope.models.weightpro[i].wholesale_price) {
+						procountprice = (procountprice >= $scope.models.weightpro[i].wholesale_price.split('|')[0] * 1) ? (procountprice - $scope.models.weightpro[i].wholesale_price.split('|')[1]) : procountprice;
 					}
-					$scope.price_count = $scope.price_count + procountprice;
+					$scope.models.price_count = $scope.models.price_count + procountprice;
 				} else {
-					if ($scope.weightpro[i].status == '3') {
-						if ($scope.weightpro[i].selected == 'false') {
-							$scope.checkall = false;
-						}
+					if (($scope.models.weightpro[i].status == '3')&&($scope.models.weightpro[i].selected == 'false')) {
+							$scope.models.checkall = false;
 					}
 				}
 			}
@@ -240,26 +252,27 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		};
 		//全选
 		$scope.selectall = function() {
-			if (!$scope.checkall) {
-				for (i in $scope.weightpro) {
-					if ($scope.weightpro[i].status == '3') {
-						$scope.weightpro[i].selected = 'true';
+			if (!$scope.models.checkall) {
+				for (i in $scope.models.weightpro) {
+					if ($scope.models.weightpro[i].status == '3') {
+						$scope.models.weightpro[i].selected = 'true';
 					}
 				};
-				for (i in $scope.commonpro) {
-					$scope.commonpro[i].selected = 'true';
+				for (i in $scope.models.commonpro) {
+					$scope.models.commonpro[i].selected = 'true';
 				}
-				$scope.checkall = true;
+				$scope.models.checkall = true;
 			} else {
-				$scope.checkall = false;
+				$scope.models.checkall = false;
 			}
 		};
 		$scope.getbagdata = function() {
 			//购物车数据
-			$http.get(basepath + 'cart/view3/?access_token=' + $scope.access_token).success(function(data) {
+			$http({method:'get',url:basepath+'cart/view3/?access_token='+access_token}).success(function(data) {
 				if (data.result_code == "0") {
-					$scope.commonpro = data.data.common_products;
-					$scope.weightpro = data.data.weight_products;
+					$scope.models.commonpro = data.data.common_products;
+					$scope.models.weightpro = data.data.weight_products;
+					console.log($scope.models.commonpro)
 				} else {
 					artDialog.alert('获取数据失败，请稍后重试！')
 				}
@@ -273,18 +286,20 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		$scope.toSuborder = function() {
 				//普通商品提交
 				var proidlist = [];
-				angular.forEach($scope.commonpro, function(data) {
+				angular.forEach($scope.models.commonpro, function(data) {
 					if ((data.product_amount != '0') && (data.selected == "true")) {
 						proidlist.push(data.product_id);
 					}
 				});
-				angular.forEach($scope.weightpro, function(data) {
+				angular.forEach($scope.models.weightpro, function(data) {
 					if ((data.product_amount != '0') && (data.selected == "true")) {
 						proidlist.push(data.product_id);
 					}
 				});
-				$location.path('#/tab/suborer');
-				$location.prolist = proidlist.join(',');
+				//$state.go('tab.suborder')
+				console.log(proidlist.join(','));
+				$location.path('tab/suborder');
+				$location.orderlist = proidlist.join(',');
 			}
 			//添加到购物车
 		$scope.addTocart = function(pro) {
@@ -294,7 +309,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		$scope.toWeight = function(pro) {
 			$http({
 				method: 'get',
-				url: basepath + 'cart/weight/?access_token=' + $scope.access_token,
+				url: basepath + 'cart/weight/?access_token=' + access_token,
 				params: { //商品id, userid,数量
 					product_id: pro.product_id,
 				}
@@ -318,15 +333,15 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 					return;
 				}
 				if (protype == 'common') {
-					for (var i = 0; i < $scope.commonpro.length; i++) {
-						if ($scope.commonpro[i].product_id == pro.product_id) {
-							$scope.commonpro.splice(i, 1);
+					for (var i = 0; i < $scope.models.commonpro.length; i++) {
+						if ($scope.models.commonpro[i].product_id == pro.product_id) {
+							$scope.models.commonpro.splice(i, 1);
 						}
 					}
 				} else {
 					for (var i = 0; i < $scope.weightpro.length; i++) {
-						if ($scope.weightpro[i].product_id == pro.product_id) {
-							$scope.weightpro.splice(i, 1);
+						if ($scope.models.weightpro[i].product_id == pro.product_id) {
+							$scope.models.weightpro.splice(i, 1);
 						}
 					}
 				}
@@ -335,6 +350,8 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			})
 		}
 	}).controller('LoginCtrl', function($scope, $http, $ionicLoading, $stateParams, $state, user) {
+		localStorage.setItem('access_token', null);
+		access_token = null;
 		$ionicLoading.hide();
 		$scope.models = {};
 		$scope.login = function() {
@@ -350,8 +367,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 				$ionicLoading.hide();
 				if (data.result_code == '0') {
 					user.loginmsg(data.data);
-					console.log($stateParams);
-					var from =$stateParams.from||'tab.main';
+					var from = $stateParams.from || 'tab.main';
 					$state.go(from);
 				} else {
 					artDialog.alert(data.result_dec + ',请重试！');
@@ -366,12 +382,18 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			});
 		}
 	})
-	.controller('UserCtrl', function($scope, $http, $ionicLoading, user) {
+	.controller('UserCtrl', function($scope, $http, $ionicLoading, $state, user) {
 		//用户中心
+		if (!access_token) {
+			$state.go("login", {
+				'from': $state.current.name
+			});
+			return;
+		}
 		$ionicLoading.show();
 		$http({
 			method: 'get',
-			url: basepath + 'user/info/?access_token=' + $scope.access_token + '&user_id' + localStorage.getItem('user_id')
+			url: basepath + 'user/info/?access_token=' + access_token
 		}).success(function(data) {
 			$ionicLoading.hide();
 			if (data.result_code == '0') {
@@ -384,7 +406,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			$ionicLoading.show('退出中...');
 			$http({
 				method: 'get',
-				url: basepath + 'user/logout/?access_token=' + $scope.access_token
+				url: basepath + 'user/logout/?access_token=' + access_token
 			}).success(function(data) {
 				$ionicLoading.hide();
 				user.logout();
@@ -523,7 +545,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		//自提信息
 		$http({
 			method: 'get',
-			url: basepath + 'community/contact/?access_token=' + $scope.access_token
+			url: basepath + 'community/contact/?access_token=' + access_token
 		}).success(function(data) {
 			$scope.models.selfDaddr = data.data.community_addr;
 			$scope.models.selfTel = data.data.property_tel;
@@ -531,7 +553,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 		//获取用户地址联系信息
 		$http({
 			method: 'get',
-			url: basepath + 'user/info/?access_token=' + $scope.access_token
+			url: basepath + 'user/info/?access_token=' + access_token
 		}).success(function(data) {
 			if (data.result_code == '0') {
 				$scope.models.delivertype = "oldeliver";
@@ -718,7 +740,6 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 			}
 		};
 	}).controller('OdetailCtrl', function($scope, $http, $location, $ionicLoading, $stateParams, orderact) {
-		console.log($stateParams);
 		if (!$stateParams.orderid) {
 			$location.path('tab/orderlist');
 			return;
@@ -765,36 +786,10 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 	}).controller('CardCtrl', function($scope, $http) {
 		$http({
 			method: 'get',
-			url: basepath + 'qxcard/list/?access_token=' + $scope.access_token + '&type=1'
+			url: basepath + 'qxcard/list/?access_token=' + access_token + '&type=1'
 		}).success(function(data) {
 			if (data.result_code == '0' && data.data.length) {
-				$scope.cards = data.data
-			} else {
-				$scope.cards = [{
-					"qxcard_no": "11232111",
-					"qxcard_value": "100",
-					"qxcard_balance": "20.00",
-					"qxcard_status": "3",
-					"expire_time": "2015-12-31 23:59:59"
-				}, {
-					"qxcard_no": "11232111",
-					"qxcard_value": "300",
-					"qxcard_balance": "200.00",
-					"qxcard_status": "3",
-					"expire_time": "2015-12-31 23:59:59"
-				}, {
-					"qxcard_no": "11232111",
-					"qxcard_value": "500",
-					"qxcard_balance": "20.00",
-					"qxcard_status": "3",
-					"expire_time": "2015-12-31 23:59:59"
-				}, {
-					"qxcard_no": "11232111",
-					"qxcard_value": "1000",
-					"qxcard_balance": "100.00",
-					"qxcard_status": "3",
-					"expire_time": "2015-12-31 23:59:59"
-				}, ]
+				$scope.cards = data.data;
 			}
 		}).error(function() {});
 		$scope.jh = function() {
@@ -802,7 +797,7 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 				if (v.length == 16) {
 					$http({
 						method: 'post',
-						url: basepath + 'qxcard/activate/?access_token=' + $scope.access_token,
+						url: basepath + 'qxcard/activate/?access_token=' + access_token,
 						data: {
 							qxcard_cdkey: v
 						}
@@ -810,12 +805,12 @@ angular.module('starter.controllers', ['app.service']).run(function($rootScope) 
 						if (data.result_code == '0') {
 							artDialog.tips('激活成功');
 						} else {
-							artDialog.tips(data.result_dec)
+							artDialog.tips(data.result_dec, 20)
 						}
 					});
 				} else {
 					artDialog.alert('请输入16位密码');
-					return;
+					return false;
 				}
 			});
 		};

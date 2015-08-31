@@ -23,38 +23,33 @@ function setoboxpwd(t) {
 	});
 }
 var basepath = "http://115.159.93.15/scframe/";
-angular.module('app.service', []).run(function($rootScope) {
-		$rootScope.access_token = localStorage.getItem('access_token');
-	})
-	.factory('user', ['$http', '$location', '$rootScope',
-		function($http, $location, $rootScope) {
+var access_token = localStorage.getItem('access_token');
+var winw = window.screen.width;
+angular.module('app.service', [])
+	.factory('user', ['$http', '$location',
+		function($http, $location) {
 			return {
 				loginmsg: function(data) {
-					localStorage.clear();
-					localStorage.setItem('user_id', data.user_id);
-					localStorage.setItem('login_name', data.login_name);
 					localStorage.setItem('access_token', data.access_token);
-					console.log(localStorage.getItem('access_token'));
-					$rootScope.access_token = data.access_token;
+					access_token = data.access_token;
 				},
 				logout: function() {
-					localStorage.clear();
-					$rootScope.access_token = null;
-					$location.path('/tab/main')
+					localStorage.setItem('access_token', null);
+					access_token = null;
+					$location.path('/tab/main');
 				},
 				setuserinfo: function(data) {
 					return $http({
 						method: 'post',
-						url: basepath + 'user/updateInfo/?access_token=' + $rootScope.access_token,
+						url: basepath + 'user/updateInfo/?access_token=' + access_token,
 						data: data
 					})
 				}
 			}
 		}
 	])
-	.factory('qxcard', ['$http', '$rootScope',
-		function($http, $rootScope) {
-			var access_token = $rootScope.access_token;
+	.factory('qxcard', ['$http',
+		function($http) {
 			return {
 				checkBalance: function(price) { //验证余额
 					return $http({
@@ -79,9 +74,7 @@ angular.module('app.service', []).run(function($rootScope) {
 			};
 		}
 	])
-	.factory('orderact', ['$http', '$rootScope',
-		function($http, $rootScope) {
-			var access_token = $rootScope.access_token;
+	.factory('orderact', ['$http',function($http) {
 			return {
 				topay: function(params) { //提交订单
 					return $http({
@@ -161,9 +154,8 @@ angular.module('app.service', []).run(function($rootScope) {
 			};
 		}
 	])
-	.factory('updateCart', ['$http', '$rootScope',
-		function($http, $rootScope) {
-			var access_token =$rootScope.access_token||localStorage.getItem('access_token');
+	.factory('updateCart', ['$http',
+		function($http) {
 			//更新购物车
 			var updateCart = function(proid, pronum, type) {
 				type = type || 2;
@@ -234,9 +226,8 @@ angular.module('app.service', []).run(function($rootScope) {
 				}
 			}
 		}
-	]).directive('cartprolist', ['$http', '$rootScope', 'updateCart',
-		function($http, $rootScope, updateCart) {
-			var access_token = $rootScope.access_token;
+	]).directive('cartprolist', ['$http', 'updateCart',
+		function($http, updateCart) {
 			//购物车商品列表指令
 			return {
 				restrict: 'EA',
@@ -246,7 +237,6 @@ angular.module('app.service', []).run(function($rootScope) {
 				},
 				templateUrl: 'js/tpl/cartprolist.html', //购物车商品列表模板
 				link: function(scope, element, attr) {
-					var winw = window.screen.width;
 					scope.needel = attr.needel;
 					scope.scrollStep = 0;
 					scope.plst = attr.plist;
@@ -254,16 +244,16 @@ angular.module('app.service', []).run(function($rootScope) {
 					scope.lih = (winw - 5) / scope.minsize;
 					scope.sbwidth = winw / scope.minsize;
 					scope.$watch('protypesize', function() {
-							scope.scrollStep = scope.scrollStep < (4 - scope.protypesize) ? (4 - scope.protypesize) : scope.scrollStep;
-							scope.scrollStep = scope.scrollStep >= 0 ? 0 : scope.scrollStep;
-						})
-						//向左滚动
-					scope.prosL = function(pronum) {
+						scope.scrollStep = scope.scrollStep < (4 - scope.protypesize) ? (4 - scope.protypesize) : scope.scrollStep;
+						scope.scrollStep = scope.scrollStep >= 0 ? 0 : scope.scrollStep;
+					});
+					//向左滚动
+					scope.prosL = function() {
 							scope.scrollStep -= scope.minsize;
 							scope.scrollStep = scope.scrollStep < (scope.minsize - scope.protypesize) ? (scope.minsize - scope.protypesize) : scope.scrollStep
 						}
 						//向右滚动
-					scope.prosR = function(pronum) {
+					scope.prosR = function() {
 						scope.scrollStep += scope.minsize;
 						scope.scrollStep = scope.scrollStep > 0 ? 0 : scope.scrollStep
 					};
@@ -279,9 +269,8 @@ angular.module('app.service', []).run(function($rootScope) {
 
 			}
 		}
-	]).directive('prolist', ['$http', '$rootScope', 'updateCart',
-		function($http, $rootScope, updateCart) {
-			var access_token = $rootScope.access_token;
+	]).directive('prolist', ['$http', 'updateCart',
+		function($http, updateCart) {
 			//商品列表指令
 			return {
 				restrict: 'EA',
@@ -341,7 +330,7 @@ angular.module('app.service', []).run(function($rootScope) {
 			}
 		}
 	}).directive('boxouter', function() {
-		//暂时用于include静态内容，嵌入指令有问题，稍后研究
+		//models
 		//boxouter
 		return {
 			restrict: 'EA',
@@ -361,7 +350,6 @@ angular.module('app.service', []).run(function($rootScope) {
 			}
 		}
 	}).directive('boxinner', function() {
-		//暂时用于include静态内容，嵌入指令有问题，稍后研究
 		//boxouter
 		return {
 			restrict: 'EA',
@@ -380,10 +368,8 @@ angular.module('app.service', []).run(function($rootScope) {
 
 			}
 		}
-	}).directive('orderinfo', ['$http', '$filter', '$rootScope', 'orderact',
-		function($http, $filter, $rootScope, orderact) {
-			var access_token = $rootScope.access_token;
-			//暂时用于include静态内容，嵌入指令有问题，稍后研究
+	}).directive('orderinfo', ['$http', '$filter','$ionicActionSheet', '$timeout', 'orderact',
+		function($http, $filter,$ionicActionSheet,$timeout, orderact) {
 			//boxouter
 			return {
 				restrict: 'EA',
@@ -452,23 +438,39 @@ angular.module('app.service', []).run(function($rootScope) {
 						})
 					};
 					scope.delorder = function() { //取消订单
-						artDialog.confirm('您确定要取消该笔订单吗？', function() {
-							$http({
-								method: 'post',
-								url: basepath + 'order/cancel/?access_token=' + access_token,
-								data: {
-									order_serial: scope.order.order_serial
-								}
-							}).success(function(data) {
-								if (data.result_code == '0') {
-									scope.order.order_status = '23';
-								} else {
-									artDialog.tips(data.result_dec);
-								}
-							}).error(function(a, b, c, d) {
-								artDialog.tips(b);
-							});
-						});
+						var hideSheet = $ionicActionSheet.show({
+						buttons: [{
+							text: '立刻支付'
+						}, {
+							text: '再来一份'
+						}],
+						destructiveText: '删除订单',
+						titleText: '订单操作',
+						cancelText: '取消',
+						cancel: function() {
+							// add cancel code..
+						},
+						buttonClicked: function(index) {
+							return true;
+						}
+					});
+//						artDialog.confirm('您确定要取消该笔订单吗？', function() {
+//							$http({
+//								method: 'post',
+//								url: basepath + 'order/cancel/?access_token=' + access_token,
+//								data: {
+//									order_serial: scope.order.order_serial
+//								}
+//							}).success(function(data) {
+//								if (data.result_code == '0') {
+//									scope.order.order_status = '23';
+//								} else {
+//									artDialog.tips(data.result_dec);
+//								}
+//							}).error(function(a, b, c, d) {
+//								artDialog.tips(b);
+//							});
+//						});
 					};
 					scope.payinfo = function() { //支付详情
 						var payinfo = "<ul class='bdt_list payproinfo'>";

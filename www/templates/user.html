@@ -1,17 +1,17 @@
-  <ion-view view-title="用户中心">
-  <ion-content>
+<ion-view view-title="我的" hide-nav-bar="true">
+	<ion-content>
 		<div id="usercenter" ng-show="info">
-			<div id="user_info" class="txt-c c" style="background-image: {{info.bgpic}};">
+			<div id="user_info" class="txt-c c">
+				<div id="user_bg" ng-class="{loanimate:loadok}" style="background-image: {{info.bgpic}};"></div>
 				<a href="#/tab/account/userinfo" class="ui_gravter" style="background-image:url({{info.avatar}});">
 				</a>
 				<p class="ui_name"><i class="qx fs_4" ng-class="{'qx-male fc_gr':info.sex==1,'qx-female fc_r':info.sex==2}"></i> {{info.nick}}</p>
 				<p>{{info.sign}}</p>
-
 			</div>
 			<div class="icon_navlist" id="uc_nav">
 				<ul>
 					<li>
-						<a href="#/tab/account/qxcard">
+						<a ui-sref="tab.qxcard">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-star"></i></dt>
 								<dd class="nav_name">我的区享卡</dd>
@@ -20,7 +20,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#/tab/user/msg">
+						<a href="#/tab/account/msg">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-user"></i></dt>
 								<dd class="nav_name">我的消息</dd>
@@ -29,7 +29,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#/tab/user/myarea">
+						<a href="#/tab/account/myarea">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-village"></i></dt>
 								<dd class="nav_name">我的小区</dd>
@@ -38,7 +38,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#/tab/user/ss">
+						<a href="#/tab/account/ss">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-msg"></i></dt>
 								<dd class="nav_name">我的说说</dd>
@@ -47,7 +47,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#/tab/user/group">
+						<a href="#/tab/account/group">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-group"></i></dt>
 								<dd class="nav_name">发现邻里</dd>
@@ -56,7 +56,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#/tab/user/setting">
+						<a href="#/tab/account/setting">
 							<dl>
 								<dt class="nav_icon"><i class="qx qx-setting"></i></dt>
 								<dd class="nav_name">设置</dd>

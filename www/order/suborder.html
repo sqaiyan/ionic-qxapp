@@ -1,4 +1,7 @@
 <ion-view view-title="订单填写" data-ng-init="getorderlist()">
+	<ion-nav-button side="left">
+        <a href="#/tab/bag" class="ion ion-ios-arrow-left mgyx-back"><font>返回</font></a>
+    </ion-nav-button>
 	<ion-content>
 		<!--商品列表-->
 		<div class="cart havepro">
@@ -44,13 +47,12 @@
 
 					<div class="dbinner_cnt pw">
 						<ul class="bdt_list c">
-							<li class="c"><i class="qx qx-location fs_6 fc_o fl"></i><span> 提货地址：</span><span class="fc_gray" ng-bind="selfDaddr"></span>
+							<li class="c"><i class="qx qx-location fs_6 fc_o fl"></i><span> 提货地址：</span><span class="fc_gray" ng-bind="models.selfDaddr"></span>
 							</li>
-							<li class="c"><i class="qx qx-phone fs_6 fc_o fl"></i><span> 联系电话：</span><span class="fc_gray" ng-bind="selfTel"></span>
+							<li class="c"><i class="qx qx-phone fs_6 fc_o fl"></i><span> 联系电话：</span><span class="fc_gray" ng-bind="models.selfTel"></span>
 							</li>
 						</ul>
 					</div>
-
 				</div>
 			</div>
 		</div>
@@ -77,7 +79,6 @@
 							<span class="fl">现金支付</span>
 							<radio radiovalue='models.olpayType' truev="cashpay"></radio>
 						</li>
-
 					</ul>
 				</div>
 			</div>
@@ -113,7 +114,7 @@
 			</div>
 		</div>
 	</ion-content>
-</ion-view>
-<ion-footer-bar class="row-no-padding bar-subfooter">
+	<ion-footer-bar class="row-no-padding bar-subfooter">
 		<button ng-click="suborder()" ng-class="{btn_dis:!loadoff}" ng-disabled="!loadoff" class="fr btn_big btn btn_r">提交</button>
-</ion-footer-bar>
+	</ion-footer-bar>
+</ion-view>

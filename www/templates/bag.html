@@ -3,14 +3,14 @@
 		<ion-refresher pulling-text="下拉刷新" on-refresh="getbagdata()">
 		</ion-refresher>
 		<div id="bagpl_wrap">
-			<div class="pd txt-c fr_gray fz_4 hide" ng-class="{block:!commonpro.length&&!weightpro.length}">暂无数据</div>
-			<div class="drawerbox_outer openout hide" ng-class="{block:commonpro.length}">
+			<div class="pd txt-c fr_gray fz_4 hide" ng-class="{block:!models.commonpro.length&&!models.weightpro.length}">暂无数据</div>
+			<div class="drawerbox_outer openout hide" ng-class="{block:models.commonpro.length}">
 				<div class="dbout_header c">
 					<span class="fl dboh_title">普通商品</span>
 				</div>
 				<div class="dbout_cnt">
 					<ul class="bagplst">
-						<li class="c rc_list rcl_left" ng-repeat="pro in commonpro">
+						<li class="c rc_list rcl_left" ng-repeat="pro in models.commonpro">
 							<checkbox selected="pro.selected"></checkbox>
 							<div class="fr bplst_close" ng-click="del_pro(pro,'common')"><i class="qx qx-roundclose"></i>
 							</div>
@@ -48,14 +48,14 @@
 				</div>
 			</div>
 
-			<div class="drawerbox_outer openout hide" ng-class="{block:weightpro.length}" ng-if="weightpro.length">
+			<div class="drawerbox_outer openout hide" ng-class="{block:models.weightpro.length}" ng-if="models.weightpro.length">
 				<div class="dbout_header c">
 					<span class="fl dboh_title">称重商品</span>
 					<b onclick="weighinfo()" class="qx qx-warn"></b>
 				</div>
 				<div class="dbout_cnt">
 					<ul class="bagplst">
-						<li class="c rc_list rcl_left" ng-repeat="pro in weightpro">
+						<li class="c rc_list rcl_left" ng-repeat="pro in models.weightpro">
 							<!-- 选择框checkbox,needw<3时为需称重和待称重，禁用 -->
 							<checkbox selected="pro.selected" disvalue="{{pro.status!=3}}"></checkbox>
 							<div class="fr bplst_close" ng-click="del_pro(pro,'weight')"><i class="qx qx-roundclose"></i>
@@ -92,26 +92,20 @@
 					</ul>
 				</div>
 			</div>
-
 		</div>
-
-	</ion-content>
-	<ion-footer-bar class="row-no-padding bar-subfooter">
-	<div id="index_cart_wrap" class="cart c" ng-class="{havepro:cart_count}">
+		<ion-footer-bar class="row-no-padding bar-subfooter">
+		<div id="index_cart_wrap" class="cart c" ng-class="{havepro:models.cart_count}">
 			<div id="cart_act" class="c rc_list">
 				<div class="rc_wrap fl">
 					<i class="qx qx-roundcheckfill" ng-if="checkall"></i>
 					<i class="qx qx-roundcheck" ng-if="!checkall"></i>
 					<input type="button" ng-click="selectall()" />
 				</div>
-				<div class="cart_price fl pw">商品总额：<span ng-bind="price_count|currency:'￥'"></span>
+				<div class="cart_price fl pw">商品总额：<span ng-bind="models.price_count|currency:'￥'"></span>
 				</div>
-				<button class="fr cart_subgo" ng-disabled="!cart_count" ng-click="toSuborder()">结算</button>
+				<button class="fr cart_subgo" ng-disabled="!models.cart_count" ng-click="toSuborder()">结算</button>
 			</div>
 		</div>
-
 	</ion-footer-bar>
-	<div class="bar bar-subfooter row-no-padding hide">
-
-	</div>
+	</ion-content>
 </ion-view>
