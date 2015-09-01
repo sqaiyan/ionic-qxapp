@@ -158,9 +158,7 @@ angular.module('starter.controllers', ['ionic','app.service'])
 		$scope.tabclick = function(tab) {
 			$scope.tabs = tab;
 			localStorage.setItem('ordertype', tab);
-			$ionicLoading.show();
 			orderact.orderlist($scope.tabs, 100).success(function(data) {
-				$ionicLoading.hide();
 				$scope.$broadcast('scroll.refreshComplete');
 				if (data.result_code != '0') {
 					artDialog.alert(data.result_dec);
@@ -170,7 +168,6 @@ angular.module('starter.controllers', ['ionic','app.service'])
 				}
 			}).error(function() {
 				$scope.$broadcast('scroll.refreshComplete');
-				$ionicLoading.hide();
 				artDialog.alert('订单获取异常');
 			});
 		};
@@ -186,7 +183,6 @@ angular.module('starter.controllers', ['ionic','app.service'])
 		$scope.models.cart_count = $scope.models.price_count = 0; //商品数量和总价
 		$scope.checkall = false;
 		$scope.$watch('models.commonpro', function() {
-			console.log("1");
 			$scope.models.cart_count = $scope.models.price_count = 0;
 			for (i in $scope.models.commonpro) {
 				if ($scope.models.commonpro[i].selected == 'true') {
