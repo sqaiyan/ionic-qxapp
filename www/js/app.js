@@ -1,8 +1,11 @@
 var basepath = "http://115.159.93.15/scframe/";
+var postion='';	
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 	.run(function($ionicPlatform) {
 		$ionicPlatform.ready(function() {
 			if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+				localStorage.setItem('device',cordova.device());
+				console.log(localStorage.getItem('device'));
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
 			}
@@ -44,9 +47,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			.state('login', {
 				url: '/login',
 				cache: 'false',
-				params:{from:null},
+				params:{from:null,formtype:1},
 				templateUrl: 'templates/login.html',
 				controller: 'LoginCtrl'
+			})
+			.state('register', {
+				url: '/register',
+				cache: 'false',
+				templateUrl: 'templates/login.html',
+				params:{formtype:'2'},
+				controller: 'LoginCtrl'
+			})
+			.state('resetpwd', {
+				url: '/resetpwd',
+				cache: 'false',
+				templateUrl: 'templates/resetpwd.html',
+				controller: 'resetpwdCtrl'
 			})
 			.state('tab.shangmen', {
 				url: '/shangmen',
@@ -91,7 +107,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 				cache: false,
 				views: {
 					'tab-orderlist': {
-						templateUrl: 'order/orderlist.html',
+						templateUrl: 'templates/order/orderlist.html',
 						controller: 'OrderlistCtrl'
 					}
 				}
@@ -100,7 +116,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 				cache: false,
 				views: {
 					'tab-orderlist': {
-						templateUrl: 'order/suborder.html',
+						templateUrl: 'templates/order/suborder.html',
 						controller: 'SuborderCtrl'
 					}
 				}
@@ -110,7 +126,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 				cache: false,
 				views: {
 					'tab-orderlist': {
-						templateUrl: 'order/order-detail.html',
+						templateUrl: 'templates/order/order-detail.html',
 						controller: 'OdetailCtrl'
 					}
 				}

@@ -28,15 +28,12 @@
 				支付方式：<span class="fc_gray"><b ng-bind="paytype(order.pay_type_ext)"></b>
 				</span>
 			</li>
-			<li class="pw c" ng-if="order.delivery_type=='1'">
-				配送方式：<span class="fc_gray" ng-bind="order.delivery_type_dec"></span>
-			</li>
 		</ul>
 		<!-- 配送方式 -->
-		<div class="drawerbox_inner" ng-class="{openinner:!destatus}" ng-if="(order.delivery_type=='2')">
-			<div class="dbinner_title" ng-click="destatus=!destatus"><span class="bdhb_title">配送方式：<span class="fc_gray">{{order.delivery_type_dec}}</span></span><span class="box_arrow"><i class="qx qx-unfold"></i></span>
+		<div class="drawerbox_inner" ng-class="{openinner:!destatus}" >
+			<div class="dbinner_title" ng-click="destatus=!destatus"><span class="bdhb_title">配送方式：<span class="fc_gray">{{order.delivery_type_dec}}</span></span><span ng-if="(order.delivery_type=='2')" class="box_arrow"><i class="qx qx-unfold"></i></span>
 			</div>
-			<div class="dbinner_cnt pw">
+			<div class="dbinner_cnt pw" ng-if="(order.delivery_type=='2')">
 				<ul class="bdt_list c">
 					<li><i class="qx qx-location fs_6 fc_o"></i><span> 上门地址：</span><span class="fc_gray ">{{order.delivery_addr }}</span>
 					</li>

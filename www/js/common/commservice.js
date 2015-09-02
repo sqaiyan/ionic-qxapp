@@ -7,7 +7,15 @@ function GetQueryString(name) {
 	return null;
 };
 var thecard_inputpwd = '<div id="enterpaypwd" class="pt"><input type="number" maxlength=6 oninput="setoboxpwd(0)" autofocus="autofocus" autocomplete="off" autofocus="autofocus"/><ul><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li></div>';
-
+function js_check(t,text){
+	switch(t){
+		case "card":
+		return text.test('')
+		break;
+		case 'tel':
+		return /^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/.test(text)
+	}
+};
 function setoboxpwd(t) {
 	var pwd = $("#enterpaypwd input ").val();
 	pwd = pwd.substring(0, 6);
@@ -34,8 +42,8 @@ angular.module('app.service', [])
 					access_token = data.access_token;
 				},
 				logout: function() {
-					localStorage.setItem('access_token', null);
-					access_token = null;
+					localStorage.setItem('access_token', '');
+					access_token = '';
 					$location.path('/tab/main');
 				},
 				setuserinfo: function(data) {
@@ -44,6 +52,8 @@ angular.module('app.service', [])
 						url: basepath + 'user/updateInfo/?access_token=' + access_token,
 						data: data
 					})
+				},
+				getcommunity:function(){
 				}
 			}
 		}

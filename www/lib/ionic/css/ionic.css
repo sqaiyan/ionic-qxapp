@@ -2728,15 +2728,15 @@ ion-infinite-scroll {
 .has-footer {
   bottom: 44px; }
 
-.has-subfooter {
-  bottom: 88px; }
+
 
 .has-tabs, .bar-footer.has-tabs {
   bottom: 49px; }
   .has-tabs.pane, .bar-footer.has-tabs.pane {
     bottom: 49px;
     height: auto; }
-
+.has-subfooter {
+  bottom: 88px; }
 .has-footer.has-tabs {
   bottom: 93px; }
 

@@ -1,6 +1,6 @@
 <ion-view view-title="我的" hide-nav-bar="true">
 	<ion-content>
-		<div id="usercenter" ng-show="info">
+		<div id="usercenter">
 			<div id="user_info" class="txt-c c">
 				<div id="user_bg" ng-class="{loanimate:loadok}" style="background-image: {{info.bgpic}};"></div>
 				<a href="#/tab/account/userinfo" class="ui_gravter" style="background-image:url({{info.avatar}});">
@@ -66,7 +66,7 @@
 					</li>
 				</ul>
 				<div class="ph">
-					<a ng-click="logout()" class="btn btn_r block btn_big">退出</a>
+					<a ng-click="logout()" class="btn mw btn_r block btn_big">退出</a>
 				</div>
 			</div>
 		</div>

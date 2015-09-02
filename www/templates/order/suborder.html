@@ -1,0 +1,119 @@
+<ion-view view-title="订单填写" data-ng-init="getorderlist()">
+	<ion-nav-button side="left">
+        <a href="#/tab/bag" class="ion ion-ios-arrow-left mgyx-back"><font>返回</font></a>
+    </ion-nav-button>
+	<ion-content>
+		<!--商品列表-->
+		<div class="cart havepro">
+			<cartprolist plist="orderplist" pronum="{{orderplist.length}}"></cartprolist>
+			<!-- 信息 -->
+			<div id="cart_act" class="c">
+				<div class="cart_price fr pw" ng-show="oderprice">共计：<span ng-bind="oderprice|currency:'￥'"></span>
+				</div>
+			</div>
+		</div>
+		<!-- 配送方式 -->
+		<div class="drawerbox_outer openout">
+			<div class="dbout_header c">
+				<span class="fl dboh_title">配送方式</span>
+			</div>
+			<div class="dbout_cnt">
+				<div class="drawerbox_inner c" ng-class="{openinner:models.delivertype=='oldeliver'}">
+					<div class="bdh_box c rc_list rcl_right dbinner_title">
+						<span class="bdhb_title">送货上门</span>
+						<!-- 编辑地址 -->
+						<a class="fr pw" ng-click="editaddr()" ng-show="models.delivertype=='oldeliver'"><i class="qx qx-pen fs_5 fc_o fr"></i></a>
+						<radio radiovalue='models.delivertype' truev="oldeliver"></radio>
+					</div>
+					<div class="dbinner_cnt pw">
+						<ul class="bdt_list c">
+							<li class="c"><i class="qx qx-location fs_6 fc_o fl"></i><span> 上门地址：</span><span class="fc_gray">{{models.address}}</span><a ng-click="editaddr()" class="btn btn_r" ng-if="!models.address">添加上门地址</a>
+							</li>
+							<li class="c"><i class="qx qx-phone fs_6 fc_o fl"></i><span> 联系电话：</span><span class="fc_gray">{{models.phone}}</span><a ng-click="editaddr()" class="btn btn_r" ng-if="!models.phone">添加联系电话</a>
+							</li>
+							<li class="c"><i class="qx qx-time fs_6 fc_o fl"></i><span> 送货时间：</span><span class="fc_gray">{{vm.ap.timetype+vm.clock.label||'即刻起送'}}</span>
+								<input type="hidden" name="delivertime" value="{{delivertime||'即刻起送'}}" />
+							</li>
+							<li class="c"><i class="fl qx qx-recharge fs_6 fc_o"></i><span> 送货费用：</span><span class="fc_gray">0元</span>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class=" drawerbox_inner c" ng-class="{openinner:models.delivertype=='selfdeliver'}">
+					<div class="bdh_box c rc_list rcl_right dbinner_title">
+						<span class="bdhb_title">自行提货</span>
+						<radio radiovalue='models.delivertype' truev="selfdeliver"></radio>
+					</div>
+
+					<div class="dbinner_cnt pw">
+						<ul class="bdt_list c">
+							<li class="c"><i class="qx qx-location fs_6 fc_o fl"></i><span> 提货地址：</span><span class="fc_gray" ng-bind="models.selfDaddr"></span>
+							</li>
+							<li class="c"><i class="qx qx-phone fs_6 fc_o fl"></i><span> 联系电话：</span><span class="fc_gray" ng-bind="models.selfTel"></span>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 支付方式 -->
+		<div class="drawerbox_outer openout">
+			<div class="dbout_header c">
+				<span class="fl dboh_title">选择支付方式</span>
+			</div>
+			<div class="dbout_cnt">
+				<div class="bdt_list">
+					<ul>
+						<li class="c pw rc_list rcl_right" ng-show="qxabled&&hasqxcard">
+							<span class="fl">在线支付</span>
+							<radio radiovalue='models.olpayType' truev="qxcardpay"></radio>
+						</li>
+						<li class="pw rc_list hide" ng-class="{block:!models.qxabled}">您有商品不支持使用区享卡支付</li>
+						<li class="pd hide" ng-class="{block:!models.hasqxcard}">您暂无区享卡或区享卡余额不足，您可联系门店购买或先<a class="btn btn_r mw">充值</a>
+						</li>
+						<li class="c pw rc_list rcl_right">
+							<span class="fl">第三方支付(暂只支持微信支付)</span>
+							<radio radiovalue='models.olpayType' truev="olpay"></radio>
+						</li>
+						<li class="c pw rc_list rcl_right">
+							<span class="fl">现金支付</span>
+							<radio radiovalue='models.olpayType' truev="cashpay"></radio>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<!-- 修改地址弹窗模板 -->
+		<div id="modifyaddr" class="hide">
+			<div id="dform_list">
+				<form id="updateaddrinform" name="updateaddrinform">
+					<dl>
+						<dt><i class="qx qx-location fs_4 fc_o"></i> 上门地址</dt>
+						<dd>
+							<input name="addr" required type="text" id="df_addr" class="longtxt" placeholder="小区名+单元名+单元号" name="df_tel" id="df_addr" ng-model="models.address" />
+						</dd>
+					</dl>
+					<dl>
+						<dt><i class="qx qx-phone fs_4 fc_o"></i> 联系电话</dt>
+						<dd>
+							<input required="required" type="tel" maxlength="11" id="df_phone" class="longtxt" name="df_phone" id="df_phone" ng-model="models.phone" placeholder="手机号码" />
+						</dd>
+					</dl>
+					<dl>
+						<dt><i class="qx qx-time fs_4 fc_o"></i>送货时间</dt>
+						<dd>
+							<select class="shortxt" ng-model="vm.ap" id="df_timeap" ng-options="ap.timetype for ap in vm.timecontrol">
+								<option value="">-送货时段-</option>
+							</select>
+							<select class="shortxt" ng-if="vm.ap.clock" ng-model="vm.clock" id="df_timeclock " ng-options="clock.label for clock in vm.ap.clock">
+								<option value="">送货时间点</option>
+							</select>
+						</dd>
+					</dl>
+				</form>
+			</div>
+		</div>
+	</ion-content></ion-view>
+	<ion-footer-bar class="row-no-padding bar-subfooter">
+		<button ng-click="suborder()" style="height: 44px;" ng-class="{btn_dis:!loadoff}" ng-disabled="!loadoff" class="fr btn_big btn btn_r block">提交</button>
+	</ion-footer-bar>

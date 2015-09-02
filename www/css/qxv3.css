@@ -78,6 +78,7 @@ a.btn,button.btn{cursor: pointer;}
 .mh{margin-top: 10px;margin-bottom: 10px;}
 .hide{display: none;}
 .block{display: block;}
+button.block{width: 100%;}
 .disvisible{visibility: hidden;}
 .visible{visibility: visible;}
 .txt-c{text-align: center;}
@@ -114,7 +115,7 @@ table{width: 100%;border-collapse: collapse;}
 #header .fr{padding-left: 5px;}
 #header .header_title{font-size: 1rem;float: left;}
 /*底部导航*/
-.tabs{height: 51px;left: 0;z-index: 700;overflow: hidden;border: none !important;padding: 0 !important;background-color:#fff;}
+.tabs{border: none !important;padding: 0 !important;background-color:#fff;height: 50px;overflow: hidden;}
 .tabs .tab-item{padding-top: 12px;line-height: 20px;border-top: 1px solid #ddd;position: relative; overflow: visible;max-width: none;color: #666;}
 .tab-item .icon{font-size:1.8rem;height: auto;}
 ion-tabs.tabs-color-active-positive .tab-item.tab-item-active, ion-tabs.tabs-color-active-positive .tab-item.active, ion-tabs.tabs-color-active-positive .tab-item.activated{color: #f76453;}
@@ -164,12 +165,12 @@ background-size: 100% auto;position: absolute;left: 0;top: 0;z-index: -1;content
 
 /*提交框*/
 #login_form{}
-#text_form li{position: relative;padding-bottom: 10px;;}
-#text_form li .qx{position: absolute;left: 8px;top: 5px;color: #999;font-size: 1.2rem;}
-#text_form li input{width: 100%;padding: 5px; box-sizing: border-box;border: 1px solid #ddd;height: 40px;padding-left:30px;}
-#text_form .prbtn input{}
-#text_form .prbtn{padding-right:8.5rem;}
-#text_form .prbtn .btn{position: absolute;right:0;top:0;}
+.text_form li{position: relative;padding-bottom: 10px;margin-top: 10px;}
+.text_form li .qx{position: absolute;left: 8px;top: 5px;color: #999;font-size: 1.2rem;}
+.text_form li input{width: 100%;padding: 5px; box-sizing: border-box;border: 1px solid #ddd;height: 38px;padding-left:30px;line-height: 26px;}
+.text_form .prbtn input{}
+.text_form .prbtn{padding-right:8.5rem;}
+.text_form .prbtn .btn{position: absolute;right:0;top:0;}
 	/*第三方登录*/
 	#other_login_list{border: none;text-align: center;border-top: 1px solid #ddd;position: absolute;bottom: 0;width: 100%;padding-bottom:5px;}
 	#olist_title{text-align: center;display: block;position: relative;color: #999;margin-left: 40%; text-indent: -5em;padding-left:5.5em;padding-right: .5em;border-width:1px 0 0;font-size: .875rem;line-height: 1;}
@@ -195,7 +196,7 @@ background-size: 100% auto;position: absolute;left: 0;top: 0;z-index: -1;content
 	.msg_smore #msg_list .qx-unfold{ -webkit-transform: rotate(180deg);transform: rotate(180deg);}
 	.msg_smore #msg_list dd{display: block;}
 	/*产品列表*/
-	#index_prolist{padding-bottom: 44px;background-color: #fff;overflow: hidden;}
+	#index_prolist{background-color: #fff;overflow: hidden;}
 	#pl_nav{width: 90px;float: left;overflow:auto;background-color: #f0f0f0;height: 100%;position: relative;}
 	#pl_nav ul{overflow: auto;}
 	#pl_nav li{padding:10px 3px 10px 10px;display: block;line-height: 20px;font-size: 14px;font-size: .875rem;border-bottom: 1px solid #ddd;overflow: hidden; white-space: nowrap; word-break: keep-all; text-overflow: ellipsis;position: relative;}
@@ -291,7 +292,6 @@ background-size: cover; background-image: url(../images/erro.png);}
 .openout .dbout_cnt,.openinner .dbinner_cnt{display: block;}
 .openinner .dbinner_title .box_arrow .qx{ -webkit-transform: rotate(180deg);transform: rotate(180deg);display: block;}
 /*购物袋bagplst*/
-#bagpl_wrap{margin-bottom: 46px;background-color: #fff;padding-top: 1px;overflow: hidden;}
 .bagplst li{position: relative;border-bottom: 1px solid #ddd;}
 .bagplst .bplst_close{width: 40px;text-align: center;padding:5px 0;position: absolute;right: 0;top: 0;}
 .bplst_close .qx{color: #ff1e17;font-size: 1.3rem;}
@@ -530,3 +530,6 @@ background-size: cover; background-image: url(../images/erro.png);}
     color: #999;
     padding-bottom: 1em;
 }
+.has-subfooter {
+  bottom: 93px; }
+  .bar-subfooter{ overflow: visible;}

@@ -1,0 +1,59 @@
+<ion-view view-title="密码重置">
+	<ion-content>
+		<div class="tab" ng-if="models.haslogin"><a ng-class="{cur:models.cnt==1}" ng-click="models.cnt=1">原密码修改</a><a ng-class="{cur:models.cnt==2}" ng-click="models.cnt=2">手机验证码修改</a></div>
+		<!-- 原密码修改 -->
+		<div class="text_form" ng-if="models.haslogin" ng-show="models.cnt==1">
+			<form ng-submit="oldpwd()" name="oldpwd" method="post">
+				<ul class="tab_cnt ">
+					<li><i class="qx qx-password"></i>
+						<input type="password" name="oldpwd" ng-model="models.oldpwd" required="required" placeholder="请输入原密码" />
+					</li>
+					<li><i class="qx qx-password"></i>
+						<input type="password" name="onewpwd" ng-model="models.onewpwd" required="required" placeholder="请输入新密码" />
+					</li>
+					<li><i class="qx qx-password"></i>
+						<input type="password" name="orenewpwd" ng-model="models.orenewpwd" required="required" placeholder="请确认新密码" />
+					</li>
+					<li>
+						<button type="submit" class="btn btn_r btn_big block" ng-class="{btn_dis:!oldpwd.$valid}" ng-disabled="!oldpwd.$valid">提 交</button>
+					</li>
+				</ul>
+			</form>
+		</div>
+		
+		<!-- 手机验证码修改 -->
+		<div class="text_form" ng-show="models.cnt==2">
+			<div class="pd txt-c tab hide" style="margin-top: 4px;"><span class="btn_big" ng-class="{fc_r:!models.codeok}">短信验证码</span> <i class="qx qx-right mw"></i> <span class=" btn_big" ng-class="{fc_r:models.codeok}">设置新密码</span></div>
+			<form ng-submit="checkcodef()" name="checkcode" method="post" ng-class="{hide:models.codeok}">
+				<ul class="tab_cnt">
+					<li><i class="qx qx-phone"></i>
+						<input type="text" name="username" required="required" ng-model="models.username" placeholder="手机号码" />
+					</li>
+					<li class="prbtn"><i class="qx qx-password"></i>
+						<input type="text" placeholder="请输入验证码" required="required" name="code" ng-model="models.code" />
+						<a ng-click="getcode()" ng-show="models.seconds==0" ng-class="{btn_dis:!checkcode.username.$valid}" class="btn btn_o btn_big">发送验证码</a>
+						<span class="btn btn_dis btn_big" ng-show="models.seconds!=0">重新获取({{models.seconds}})s</span>
+					</li>
+					<li>
+						<button type="submit" class="btn btn_r btn_big block" ng-class="{btn_dis:!checkcode.$valid}" ng-disabled="!checkcode.$valid">验 证</button>
+					</li>
+				</ul>
+			</form>
+			<form ng-submit="subnewpwd()" name="subpwd" method="post" ng-class="{hide:!models.codeok}">
+				<ul class="tab_cnt">
+					<li><i class="qx qx-phone"></i>
+						<input type="password" name="newpwd" ng-model="models.newpwd" required="required" placeholder="新密码" />
+					</li>
+					<li><i class="qx qx-password"></i>
+						<input type="password" name="renewpwd" ng-model="models.renewpwd" required="required" placeholder="确认新密码" />
+					</li>
+					<li>
+						<button type="submit" class="btn btn_r btn_big block" ng-class="{btn_dis:!subpwd.$valid}" ng-disabled="!subpwd.$valid">验 证</button>
+					</li>
+				</ul>
+			</form>
+			<a ui-sref="login" class="btn btn_big btn_r block mw " ng-if="!models.haslogin">登录后用原密码修改</a>
+			<p class="pd"><a href="" class="fc_r">收不到短信验证码？</a></p>
+		</div>
+	</ion-content>
+</ion-view>

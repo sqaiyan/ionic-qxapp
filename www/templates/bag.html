@@ -1,6 +1,6 @@
 <ion-view view-title="购物袋">
 	<ion-content ng-controller="bagCtrl" data-ng-init="getbagdata()">
-		<ion-refresher pulling-text="下拉刷新" on-refresh="getbagdata()">
+		<ion-refresher on-refresh="getbagdata()">
 		</ion-refresher>
 		<div id="bagpl_wrap">
 			<div class="pd txt-c fr_gray fz_4 hide" ng-class="{block:!models.commonpro.length&&!models.weightpro.length}">暂无数据</div>
@@ -79,7 +79,6 @@
 								<div class="pl_proprice c">
 									<div class="fl pro_price">
 										<span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
-
 									<div class="pro_act fr" ng-if="pro.status==1">
 										<button ng-click="toWeight(pro)" class="btn btn_msg_r fr">马上订购</button>
 									</div>
@@ -93,7 +92,8 @@
 				</div>
 			</div>
 		</div>
-		<ion-footer-bar class="row-no-padding bar-subfooter">
+	
+	<ion-footer-bar class="row-no-padding bar-subfooter">
 		<div id="index_cart_wrap" class="cart c" ng-class="{havepro:models.cart_count}">
 			<div id="cart_act" class="c rc_list">
 				<div class="rc_wrap fl">

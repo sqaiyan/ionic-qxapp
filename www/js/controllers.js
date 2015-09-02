@@ -1,11 +1,11 @@
-angular.module('starter.controllers', ['ionic','app.service'])
+angular.module('starter.controllers', ['ionic', 'app.service'])
 	.controller('MainCtrl', function($scope, $http, $ionicLoading, $location, $state, updateCart) { //首页
 		if (!access_token) {
+			console.log(111);
 			$state.go("login", {
 				'from': $state.current.name
 			});
-			return;
-		}
+		};
 		$ionicLoading.show();
 		$scope.cart_propronum = 0; //默认购物车没商品
 		$scope.cart_count = 0; //默认金额0
@@ -139,7 +139,7 @@ angular.module('starter.controllers', ['ionic','app.service'])
 			$ionicLoading.hide();
 			artDialog.alert(b)
 		})
-	}).controller('OrderlistCtrl', function($scope, $http,$state,$ionicLoading, orderact) {
+	}).controller('OrderlistCtrl', function($scope, $http, $state, $ionicLoading, orderact) {
 		//订单列表
 		if (!access_token) {
 			$state.go("login", {
@@ -158,10 +158,8 @@ angular.module('starter.controllers', ['ionic','app.service'])
 		$scope.tabclick = function(tab) {
 			$scope.tabs = tab;
 			localStorage.setItem('ordertype', tab);
-			$ionicLoading.show();
 			orderact.orderlist($scope.tabs, 100).success(function(data) {
-				$ionicLoading.hide();
-				$scope.$broadcast('scroll.refreshComplete');
+					$scope.$broadcast('scroll.refreshComplete');
 				if (data.result_code != '0') {
 					artDialog.alert(data.result_dec);
 				} else {
@@ -170,11 +168,10 @@ angular.module('starter.controllers', ['ionic','app.service'])
 				}
 			}).error(function() {
 				$scope.$broadcast('scroll.refreshComplete');
-				$ionicLoading.hide();
 				artDialog.alert('订单获取异常');
 			});
 		};
-	}).controller('bagCtrl', function($scope, $http, $state,$location, updateCart) {
+	}).controller('bagCtrl', function($scope, $http, $state, $location, updateCart) {
 		//购物袋
 		if (!access_token) {
 			$state.go("login", {
@@ -186,7 +183,6 @@ angular.module('starter.controllers', ['ionic','app.service'])
 		$scope.models.cart_count = $scope.models.price_count = 0; //商品数量和总价
 		$scope.checkall = false;
 		$scope.$watch('models.commonpro', function() {
-			console.log("1");
 			$scope.models.cart_count = $scope.models.price_count = 0;
 			for (i in $scope.models.commonpro) {
 				if ($scope.models.commonpro[i].selected == 'true') {
@@ -240,8 +236,8 @@ angular.module('starter.controllers', ['ionic','app.service'])
 					}
 					$scope.models.price_count = $scope.models.price_count + procountprice;
 				} else {
-					if (($scope.models.weightpro[i].status == '3')&&($scope.models.weightpro[i].selected == 'false')) {
-							$scope.models.checkall = false;
+					if (($scope.models.weightpro[i].status == '3') && ($scope.models.weightpro[i].selected == 'false')) {
+						$scope.models.checkall = false;
 					}
 				}
 			}
@@ -268,7 +264,10 @@ angular.module('starter.controllers', ['ionic','app.service'])
 		};
 		$scope.getbagdata = function() {
 			//购物车数据
-			$http({method:'get',url:basepath+'cart/view3/?access_token='+access_token}).success(function(data) {
+			$http({
+				method: 'get',
+				url: basepath + 'cart/view3/?access_token=' + access_token
+			}).success(function(data) {
 				if (data.result_code == "0") {
 					$scope.models.commonpro = data.data.common_products;
 					$scope.models.weightpro = data.data.weight_products;
@@ -350,10 +349,15 @@ angular.module('starter.controllers', ['ionic','app.service'])
 			})
 		}
 	}).controller('LoginCtrl', function($scope, $http, $ionicLoading, $stateParams, $state, user) {
-		localStorage.setItem('access_token', null);
-		access_token = null;
+		//localStorage.setItem('access_token', null);
+		//access_token = null;
 		$ionicLoading.hide();
 		$scope.models = {};
+		$scope.models.formtype = $stateParams.formtype || 1;
+		$scope.models.formsg = $scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';;
+		$scope.$watch('models.formtype', function() {
+			$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';
+		});
 		$scope.login = function() {
 			$ionicLoading.show('登录中...');
 			$http({
@@ -368,19 +372,96 @@ angular.module('starter.controllers', ['ionic','app.service'])
 				if (data.result_code == '0') {
 					user.loginmsg(data.data);
 					var from = $stateParams.from || 'tab.main';
+					console.log(from);
 					$state.go(from);
 				} else {
 					artDialog.alert(data.result_dec + ',请重试！');
-					$scope.models = {
-						name: '',
-						pwd: ''
-					};
+					$scope.models.name='';
+					$scope.models.pwd='';
 				}
 			}).error(function(a, b, c, d) {
 				$ionicLoading.hide();
 				artDialog.alert('登录失败！');
 			});
 		}
+	})
+	.controller('resetpwdCtrl', function($scope, $http, $interval) {
+		//重置密码
+		$scope.models = {};
+		$scope.models.seconds = 0;
+		$scope.models.cnt=2;//
+		$scope.models.haslogin=false;
+		if(access_token){
+			$scope.models.haslogin=true;
+			$scope.models.cnt=1;
+		}
+		//获取验证码
+		$scope.getcode = function() {
+			$http({
+				method: 'get',
+				url: basepath + 'common/getVCode/?mobile=' + $scope.models.username
+			}).success(function(data) {
+				if (data.result_code == '0') {
+					artDialog.tips('短信发送成功');
+					$scope.models.code = data.data.validate_Code;
+					$scope.models.seconds = 60;
+					$interval(function() {
+						if ($scope.models.seconds == 0) {
+							return;
+						}
+						$scope.models.seconds--;
+					}, 1000)
+				}else{
+					artDialog.tips(data.result_dec);
+					$scope.models.seconds=0;
+				}
+			}).error(function() {
+				artDialog.alert('获取验证码异常，请稍后重试！');
+			});
+		};
+		//校验验证码
+		$scope.checkcodef=function(){
+			console.log("checkcode");
+			$http.get(basepath+'common/checkVCode/?mobile='+$scope.models.username+'&code='+$scope.models.code).success(function(data){
+				if(data.result_code=='0'){
+					$scope.models.codeok=true;
+				}else{
+					artDialog.tips(data.result_dec);
+					$scope.models.seconds=0;
+					$scope.models.code='';
+				}
+			})
+			
+		};
+		//提交密码
+		$scope.subnewpwd = function() {
+			console.log($scope.models.newpwd+'````'+$scope.models.renewpwd);
+			if($scope.models.newpwd==''||($scope.models.newpwd!=$scope.models.renewpwd)){
+				artDialog.alert('请输入新密码');return false;
+			}
+			$http({
+				method: 'post',
+				url: basepath + 'account/resetPassword/?access_token=' + access_token,
+				data: {
+					phone: $scope.models.username,
+					type: 2,
+					password:$scope.models.newpwd,
+					validateCode: $scope.models.code,
+					newPassword: $scope.models.renewpwd
+				}
+			}).success(function(data) {
+				if (data.result_code == '0') {
+					artDialog.tips('密码重置成功！');
+					$timeout(function(){
+						$stat.go('login');
+					},3000)
+				}else{
+					artDialog.alert(data.result_dec);
+				}
+			}).error(function() {
+				artDialog.alert('获取验证码异常，请稍后重试！');
+			});
+		};
 	})
 	.controller('UserCtrl', function($scope, $http, $ionicLoading, $state, user) {
 		//用户中心
@@ -401,6 +482,8 @@ angular.module('starter.controllers', ['ionic','app.service'])
 			} else {
 				artDialog.alert(data.result_dec)
 			}
+		}).error(function() {
+			$ionicLoading.hide();
 		});
 		$scope.logout = function() {
 			$ionicLoading.show('退出中...');
