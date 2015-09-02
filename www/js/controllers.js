@@ -159,7 +159,11 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 			$scope.tabs = tab;
 			localStorage.setItem('ordertype', tab);
 			orderact.orderlist($scope.tabs, 100).success(function(data) {
+<<<<<<< HEAD
 					$scope.$broadcast('scroll.refreshComplete');
+=======
+				$scope.$broadcast('scroll.refreshComplete');
+>>>>>>> 4018510a495a5453924696590a703d4c07c9d1a1
 				if (data.result_code != '0') {
 					artDialog.alert(data.result_dec);
 				} else {

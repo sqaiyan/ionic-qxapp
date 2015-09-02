@@ -76,7 +76,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			})
 			.state('tab.account', {
 				url: '/account',
-				cache:false,
+				cache:true,
 				views: {
 					'tab-account': {
 						templateUrl: 'templates/user.html',
@@ -104,7 +104,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			})
 			.state('tab.orderlist', {
 				url: '/orderlist',
-				cache: false,
+				cache: true,
 				views: {
 					'tab-orderlist': {
 						templateUrl: 'templates/order/orderlist.html',
@@ -123,7 +123,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 			}).state('tab.orderdetail', {
 				url: '/orderdetail/{orderid}',
-				cache: false,
+				cache: true,
 				views: {
 					'tab-orderlist': {
 						templateUrl: 'templates/order/order-detail.html',
