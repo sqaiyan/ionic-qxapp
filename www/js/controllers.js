@@ -1,7 +1,6 @@
 angular.module('starter.controllers', ['ionic', 'app.service'])
 	.controller('MainCtrl', function($scope, $http, $ionicLoading, $location, $state, updateCart) { //首页
 		if (!access_token) {
-			console.log(111);
 			$state.go("login", {
 				'from': $state.current.name
 			});
@@ -37,14 +36,16 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 			method: 'get',
 			url: basepath + 'community/contact/?access_token=' + access_token
 		}).success(function(data) {
-			$scope.area_name = data.data.community_nanme;
+			if (data.result_code == '0') {
+				$scope.area_name = data.data.community_nanme;
+			}
 		});
 		//广告
 		$http({
 			method: 'get',
 			url: basepath + 'service/ad3/?access_token=' + access_token + '&type=1'
 		}).success(function(data) {
-			if (data.result_dec == 'OK') {
+			if (data.result_code == '0') {
 				$scope.ad = data.data;
 			}
 		});
@@ -55,6 +56,9 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 		}).success(function(data) {
 			$ionicLoading.hide();
 			$scope.prolist = data.data;
+		}).error(function(a,b,c,d){
+			$ionicLoading.hide();
+			artDialog.tips(a)
 		});
 		//监视购物车内商品类别数量
 		$scope.$watch('prolist', function(n, o, scope) {
@@ -159,11 +163,7 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 			$scope.tabs = tab;
 			localStorage.setItem('ordertype', tab);
 			orderact.orderlist($scope.tabs, 100).success(function(data) {
-<<<<<<< HEAD
-					$scope.$broadcast('scroll.refreshComplete');
-=======
 				$scope.$broadcast('scroll.refreshComplete');
->>>>>>> 4018510a495a5453924696590a703d4c07c9d1a1
 				if (data.result_code != '0') {
 					artDialog.alert(data.result_dec);
 				} else {
@@ -380,8 +380,8 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 					$state.go(from);
 				} else {
 					artDialog.alert(data.result_dec + ',请重试！');
-					$scope.models.name='';
-					$scope.models.pwd='';
+					$scope.models.name = '';
+					$scope.models.pwd = '';
 				}
 			}).error(function(a, b, c, d) {
 				$ionicLoading.hide();
@@ -393,11 +393,11 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 		//重置密码
 		$scope.models = {};
 		$scope.models.seconds = 0;
-		$scope.models.cnt=2;//
-		$scope.models.haslogin=false;
-		if(access_token){
-			$scope.models.haslogin=true;
-			$scope.models.cnt=1;
+		$scope.models.cnt = 2; //
+		$scope.models.haslogin = false;
+		if (access_token) {
+			$scope.models.haslogin = true;
+			$scope.models.cnt = 1;
 		}
 		//获取验证码
 		$scope.getcode = function() {
@@ -415,33 +415,34 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 						}
 						$scope.models.seconds--;
 					}, 1000)
-				}else{
+				} else {
 					artDialog.tips(data.result_dec);
-					$scope.models.seconds=0;
+					$scope.models.seconds = 0;
 				}
 			}).error(function() {
 				artDialog.alert('获取验证码异常，请稍后重试！');
 			});
 		};
 		//校验验证码
-		$scope.checkcodef=function(){
+		$scope.checkcodef = function() {
 			console.log("checkcode");
-			$http.get(basepath+'common/checkVCode/?mobile='+$scope.models.username+'&code='+$scope.models.code).success(function(data){
-				if(data.result_code=='0'){
-					$scope.models.codeok=true;
-				}else{
+			$http.get(basepath + 'common/checkVCode/?mobile=' + $scope.models.username + '&code=' + $scope.models.code).success(function(data) {
+				if (data.result_code == '0') {
+					$scope.models.codeok = true;
+				} else {
 					artDialog.tips(data.result_dec);
-					$scope.models.seconds=0;
-					$scope.models.code='';
+					$scope.models.seconds = 0;
+					$scope.models.code = '';
 				}
 			})
-			
+
 		};
 		//提交密码
 		$scope.subnewpwd = function() {
-			console.log($scope.models.newpwd+'````'+$scope.models.renewpwd);
-			if($scope.models.newpwd==''||($scope.models.newpwd!=$scope.models.renewpwd)){
-				artDialog.alert('请输入新密码');return false;
+			console.log($scope.models.newpwd + '````' + $scope.models.renewpwd);
+			if ($scope.models.newpwd == '' || ($scope.models.newpwd != $scope.models.renewpwd)) {
+				artDialog.alert('请输入新密码');
+				return false;
 			}
 			$http({
 				method: 'post',
@@ -449,17 +450,17 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 				data: {
 					phone: $scope.models.username,
 					type: 2,
-					password:$scope.models.newpwd,
+					password: $scope.models.newpwd,
 					validateCode: $scope.models.code,
 					newPassword: $scope.models.renewpwd
 				}
 			}).success(function(data) {
 				if (data.result_code == '0') {
 					artDialog.tips('密码重置成功！');
-					$timeout(function(){
+					$timeout(function() {
 						$stat.go('login');
-					},3000)
-				}else{
+					}, 3000)
+				} else {
 					artDialog.alert(data.result_dec);
 				}
 			}).error(function() {
@@ -475,20 +476,16 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 			});
 			return;
 		}
-		$ionicLoading.show();
 		$http({
 			method: 'get',
 			url: basepath + 'user/info/?access_token=' + access_token
 		}).success(function(data) {
-			$ionicLoading.hide();
 			if (data.result_code == '0') {
 				$scope.info = data.data;
 			} else {
 				artDialog.alert(data.result_dec)
 			}
-		}).error(function() {
-			$ionicLoading.hide();
-		});
+		}).error(function() {});
 		$scope.logout = function() {
 			$ionicLoading.show('退出中...');
 			$http({
@@ -502,6 +499,9 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 				} else {
 					artDialog.alert(data.result_dec)
 				}
+			}).error(function(){
+				$ionicLoading.hide();
+				user.logout();
 			});
 		};
 		$scope.update_user_info = function() {

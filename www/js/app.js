@@ -1,5 +1,5 @@
 var basepath = "http://115.159.93.15/scframe/";
-var postion='';	
+var postion='';
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 	.run(function($ionicPlatform) {
 		$ionicPlatform.ready(function() {
@@ -27,7 +27,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			})
 			.state('tab.main', {
 				url: '/main',
-				cache: false,
+				cache:false,
 				views: {
 					'tab-main': {
 						templateUrl: 'templates/main.html',
@@ -76,7 +76,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			})
 			.state('tab.account', {
 				url: '/account',
-				cache:true,
 				views: {
 					'tab-account': {
 						templateUrl: 'templates/user.html',

@@ -28,7 +28,7 @@
 							<input type="tel" ng-model="models.regtel" name="regtel" required="required" placeholder="用户名/手机号/邮箱" />
 						</li>
 						<li class="prbtn"><i class="qx qx-password"></i>
-							<input type="text" ng-model='models.regcode' required placeholder="请输入短信的验证码" />
+							<input type="text" ng-model='models.regcode' required placeholder="请输入短信验证码" />
 							<a ng-click="getcode()" ng-class="{btn_dis:!regform.regtel.$valid}" class="btn btn_o btn_big">发送验证码</a>
 						</li>
 						<li><button type="submit" style="width: 100%;" ng-class="{btn_dis:!regform.$valid}" class="btn btn_r block  btn_big">注册</button>
