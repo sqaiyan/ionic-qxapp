@@ -1,11 +1,18 @@
 var basepath = "http://115.159.93.15/scframe/";
-var postion='';
+var postion = '';
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
-	.run(function($ionicPlatform) {
+	.run(function($rootScope, $state, $ionicPlatform) {
+		$rootScope.$on('$stateChangeStart', function(event, toState, toStateParams, fromState, fromStateParams) {
+			//console.log('tostate：' + toState.name);
+			//console.log('fromstate：' + fromState.name);
+			var list = art.dialog.list;
+			for (var i in list) {
+				list[i].close();
+			};
+		});
 		$ionicPlatform.ready(function() {
 			if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-				localStorage.setItem('device',cordova.device());
-				console.log(localStorage.getItem('device'));
+				localStorage.setItem('device', cordova.device());
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
 			}
@@ -27,7 +34,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			})
 			.state('tab.main', {
 				url: '/main',
-				cache:false,
+				cache: false,
 				views: {
 					'tab-main': {
 						templateUrl: 'templates/main.html',
@@ -47,7 +54,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			.state('login', {
 				url: '/login',
 				cache: 'false',
-				params:{from:null,formtype:1},
+				params: {
+					from: null,
+					formtype: 1
+				},
 				templateUrl: 'templates/login.html',
 				controller: 'LoginCtrl'
 			})
@@ -55,7 +65,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 				url: '/register',
 				cache: 'false',
 				templateUrl: 'templates/login.html',
-				params:{formtype:'2'},
+				params: {
+					formtype: '2'
+				},
 				controller: 'LoginCtrl'
 			})
 			.state('resetpwd', {
