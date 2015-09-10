@@ -1,5 +1,4 @@
 <ion-view view-title="{{models.formsg}}">
-		<ion-content>
 		<div class="tab">
 			<a ng-click="models.formtype='1'" ng-class="{cur:models.formtype==1}">登录</a><a ng-click="models.formtype='2'" ng-class="{cur:models.formtype==2}">注册</a>
 		</div>
@@ -39,7 +38,7 @@
 		</div>
 		<div class="fc_gray pw">温馨提示：如果您使用未注册的手机号登录将代表您已经同意了 <a ng-class="xydetail()" style="text-decoration: underline;" class="fc_r">《区享用户协议》</a>
 		</div>
-		<fieldset id="other_login_list" class="hide">
+		<fieldset id="other_login_list" class="">
 			<div id="olist_title">使用第三方账号登录</div>
 			<div id="olist_cnt">
 				<ul>
@@ -54,5 +53,4 @@
 				</ul>
 			</div>
 		</fieldset>
-		</ion-content>
 </ion-view>

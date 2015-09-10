@@ -172,8 +172,8 @@ background-size: 100% auto;}
 .text_form .prbtn{padding-right:8.5rem;}
 .text_form .prbtn .btn{position: absolute;right:0;top:0;}
 	/*第三方登录*/
-	#other_login_list{border: none;text-align: center;border-top: 1px solid #ddd;position: absolute;bottom: 0;width: 100%;padding-bottom:5px;}
-	#olist_title{text-align: center;display: block;position: relative;color: #999;margin-left: 40%; text-indent: -5em;padding-left:5.5em;padding-right: .5em;border-width:1px 0 0;font-size: .875rem;line-height: 1;}
+	#other_login_list{border: none;text-align: center;border-top: 1px solid #ddd;position: absolute;bottom: 0;width: 100%;padding:5px;}
+	#olist_title{text-align: center;display: block;position: absolute;color: #999;font-size: .875rem;line-height: 1;width: 10em;background-color: #fff;left: 50%;top: 0;margin-left: -5em;margin-top: -15px;line-height: 30px;border: 1px solid #ddd;border-radius: 15px;}
 	#olist_cnt{text-align: center;}
 	#olist_cnt li{display: inline-block;width: 46%;text-align: center;}
 	#olist_cnt li a{display:block;}
