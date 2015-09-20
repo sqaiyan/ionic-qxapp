@@ -131,7 +131,7 @@ angular.module('starter.controllers', ['ionic', 'app.service'])
 		$ionicLoading.show();
 		$http({
 			method: 'get',
-			url: basepath + 'order/getDeliveryList/?accsess_token=' + access_token
+			url: basepath + 'order/getDeliveryList/?access_token=' + access_token
 		}).success(function(data) {
 			$ionicLoading.hide();
 			if (data.result_code == '0') {

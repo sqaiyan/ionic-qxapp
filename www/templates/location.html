@@ -7,10 +7,10 @@
 		<meta name="apple-mobile-web-app-capable" content="yes">
 		<meta name="format-detection" content="telephone=no, email=no">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-		<link rel="stylesheet" type="text/css" href="css/qxv3.css" />
-		<link rel="stylesheet" type="text/css" href="css/dialog.css" />
-		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
+		<link rel="stylesheet" type="text/css" href="../css/qxv3.css" />
+		<link rel="stylesheet" type="text/css" href="../css/dialog.css" />
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/ionic/js/angular/angular.js" type="text/javascript" charset="utf-8"></script>
 		<style>
 		body{overflow: hidden;height: 100%;}
 			#index_prolist{position: absolute;height: 100%;left: 0;padding-top: 44px;width:100%;padding: 0;overflow: auto;}
@@ -41,9 +41,9 @@
 				</div>
 			</div>
 		</div>
-		<script src="js/artDialog.source.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/iframeTools.source.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/common/commservice.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/artDialog.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/iframeTools.source.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../js/common/commservice.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			var indexApp = angular.module('indexApp', []);
 			indexApp.run(function($rootScope) {})
@@ -78,6 +78,7 @@
 						navigator.geolocation.getCurrentPosition(function(p) {
 								//var loc = "118.786502,31.93437"; //
 								var loc=p.coords.latitude + ',' + p.coords.longitude;//当前位置
+								alert(loc)
 								$http({
 									method: 'get',
 									url: basepath + 'lbs/Service/getNearShop/?location=' + loc
@@ -93,11 +94,11 @@
 										artDialog.tips('您所在的位置暂无区享门店');
 									}
 								}).error(function(a, b, c, d) {
-									artDialog.tips('定位失败');
 									$scope.locationload = false;
 								});
 							},
 							function(error) {
+								console.log(error)
 								$scope.locationload = false;
 								var msg = '';
 								switch (error.code) {
@@ -115,6 +116,8 @@
 										break;
 								};
 								artDialog.tips(msg);
+							},{
+								enableHighAcuracy:true
 							});
 					};
 				}

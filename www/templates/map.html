@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>配送点管理</title>
+		<link rel="stylesheet" type="text/css" href="css/map.css"/>
+	</head>
+	<body ng-app="mapApp" ng-controller="mapCtrl">
+		<div id="map"></div>
+		<div id="action">
+			<dl>
+				<dt>城市：</dt>
+				<dd><select name="citylist" ng-model="city">
+					<option value="{{$index}}" ng-selected="city==$index" ng-repeat="c in citylist">{{c.name}}</option>
+				</select></dd>
+			</dl>
+			<dl>
+				<dt>配送点：</dt>
+				<dd><select name="citypoints" ng-model="cp" ng-change="changecp()">
+					<option value="{{$index}}" ng-repeat="cpi in citypoints">{{cpi.name}}</option>
+				</select></dd>
+			</dl>
+			<dl>
+				<dt>配送点信息：{{areaCst.id}}</dt>
+				<dd ng-if="areaCst.id"><label for="">配送点id：{{areaCst.id}}</label></dd>
+				<dd><label for="">配送点名称：<input type="text" ng-model="areaCst.name" /></label></dd>
+				<dd><label for="">配送点坐标：{{areaCst.poi.lng}}{{areaCst.poi.lat}}</label></dd>
+				<dd><label for="">配送区域多边形点数：{{areaCst.pollatgon.length}}</label></dd>
+				<dd ng-if="areaCst.id"><button ng-click="updatefj()">更新</button></dd>
+				<dd ng-if="!areaCst.id"><button ng-click="addfj()">添加</button></dd>
+			</dl>
+		</div>
+		<script src="js/points.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5E5EE28a7615536d1ffe2ce2a3667859"></script>
+<!--加载鼠标绘制工具-->
+<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="js/fj.js"></script>
+	</body>
+</html>

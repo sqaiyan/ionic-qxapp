@@ -2,17 +2,15 @@
 	<ion-content>
 		<div class="icon_navlist" id="service_nav">
 			<ul>
-				<li>
-					<a href="#/tab/shangmen">
+				<li ng-repeat="s in service">
+					<a ng-href="#/tab/shangmen" ng-if="$index==0">
 						<dl>
-							<dt class="nav_icon mr"><img src="img/service_sm.jpg" alt="区享上门" /></dt>
-							<dd class="nav_name">区享上门</dd>
-							<dd class="nav_des">区享上门</dd>
+							<dt class="nav_icon mr"><img ng-src="{{s.service_img}}" /></dt>
+							<dd class="nav_name" ng-bind="s.service_name"></dd>
+							<dd class="nav_des" ng-bind="s.service_dec"></dd>
 						</dl>
 					</a>
-				</li>
-				<li ng-repeat="s in service">
-					<a ng-href="{{s.service_url}}">
+					<a  ng-if="$index!=0" ng-href="{{s.service_url}}">
 						<dl>
 							<dt class="nav_icon mr"><img ng-src="{{s.service_img}}" /></dt>
 							<dd class="nav_name" ng-bind="s.service_name"></dd>
