@@ -1,5 +1,5 @@
 <div class="orderlist">
-	<div class="order_title"><a ng-href="#tab/orderdetail/{{order.order_serial}}" class="odt_name"><i class="qx qx-time"></i>{{order.order_time}}</a>
+	<div class="order_title"><a ng-href="#tab/orderdetail/{{order.order_serial}}" class="odt_name"><i class="qx qx-time fc_o"></i> {{order.order_time}}</a>
 		<span class="fr">
 		<span class="btn btn_msg_o" ng-if="orderstatus(order.order_status,1)">待发货</span>
 		<span class="btn btn_msg_o hide" ng-if="orderstatus(order.order_status,0)">待支付</span>
@@ -30,7 +30,7 @@
 			</li>
 		</ul>
 		<!-- 配送方式 -->
-		<div class="drawerbox_inner" ng-class="{openinner:!destatus}" >
+		<div class="drawerbox_inner" ng-class="{openinner:destatus}" >
 			<div class="dbinner_title" ng-click="destatus=!destatus"><span class="bdhb_title">配送方式：<span class="fc_gray">{{order.delivery_type_dec}}</span></span><span ng-if="(order.delivery_type=='2')" class="box_arrow"><i class="qx qx-unfold"></i></span>
 			</div>
 			<div class="dbinner_cnt pw" ng-if="(order.delivery_type=='2')">
@@ -47,7 +47,7 @@
 			</div>
 		</div>
 		<!-- 配送信息 -->
-		<div class="drawerbox_inner " ng-if="(order.delivery_type=='2')&&(orderstatus(order.order_status,1)||orderstatus(order.order_status,2))" ng-class="{'openinner':(order.distri_staus!='-1')&&(!order.dinfo)}">
+		<div class="drawerbox_inner " ng-if="(order.delivery_type=='2')&&(orderstatus(order.order_status,1)||orderstatus(order.order_status,2))" ng-class="{'openinner':(order.distri_staus=='-1')||(order.dinfo)}">
 			<!-- 配送已经接单和订单待收货状态显示配送信息 -->
 			<div class="dbinner_title">
 				<span class="bdhb_title">配送信息：</span>
@@ -62,8 +62,8 @@
 				<ul class="bdt_list c">
 					<li><span class="pt"><i class="qx qx-my fs_6 fc_o"></i> 配送人员：</span>
 						<span class="usericon"><span><img ng-src="{{order.distri_worker_img}}"></span></span>
-						<a class="ph fs_3" ng-if="order.distri_worker_phone" ng-href="tel:{{order.distri_worker_phone}}"><i class="qx qx-telephone fs_7 fc_gr"></i>呼叫</a>
-						<a class="pd fs_3" ng-click="stardworker()"><i class="qx qx-survice fc_o fs_7" ng-class="{fc_gray:order.distri_worker_isPraised=='1'}"></i>{{order.distri_worker_praise}}</a>
+						<a class="ph fs_2" ng-if="order.distri_worker_phone" ng-href="tel:{{order.distri_worker_phone}}"><i class="qx qx-telephone fs_6 fc_gr"></i>呼叫</a>
+						<a class="pd fs_2" ng-click="stardworker()"><i class="qx qx-survice fc_o fs_6" ng-class="{fc_gray:order.distri_worker_isPraised=='1'}"></i>{{order.distri_worker_praise}}</a>
 					</li>
 					<li ng-if="order.distri_start_time"><i class="qx qx-time fs_6 fc_o"></i><span> 开始配送时间：</span><span class="fc_gray" ng-bind="order.distri_start_time"></span>
 					</li>

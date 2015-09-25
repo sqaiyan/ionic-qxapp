@@ -1,4 +1,7 @@
 <ion-view view-title="区享上门">
+	<style type="text/css">
+		.bdhb_title:before{content: "\e60b";color: orange;font-size:1.2rem;margin-right: 3px;font-family: "qx";}
+	</style>
 	<ion-content>
 		<div class="pd mh txt-c fc_gray hide" ng-class="{block:!dlist.length}"><i class="qx qx-roundclose fs_6"></i>
 			<br/>暂无订单</div>
@@ -6,14 +9,14 @@
 			<li ng-repeat="d in dlist" class="mb bg_f">
 				<div class="bg_f ph">
 					<div class="txt-c">
-						<span class="ph fs_2"><i class="qx qx-my fc_o fs_6"></i>配送人</span>
+						<span class="ph fs_2"><i class="qx qx-my fc_o fs_5"></i>配送人</span>
 						<span class="usericon"><span><img alt="{{d.distri_worker_name}}" ng-src="{{d.distri_worker_img}}"></span></span>
-						<a class="ph fs_3" ng-if="d.distri_worker_phone" href="tel:{{d.distri_worker_phone}}"><i class="qx qx-telephone fs_7 fc_gr"></i>呼叫</a>
-						<a class="pw fs_3"><i class="qx qx-survice fc_o fs_7"></i>{{d.distri_worker_praise}}</a>
+						<a class="ph fs_2" ng-if="d.distri_worker_phone" href="tel:{{d.distri_worker_phone}}"><i class="qx qx-telephone fs_6 fc_gr"></i>呼叫</a>
+						<a class="pw fs_2"><i class="qx qx-survice fc_o fs_6"></i>{{d.distri_worker_praise}}</a>
 					</div>
 				</div>
 
-				<boxinner needtoggle='1' boxtitle="{{sub.create_time}}" class="bg_f" ng-repeat="sub in d.subList">
+				<boxinner needtoggle='1' boxtitle="{{d.distri_worker_name}}" class="bg_f" ng-repeat="sub in d.subList">
 					<ul class="bdt_list">
 						<li class="c fs_2" ng-repeat="p in sub.subList"><span class="fl">{{p.product_name}}</span><span class="fr fc_gray fs_1 ml">{{p.product_price|currency:'￥'}}*{{p.product_amount}}</span>
 						</li>

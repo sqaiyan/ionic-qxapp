@@ -1,8 +1,8 @@
 var basepath = "http://115.159.93.15/scframe/";
 var postion = '';
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'qx.controllers'])
 	.run(function($rootScope, $state, $ionicPlatform) {
-		$rootScope.$on('$stateChangeStart', function(event, toState, toStateParams, fromState, fromStateParams) {
+		$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
 			//console.log('tostate：' + toState.name);
 			//console.log('fromstate：' + fromState.name);
 			var list = art.dialog.list;
@@ -39,6 +39,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 					'tab-main': {
 						templateUrl: 'templates/main.html',
 						controller: 'MainCtrl'
+					}
+				}
+			}).state('tab.search', {
+				url: '/search',
+				cache: false,
+				views: {
+					'tab-main': {
+						templateUrl: 'templates/search.html',
+						controller: 'searchController'
 					}
 				}
 			})
@@ -145,3 +154,4 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 			});
 		$urlRouterProvider.otherwise('/tab/main');
 	});
+	angular.module('qx.controllers', ['ionic', 'app.service']);

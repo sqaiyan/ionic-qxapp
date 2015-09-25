@@ -30,7 +30,6 @@ function setoboxpwd(t) {
 		}
 	});
 }
-var basepath = "http://115.159.93.15/scframe/";
 var access_token = localStorage.getItem('access_token');
 var winw = window.screen.width;
 angular.module('app.service', [])
@@ -190,17 +189,41 @@ angular.module('app.service', [])
 					});
 				},
 				//添加到购物车
-				addTcart: function(pro) {
+				addTcart: function(pro,t) {
 					//可选值大于剩余量时返回
 					if (pro.loading) return;
 					pro.loading = true;
-					if (pro.product_amount >= pro.amount) return;
+					if (pro.product_amount*1 >= pro.amount*1) return;
 					//product_amount>0为修改，否则为添加
-					var up = updateCart(pro.product_id, (1 + Number(pro.product_amount)), (Number(pro.product_amount) > 0 ? 2 : 1));
+					if (t) {
+						$('#indexcart').removeClass('shopCartAnimate');
+						$('<span class="cart-fly"/>').appendTo('body').fly({
+							start: {
+								left: t.pageX - 20,
+								top: t.clientY - 30
+							},
+							end: {
+								left: 15,
+								top: window.innerHeight - 95
+							},
+							speed: 1.8,
+							onEnd: function() {
+								this.destroy();
+								var cart = $('#indexcart')
+								cart.addClass('shopCartAnimate');
+								cart.on("webkitAnimationEnd",
+										function() {
+											cart.removeClass("shopCartAnimate")
+										})
+									//e.addCartAnimate()
+							}
+						})
+					}
+					var up = updateCart(pro.product_id, (1 + pro.product_amount*1), (pro.product_amount*1 > 0 ? 2 : 1));
 					up.success(function(data) {
 						pro.loading = false;
 						if (data.result_dec == 'OK') {
-							pro.product_amount = Number(pro.product_amount) + 1;
+							pro.product_amount =pro.product_amount*1 + 1;
 						} else {
 							artDialog.tips(data.result_dec);
 						}
@@ -216,13 +239,13 @@ angular.module('app.service', [])
 					if (pro.loading) return;
 					pro.loading = true;
 					if (pro.product_amount == 0) return;
-					var up = updateCart(pro.product_id, (pro.product_amount - 1), 2);
+					var up = updateCart(pro.product_id, (pro.product_amount*1 - 1), 2);
 					up.success(function(data) {
 						pro.loading = false;
 						if (data.result_dec == 'OK') {
-							pro.product_amount = del ? 0 : (pro.product_amount - 1);
+							pro.product_amount = del ? 0 : (pro.product_amount*1 - 1);
 						} else {
-							artDialog.alert(data.result_dec);
+							artDialog.tips(data.result_dec);
 						}
 					}).error(function(a, b, c, d) {
 						pro.loading = false;
@@ -298,12 +321,20 @@ angular.module('app.service', [])
 							return o & (1 << i);
 						}
 						//添加到购物车
-					scope.addTocart = function(pro) {
-						updateCart.addTcart(pro)
+					scope.addTocart = function(pro,e) {
+						updateCart.addTcart(pro,e)
 					};
 					//删减选中的商品
 					scope.removeFcart = function(pro) {
 						updateCart.removeFcart(pro)
+					};
+					scope.mjinfo = function(pro) {
+						console.log(pro);
+						art.dialog({
+							title: "满减说明",
+							width: '92%',
+							content: "<p class='fs_2 mb'>" + pro.product_name + "</p><span class='fc_r fs_2'>满 " + pro.wholesale_price.split('|')[0] + " 减 " + pro.wholesale_price.split('|')[1] + " 元"
+						})
 					}
 				}
 			}
@@ -455,7 +486,6 @@ angular.module('app.service', [])
 							text: '再来一份'
 						}],
 						destructiveText: '删除订单',
-						titleText: '订单操作',
 						cancelText: '取消',
 						cancel: function() {
 							// add cancel code..
@@ -484,14 +514,18 @@ angular.module('app.service', [])
 					};
 					scope.payinfo = function() { //支付详情
 						var payinfo = "<ul class='bdt_list payproinfo'>";
+						var mj = 0;
 						angular.forEach(scope.order.products, function(v) {
 							payinfo += "<li class='c pw'><span class='fl'>" + (v.product_name) + "</span><span class='fr fc_gray fs_1'>" + '￥' + $filter('number')(v.product_price) + '<b>*' + $filter('number')(v.product_amount) + "</b></span></li>";
+							if (v.payoff_price != '') {
+								mj += Math.floor(v.payoff_price);
+							}
 						});
-						payinfo += "</ul><ul class='bdt_list'>";
-						if (scope.order.payoff_price) {
-							payinfo += "<li class='c fc_r pw'><span class='fl'>优惠总额</span><span class='fr fc_r'>-￥" + scope.order.payoff_price + "</span></li>";
+						//payinfo += "</ul><ul class='bdt_list payproinfo'>";
+						if (mj) {
+							payinfo += "<li class='c pw'><span class='fl fc_r'>满减优惠</span><span class='fr fc_r'>-￥" + mj + "</span></li>";
 						}
-						payinfo += "<li class='c bold pw' style='border-top:1px solid #ddd'><span class='fl'>合计</span><span class='fr fc_r'>￥" + $filter('number')(scope.order.order_price) + "</span></li>";
+						payinfo += "<li class='c bold pw'><span class='fl'>合计</span><span class='fr fc_r'>￥" + $filter('number')(scope.order.order_price) + "</span></li></ul>";
 						artDialog({
 							title: '支付详情',
 							width: '92%',

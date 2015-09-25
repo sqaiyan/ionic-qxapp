@@ -1,42 +1,86 @@
 <!DOCTYPE html>
 <html>
+
 	<head>
 		<meta charset="utf-8">
 		<title>配送点管理</title>
-		<link rel="stylesheet" type="text/css" href="css/map.css"/>
+		<style type="text/css">
+			*{padding: 0;margin: 0;}
+			#map{position: absolute;left: 0;top: 0;width: 70%;height: 100%;}
+			#action select,#action input,#action button{border: 1px solid #ddd;padding: 5px 1em; box-sizing: content-box; background: #fff;border-radius: 2px;margin: 3px 5px;}
+			#action{position: absolute;right: 0;top: 0;width:30%;height: 100%;padding-left: 1em;line-height: 1.8; box-sizing: border-box;padding: 1em;}
+			#action dd{padding-bottom: 5px;font-size: 12px;}
+			#action button{background-color:#f60;border-color: #f60;color: #fff;border-radius: 3px;font-size: 16px;}
+			#joverlay{position: fixed;left: 0;top: 0;height: 100%;width: 100%;z-index: 777;background-color: rgba(0,0,0,.5);}
+			#jingtai{position: absolute;left:50%;top: 20px;z-index: 100;width: 400px;height: 400px;border: 2px solid #eee;padding: 5px;background-color: #fff; box-shadow: 0 0 10px rgba(255,255,100,.5);margin-left: -210px;z-index: 1000;border-radius: 5px;}
+			#close{color: #fff;background-color: #fa0;padding: 5px;position: absolute;left: 50%;margin-left: 202px;top: 23px;width: 30px;height: 30px;text-align: center;line-height: 30px;border-radius: 0 5px 5px 0;z-index:888;}
+		</style>
 	</head>
+
 	<body ng-app="mapApp" ng-controller="mapCtrl">
 		<div id="map"></div>
 		<div id="action">
 			<dl>
 				<dt>城市：</dt>
-				<dd><select name="citylist" ng-model="city">
-					<option value="{{$index}}" ng-selected="city==$index" ng-repeat="c in citylist">{{c.name}}</option>
-				</select></dd>
+				<dd>
+					<select name="citylist" ng-model="city" ng-change="changecity()">
+						<option value="{{$index}}" ng-selected="city==$index" ng-repeat="c in citylist">{{c.city_name}}</option>
+					</select>
+				</dd>
 			</dl>
 			<dl>
 				<dt>配送点：</dt>
-				<dd><select name="citypoints" ng-model="cp" ng-change="changecp()">
-					<option value="{{$index}}" ng-repeat="cpi in citypoints">{{cpi.name}}</option>
-				</select></dd>
+				<dd>
+					<select name="citypoints" ng-model="cp" ng-init="cp=-1" ng-change="changeopts()">
+						<option value="-1" ng-selected="cp==-1">全部</option>
+						<option value="{{$index}}" ng-selected="cp==$index" ng-repeat="cpi in citypoints">{{cpi.sorting_name}}</option>
+					</select>
+				</dd>
 			</dl>
 			<dl>
-				<dt>配送点信息：{{areaCst.id}}</dt>
-				<dd ng-if="areaCst.id"><label for="">配送点id：{{areaCst.id}}</label></dd>
-				<dd><label for="">配送点名称：<input type="text" ng-model="areaCst.name" /></label></dd>
-				<dd><label for="">配送点坐标：{{areaCst.poi.lng}}{{areaCst.poi.lat}}</label></dd>
-				<dd><label for="">配送区域多边形点数：{{areaCst.pollatgon.length}}</label></dd>
-				<dd ng-if="areaCst.id"><button ng-click="updatefj()">更新</button></dd>
-				<dd ng-if="!areaCst.id"><button ng-click="addfj()">添加</button></dd>
+				<dt>配送点信息</dt>
+				<dd ng-if="areaCst.id">
+					<label for="">配送点id：{{areaCst.id}}</label>
+				</dd>
+				<dd>
+					<label for="">配送点编号：
+						<input type="text" ng-model="areaCst.sorting_sn" />请勿随便改是吧</label>
+				</dd>
+				<dd>
+					<label for="">配送点名称：
+						<input type="text" ng-model="areaCst.sorting_name" />
+					</label>
+				</dd>
+				<dd>
+					<label for="">　团队名称：
+						<input type="text" ng-model="areaCst.team_name" />
+					</label>
+				</dd>
+				<dd>
+					<label for="">推广点个数：
+						<input type="text" ng-model="areaCst.spread_num" />
+					</label>
+				</dd>
+				<dd>
+					<button ng-if="areaCst.sorting_id" ng-click="getjingt()">预览当前配送点静态地图</button>
+					<button ng-if="areaCst.sorting_id" ng-click="updatefj()">更新</button>
+					<button ng-if="!areaCst.sorting_id" onclick="alert('暂时就选择个配送点修改吧，后期放开新增')">添加</button>
+					<button ng-click="actinfo()">操作说明</button>
+				</dd>
 			</dl>
+
 		</div>
-		<script src="js/points.js" type="text/javascript" charset="utf-8"></script>
+		<div id="joverlay" ng-show="jingt"  ng-click="jingt=false"></div>
+		<div id="close"  ng-show="jingt"  ng-click="jingt=false">X</div>
+		<img src="" id="jingtai" alt="areaCst.sorting_name" ng-click="jingt=false"  ng-show="jingt"/>
+		<script src="../js/points.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=5E5EE28a7615536d1ffe2ce2a3667859"></script>
-<!--加载鼠标绘制工具-->
-<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
-<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
-		<script src="js/jquery.js" type="text/javascript" charset="utf-8"></script>
-		<script src="js/angular.js" type="text/javascript" charset="utf-8"></script>
-		<script type="text/javascript" src="js/fj.js"></script>
+		<!--加载鼠标绘制工具-->
+		<script type="text/javascript" src="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.js"></script>
+		<link rel="stylesheet" href="http://api.map.baidu.com/library/DrawingManager/1.4/src/DrawingManager_min.css" />
+		<script src="../js/jquery.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../lib/ionic/js/angular/angular.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" src="../js/fj.js"></script>
 	</body>
+
 </html>

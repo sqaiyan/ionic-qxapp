@@ -1,70 +1,67 @@
 <ion-view view-title="区享">
-<ion-nav-buttons class='c'>
-      <span class="fl" ng-click="doSomething()">
-aaaaa
-      </span>
-      <a href="tab/search" class="fr icon qx-search" ng-click="doSomething()">
-      </a>
-    </ion-nav-buttons>
-  <ion-content>
-<div id="header" class="hide">
-			<a class="header_title hide" ng-class="{block:area_name}"><i class="qx qx-location fs_4"></i>{{area_name}}</a>
-			<a href="search.html" class="fr"><i class="qx qx-search"></i></a>
-		</div>
-		<div id="top_msglist" ng-class="{msg_smore:openmsg}" ng-if="ad.length">
-			<div id="msg_overlay" ng-click="tad()"></div>
-			<div id="msg_list">
-				<dl>
-					<dt ng-repeat="ad in ad" ng-if="$index==0" data-index="$index">
+	<ion-nav-buttons side="left">
+		<b class="btn no-padding-w"><i class="qx qx-location fs_4"></i>{{area_name}}</b>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<a href="#/tab/search" class="btn pw btn_r">
+			<i class="icon qx-search"></i></a>
+	</ion-nav-buttons>
+	<div id="top_msglist" class="has-header" ng-class="{msg_smore:openmsg}" ng-if="ad.length">
+		<div id="msg_overlay" ng-click="tad()"></div>
+		<div id="msg_list">
+			<dl>
+				<dt ng-repeat="ad in ad" ng-if="$index==0" data-index="$index">
 						<a ng-href="{{ad.ad_url}}" ng-bind="ad.ad_name"></a><i class="qx fr qx-unfold" ng-click="tad()"></i>
 					</dt>
-					<dd ng-repeat="ad in ad" ng-if="$index!=0" data-index="$index">
-						<a ng-href="{{ad.ad_url}}" ng-bind="ad.ad_name"></a>
-					</dd>
-				</dl>
-			</div>
+				<dd ng-repeat="ad in ad" ng-if="$index!=0" data-index="$index">
+					<a ng-href="{{ad.ad_url}}" ng-bind="ad.ad_name"></a>
+				</dd>
+			</dl>
 		</div>
-
+	</div>
+	<div id="main_cnt_wrap">
 		<!-- 主商品列表 -->
-		<div id="index_prolist" class="c">
-			<div id="pl_nav">
-				<ul>
-					<!-- 类别导航列表 -->
-					<li ng-repeat="nav in navlist" id="nav{{nav.service_id}}" ng-click="togglenav(nav.service_id)" ng-class="{cur:nav.service_id==navcur_id}" ng-bind='nav.service_name'>
-					</li>
-				</ul>
-			</div>
-			<div id="pl_content">
+			<ion-scroll id="pl_nav">
+				<div>
+					<ul>
+						<!-- 类别导航列表 -->
+						<li ng-repeat="nav in navlist" id="nav{{nav.service_id}}" ng-click="togglenav(nav.service_id)" ng-class="{cur:nav.service_id==navcur_id}" ng-bind='nav.service_name'>
+						</li>
+					</ul>
+				</div>
+			</ion-scroll>
+			<ion-scroll id="pl_content" class="">
 				<div id="prolist_wrap">
 					<!-- 首页商品列表 -->
 					<prolist plst="prolist" navcur="{{navcur_id}}"></prolist>
 				</div>
-			</div>
+			</ion-scroll>
 		</div>
-		<!-- 购物车遮罩 -->
-		<div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
+
 		<!-- 购物车 -->
-  </ion-content>
+	</div>
 </ion-view>
 <ion-footer-bar class="row-no-padding bar-subfooter">
-<div id="index_cart_wrap" class="cart" ng-class="{havepro:cart_propronum}">
-			<div id="cart_content">
-				<div id="proinfo_shide" ng-show="is_cart_showdetail">
-					<div id="cart_nothing" ng-hide="cart_propronum>0">购物车是空的</div>
-					<!-- 购物车列表 -->
-					<cartprolist needel="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
+	<!-- 购物车遮罩 -->
+	<div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
+	<div id="index_cart_wrap" class="cart" ng-class="{havepro:cart_propronum}">
+		<div id="cart_content">
+			<div id="proinfo_shide" ng-show="is_cart_showdetail">
+				<div id="cart_nothing" ng-hide="cart_propronum>0">购物车是空的</div>
+				<!-- 购物车列表 -->
+				<cartprolist needel="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
+			</div>
+			<!-- 信息，操作 -->
+			<div id="cart_act" class="c">
+				<div class="icon-cart fl" ng-class="{cart_show:is_cart_showdetail}" ng-click="is_cart_showdetail=!is_cart_showdetail">
+					<i class="qx qx-cart" id="indexcart" ng-show="!is_cart_showdetail"></i>
+					<i class="qx qx-close" ng-show="is_cart_showdetail"></i>
+					<span class="num" ng-bind="cart_propronum"></span>
 				</div>
-				<!-- 信息，操作 -->
-				<div id="cart_act" class="c">
-					<div class="icon-cart fl" ng-class="{cart_show:is_cart_showdetail}" ng-click="is_cart_showdetail=!is_cart_showdetail">
-						<i class="qx qx-cart" ng-show="!is_cart_showdetail"></i>
-						<i class="qx qx-close" ng-show="is_cart_showdetail"></i>
-						<span class="num" ng-bind="cart_propronum"></span>
-					</div>
-					<div class="cart_price fl" ng-show="cart_propronum">共计<span ng-bind="cart_count|currency:'￥'"></span>
-					</div>
-					<button class="fr cart_subgo" ng-click="gosubpro()" ng-disabled="!cart_propronum">结算</button>
+				<div class="cart_price fl" ng-show="cart_propronum">共计<span ng-bind="cart_count|currency:'￥'"></span>
 				</div>
+				<button class="fr cart_subgo" ng-click="gosubpro()" ng-disabled="!cart_propronum">结算</button>
 			</div>
 		</div>
+	</div>
 </ion-footer-bar>
