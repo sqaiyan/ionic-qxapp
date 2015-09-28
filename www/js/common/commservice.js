@@ -1,4 +1,22 @@
-/**/
+/*browser*/
+var browser={
+    versions:function(){
+        var u = navigator.userAgent, app = navigator.appVersion;
+        return {//移动终端浏览器版本信息
+            trident: u.indexOf('Trident') > -1, //IE内核
+            presto: u.indexOf('Presto') > -1, //opera内核
+            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+            iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+            iPad: u.indexOf('iPad') > -1, //是否iPad
+            webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+        };
+    }(),
+    language:(navigator.browserLanguage || navigator.language).toLowerCase()
+}
 /*url params*/
 function GetQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -196,6 +214,16 @@ angular.module('app.service', [])
 					if (pro.product_amount*1 >= pro.amount*1) return;
 					//product_amount>0为修改，否则为添加
 					if (t) {
+						var cart = $('#indexcart');
+						cart.removeClass("shopCartAnimate")
+						if(browser.versions.android){
+							console.log("1");
+							cart.addClass('shopCartAnimate');
+							cart.on("webkitAnimationEnd",
+										function() {
+											cart.removeClass("shopCartAnimate")
+										})
+						}else{
 						$('#indexcart').removeClass('shopCartAnimate');
 						$('<span class="cart-fly"/>').appendTo('body').fly({
 							start: {
@@ -209,7 +237,6 @@ angular.module('app.service', [])
 							speed: 1.8,
 							onEnd: function() {
 								this.destroy();
-								var cart = $('#indexcart')
 								cart.addClass('shopCartAnimate');
 								cart.on("webkitAnimationEnd",
 										function() {
@@ -218,7 +245,7 @@ angular.module('app.service', [])
 									//e.addCartAnimate()
 							}
 						})
-					}
+					}}
 					var up = updateCart(pro.product_id, (1 + pro.product_amount*1), (pro.product_amount*1 > 0 ? 2 : 1));
 					up.success(function(data) {
 						pro.loading = false;

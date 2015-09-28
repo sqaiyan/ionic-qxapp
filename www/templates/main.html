@@ -21,24 +21,24 @@
 	</div>
 	<div id="main_cnt_wrap">
 		<!-- 主商品列表 -->
-			<ion-scroll id="pl_nav">
-				<div>
-					<ul>
-						<!-- 类别导航列表 -->
-						<li ng-repeat="nav in navlist" id="nav{{nav.service_id}}" ng-click="togglenav(nav.service_id)" ng-class="{cur:nav.service_id==navcur_id}" ng-bind='nav.service_name'>
-						</li>
-					</ul>
-				</div>
-			</ion-scroll>
-			<ion-scroll id="pl_content" class="">
-				<div id="prolist_wrap">
-					<!-- 首页商品列表 -->
-					<prolist plst="prolist" navcur="{{navcur_id}}"></prolist>
-				</div>
-			</ion-scroll>
-		</div>
+		<ion-scroll id="pl_nav">
+			<div>
+				<ul>
+					<!-- 类别导航列表 -->
+					<li ng-repeat="nav in navlist" id="nav{{nav.service_id}}" ng-click="togglenav(nav.service_id)" ng-class="{cur:nav.service_id==navcur_id}" ng-bind='nav.service_name'>
+					</li>
+				</ul>
+			</div>
+		</ion-scroll>
+		<ion-scroll id="pl_content" class="">
+			<div id="prolist_wrap">
+				<!-- 首页商品列表 -->
+				<prolist plst="prolist" navcur="{{navcur_id}}"></prolist>
+			</div>
+		</ion-scroll>
+	</div>
 
-		<!-- 购物车 -->
+	<!-- 购物车 -->
 	</div>
 </ion-view>
 <ion-footer-bar class="row-no-padding bar-subfooter">
@@ -49,7 +49,7 @@
 			<div id="proinfo_shide" ng-show="is_cart_showdetail">
 				<div id="cart_nothing" ng-hide="cart_propronum>0">购物车是空的</div>
 				<!-- 购物车列表 -->
-				<cartprolist needel="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
+				<cartprolist F="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
 			</div>
 			<!-- 信息，操作 -->
 			<div id="cart_act" class="c">

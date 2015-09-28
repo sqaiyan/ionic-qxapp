@@ -31,7 +31,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http,
 				}
 			}).error(function(a, b, c, d) {
 				$ionicLoading.hide();
-				artDialog.alert('登录失败！');
+				artDialog.alert('http请求失败'+a+'```'+b+'```'+c);
 			});
 		}
 	})
