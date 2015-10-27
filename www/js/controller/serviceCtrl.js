@@ -1,4 +1,4 @@
-angular.module('qx.controllers').controller('ServiceCtrl', function($scope, $http, $ionicLoading) {
+angular.module('qx.controllers').controller('ServiceCtrl', function($scope, $http, $ionicLoading, $ionicActionSheet,share) {
 		//获取服务列表
 		$ionicLoading.show();
 		$http({
@@ -11,6 +11,9 @@ angular.module('qx.controllers').controller('ServiceCtrl', function($scope, $htt
 			artDialog.alert(b)
 			$ionicLoading.hide();
 		});
+		$scope.shares = function() {
+			share.share('取向','hahhahah','http://baidu.com','http://qxit.com.cn/images/logo.jpg')
+		}
 	})
 	.controller('shangmenctrl', function($scope, $state, $http, $ionicLoading) {
 		//区享上门
@@ -34,5 +37,6 @@ angular.module('qx.controllers').controller('ServiceCtrl', function($scope, $htt
 		}).error(function(a, b, c, d) {
 			$ionicLoading.hide();
 			artDialog.alert(b)
-		})
+		});
+
 	})

@@ -203,7 +203,7 @@ var mapCtrl = mapApp.controller('mapCtrl', function($scope, $http) {
 			p+=data.lng+','+data.lat+';'
 		});
 		console.log(p);
-		$('#jingtai').attr('src','http://api.map.baidu.com/staticimage?width=400&height=400&center='+$scope.areaCst.longitude+','+$scope.areaCst.latitude+'&zoom=14&paths='+p+'&pathStyles=0xff2200,1,.5,0xffaa00&scale=2');
+		$('#jingtai').attr('src','http://api.map.baidu.com/staticimage?width=800&height=800&center='+$scope.areaCst.longitude+','+$scope.areaCst.latitude+'&zoom=14&paths='+p+'&pathStyles=0xff2200,1,.5,0xffaa00&scale=2');
 		$scope.jingt=true;
 	}
 		//画图层

@@ -9,12 +9,11 @@
 	<div id="top_msglist" class="has-header" ng-class="{msg_smore:openmsg}" ng-if="ad.length">
 		<div id="msg_overlay" ng-click="tad()"></div>
 		<div id="msg_list">
-			<dl>
-				<dt ng-repeat="ad in ad" ng-if="$index==0" data-index="$index">
-						<a ng-href="{{ad.ad_url}}" ng-bind="ad.ad_name"></a><i class="qx fr qx-unfold" ng-click="tad()"></i>
+			<dl><i class="qx fr qx-unfold" ng-click="tad()"></i>
+				<dt ng-if="!openmsg"><span ng-repeat="ad in ad">{{ad.ad_name}}，</span>
 					</dt>
-				<dd ng-repeat="ad in ad" ng-if="$index!=0" data-index="$index">
-					<a ng-href="{{ad.ad_url}}" ng-bind="ad.ad_name"></a>
+				<dd ng-repeat="ad in ad">
+					<a ng-href="{{ad.ad_url}}" target="_blank" ng-click="open(ad.ad_url)" ng-bind="ad.ad_name"></a>
 				</dd>
 			</dl>
 		</div>
@@ -40,10 +39,10 @@
 
 	<!-- 购物车 -->
 	</div>
-</ion-view>
+</ion-view><div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
 <ion-footer-bar class="row-no-padding bar-subfooter">
 	<!-- 购物车遮罩 -->
-	<div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
+	
 	<div id="index_cart_wrap" class="cart" ng-class="{havepro:cart_propronum}">
 		<div id="cart_content">
 			<div id="proinfo_shide" ng-show="is_cart_showdetail">

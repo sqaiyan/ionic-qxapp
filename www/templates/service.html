@@ -10,7 +10,7 @@
 							<dd class="nav_des" ng-bind="s.service_dec"></dd>
 						</dl>
 					</a>
-					<a  ng-if="$index!=0" ng-href="{{s.service_url}}">
+					<a  ng-if="$index!=0" ng-href="{{s.service_url}}" target="_blank">
 						<dl>
 							<dt class="nav_icon mr"><img ng-src="{{s.service_img}}" /></dt>
 							<dd class="nav_name" ng-bind="s.service_name"></dd>
@@ -18,6 +18,11 @@
 						</dl>
 					</a>
 				</li>
+				<li>
+					<dl>
+							<dd class="nav_name" ng-click="shares()">分享</dd>
+						</dl>
+					</li>
 			</ul>
 		</div>
 	</ion-content>

@@ -1,6 +1,6 @@
 var basepath = "http://115.159.93.15/scframe/";
 var postion = '';
-angular.module('starter', ['ionic', 'qx.controllers'])
+angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
 	.run(function($rootScope, $state, $ionicPlatform) {
 		$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
 			//console.log('tostate：' + toState.name);

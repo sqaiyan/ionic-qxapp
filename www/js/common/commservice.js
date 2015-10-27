@@ -1,23 +1,25 @@
 /*browser*/
-var browser={
-    versions:function(){
-        var u = navigator.userAgent, app = navigator.appVersion;
-        return {//移动终端浏览器版本信息
-            trident: u.indexOf('Trident') > -1, //IE内核
-            presto: u.indexOf('Presto') > -1, //opera内核
-            webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
-            gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
-            mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
-            ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
-            android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-            iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
-            iPad: u.indexOf('iPad') > -1, //是否iPad
-            webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
-        };
-    }(),
-    language:(navigator.browserLanguage || navigator.language).toLowerCase()
-}
-/*url params*/
+var browser = {
+		versions: function() {
+			var u = navigator.userAgent,
+				app = navigator.appVersion;
+			return { //移动终端浏览器版本信息
+				trident: u.indexOf('Trident') > -1, //IE内核
+				presto: u.indexOf('Presto') > -1, //opera内核
+				webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+				gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+				mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+				ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+				android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+				iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
+				iPad: u.indexOf('iPad') > -1, //是否iPad
+				webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+			};
+		}(),
+		language: (navigator.browserLanguage || navigator.language).toLowerCase()
+	}
+	/*url params*/
+
 function GetQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var r = window.location.search.substr(1).match(reg);
@@ -25,15 +27,17 @@ function GetQueryString(name) {
 	return null;
 };
 var thecard_inputpwd = '<div id="enterpaypwd" class="pt"><input type="number" maxlength=6 oninput="setoboxpwd(0)" autofocus="autofocus" autocomplete="off" autofocus="autofocus"/><ul><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li></div>';
-function js_check(t,text){
-	switch(t){
+
+function js_check(t, text) {
+	switch (t) {
 		case "card":
-		return text.test('')
-		break;
+			return text.test('')
+			break;
 		case 'tel':
-		return /^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/.test(text)
+			return /^[+]{0,1}(\d){1,3}[ ]?([-]?((\d)|[ ]){1,12})+$/.test(text)
 	}
 };
+
 function setoboxpwd(t) {
 	var pwd = $("#enterpaypwd input ").val();
 	pwd = pwd.substring(0, 6);
@@ -70,7 +74,47 @@ angular.module('app.service', [])
 						data: data
 					})
 				},
-				getcommunity:function(){
+				getcommunity: function() {}
+			}
+		}
+	]).factory('share', ['$ionicActionSheet',
+		function($ionicActionSheet) {
+			return {
+				share: function(title, des, url,imgurl, success, fail) {
+					var hideSheet = $ionicActionSheet.show({
+						buttons: [{
+							text: '分享给好友'
+						}, {
+							text: '分享到朋友圈'
+						}, {
+							text: '收藏到微信'
+						}],
+						titleText: '分享到微信',
+						cancelText: '取消',
+						cancel: function() {
+							return true;
+						},
+						buttonClicked: function(index) {
+							Wechat.share({
+								message: {
+									title: title,
+									description: des,
+									thumb: imgurl,
+									media: {
+										type: Wechat.Type.LINK,
+										webpageUrl: url
+									}
+								},
+								scene: index // share to Timeline
+							}, function() {
+								return true;
+								success;
+							}, function(reason) {
+								return true;
+								fail;
+							});
+						}
+					});
 				}
 			}
 		}
@@ -101,7 +145,8 @@ angular.module('app.service', [])
 			};
 		}
 	])
-	.factory('orderact', ['$http',function($http) {
+	.factory('orderact', ['$http',
+		function($http) {
 			return {
 				topay: function(params) { //提交订单
 					return $http({
@@ -207,50 +252,51 @@ angular.module('app.service', [])
 					});
 				},
 				//添加到购物车
-				addTcart: function(pro,t) {
+				addTcart: function(pro, t) {
 					//可选值大于剩余量时返回
 					if (pro.loading) return;
 					pro.loading = true;
-					if (pro.product_amount*1 >= pro.amount*1) return;
+					if (pro.product_amount * 1 >= pro.amount * 1) return;
 					//product_amount>0为修改，否则为添加
 					if (t) {
 						var cart = $('#indexcart');
 						cart.removeClass("shopCartAnimate")
-						if(browser.versions.android){
+						if (browser.versions.android) {
 							console.log("1");
 							cart.addClass('shopCartAnimate');
 							cart.on("webkitAnimationEnd",
-										function() {
-											cart.removeClass("shopCartAnimate")
-										})
-						}else{
-						$('#indexcart').removeClass('shopCartAnimate');
-						$('<span class="cart-fly"/>').appendTo('body').fly({
-							start: {
-								left: t.pageX - 20,
-								top: t.clientY - 30
-							},
-							end: {
-								left: 15,
-								top: window.innerHeight - 95
-							},
-							speed: 1.8,
-							onEnd: function() {
-								this.destroy();
-								cart.addClass('shopCartAnimate');
-								cart.on("webkitAnimationEnd",
-										function() {
-											cart.removeClass("shopCartAnimate")
-										})
-									//e.addCartAnimate()
-							}
-						})
-					}}
-					var up = updateCart(pro.product_id, (1 + pro.product_amount*1), (pro.product_amount*1 > 0 ? 2 : 1));
+								function() {
+									cart.removeClass("shopCartAnimate")
+								})
+						} else {
+							$('#indexcart').removeClass('shopCartAnimate');
+							$('<span class="cart-fly"/>').appendTo('body').fly({
+								start: {
+									left: t.pageX - 20,
+									top: t.clientY
+								},
+								end: {
+									left: 15,
+									top: window.innerHeight - 95
+								},
+								speed: 1.8,
+								onEnd: function() {
+									this.destroy();
+									cart.addClass('shopCartAnimate');
+									cart.on("webkitAnimationEnd",
+											function() {
+												cart.removeClass("shopCartAnimate")
+											})
+										//e.addCartAnimate()
+								}
+							})
+						}
+					}
+					var up = updateCart(pro.product_id, (1 + pro.product_amount * 1), (pro.product_amount * 1 > 0 ? 2 : 1));
 					up.success(function(data) {
 						pro.loading = false;
 						if (data.result_dec == 'OK') {
-							pro.product_amount =pro.product_amount*1 + 1;
+							pro.product_amount = pro.product_amount * 1 + 1;
 						} else {
 							artDialog.tips(data.result_dec);
 						}
@@ -266,11 +312,11 @@ angular.module('app.service', [])
 					if (pro.loading) return;
 					pro.loading = true;
 					if (pro.product_amount == 0) return;
-					var up = updateCart(pro.product_id, (pro.product_amount*1 - 1), 2);
+					var up = updateCart(pro.product_id, (pro.product_amount * 1 - 1), 2);
 					up.success(function(data) {
 						pro.loading = false;
 						if (data.result_dec == 'OK') {
-							pro.product_amount = del ? 0 : (pro.product_amount*1 - 1);
+							pro.product_amount = del ? 0 : (pro.product_amount * 1 - 1);
 						} else {
 							artDialog.tips(data.result_dec);
 						}
@@ -348,8 +394,8 @@ angular.module('app.service', [])
 							return o & (1 << i);
 						}
 						//添加到购物车
-					scope.addTocart = function(pro,e) {
-						updateCart.addTcart(pro,e)
+					scope.addTocart = function(pro, e) {
+						updateCart.addTcart(pro, e)
 					};
 					//删减选中的商品
 					scope.removeFcart = function(pro) {
@@ -436,8 +482,8 @@ angular.module('app.service', [])
 
 			}
 		}
-	}).directive('orderinfo', ['$http', '$filter','$ionicActionSheet', '$timeout', 'orderact',
-		function($http, $filter,$ionicActionSheet,$timeout, orderact) {
+	}).directive('orderinfo', ['$http', '$filter', '$ionicActionSheet', '$timeout', 'orderact',
+		function($http, $filter, $ionicActionSheet, $timeout, orderact) {
 			//boxouter
 			return {
 				restrict: 'EA',
@@ -507,37 +553,37 @@ angular.module('app.service', [])
 					};
 					scope.delorder = function() { //取消订单
 						var hideSheet = $ionicActionSheet.show({
-						buttons: [{
-							text: '立刻支付'
-						}, {
-							text: '再来一份'
-						}],
-						destructiveText: '删除订单',
-						cancelText: '取消',
-						cancel: function() {
-							// add cancel code..
-						},
-						buttonClicked: function(index) {
-							return true;
-						}
-					});
-//						artDialog.confirm('您确定要取消该笔订单吗？', function() {
-//							$http({
-//								method: 'post',
-//								url: basepath + 'order/cancel/?access_token=' + access_token,
-//								data: {
-//									order_serial: scope.order.order_serial
-//								}
-//							}).success(function(data) {
-//								if (data.result_code == '0') {
-//									scope.order.order_status = '23';
-//								} else {
-//									artDialog.tips(data.result_dec);
-//								}
-//							}).error(function(a, b, c, d) {
-//								artDialog.tips(b);
-//							});
-//						});
+							buttons: [{
+								text: '立刻支付'
+							}, {
+								text: '再来一份'
+							}],
+							destructiveText: '删除订单',
+							cancelText: '取消',
+							cancel: function() {
+								// add cancel code..
+							},
+							buttonClicked: function(index) {
+								return true;
+							}
+						});
+						//						artDialog.confirm('您确定要取消该笔订单吗？', function() {
+						//							$http({
+						//								method: 'post',
+						//								url: basepath + 'order/cancel/?access_token=' + access_token,
+						//								data: {
+						//									order_serial: scope.order.order_serial
+						//								}
+						//							}).success(function(data) {
+						//								if (data.result_code == '0') {
+						//									scope.order.order_status = '23';
+						//								} else {
+						//									artDialog.tips(data.result_dec);
+						//								}
+						//							}).error(function(a, b, c, d) {
+						//								artDialog.tips(b);
+						//							});
+						//						});
 					};
 					scope.payinfo = function() { //支付详情
 						var payinfo = "<ul class='bdt_list payproinfo'>";
