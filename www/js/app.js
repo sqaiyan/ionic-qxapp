@@ -141,6 +141,16 @@ angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
 					}
 				}
 
+			}).state('tab.address', {
+				url: '/address',
+				cache: false,
+				views: {
+					'tab-account': {
+						templateUrl: 'templates/address.html',
+						controller: 'AddressCtrl'
+					}
+				}
+
 			}).state('tab.orderdetail', {
 				url: '/orderdetail/{orderid}',
 				cache: true,

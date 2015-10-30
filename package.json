@@ -19,7 +19,14 @@
     "cordova-plugin-console",
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    {
+      "variables": {
+        "": ""
+      },
+      "locator": "https://github.com/mrwutong/cordova-qdc-baidu-location",
+      "id": "com.qdc.plugins.baidu.location"
+    }
   ],
   "cordovaPlatforms": [
     "android",

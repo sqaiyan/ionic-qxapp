@@ -1,10 +1,11 @@
 {
   "name": "qx",
   "app_id": "",
-  "proxies": [
+  "browsers": [
     {
-      "path": "http://localhost/",
-      "proxyUrl": "http://115.159.93.15/scframe/"
+      "platform": "android",
+      "browser": "crosswalk",
+      "version": "12.41.296.5"
     }
   ]
 }
