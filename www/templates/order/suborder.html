@@ -1,8 +1,12 @@
-<ion-view view-title="订单填写" data-ng-init="getorderlist()">
-	<ion-nav-button side="left">
-        <a href="#/tab/bag" class="ion ion-ios-arrow-left mgyx-back"><font>返回</font></a>
-    </ion-nav-button>
-	<ion-content>
+<ion-view view-title="订单填写">
+	<ion-nav-buttons side="left">
+		<a href="#/tab/bag" class="button back-button buttons  button-clear header-item"><i class="icon qx-back"></i><span style="display: inline;">购物袋</span></a>
+	</ion-nav-buttons>
+	<ion-nav-buttons side="right">
+		<a href="#/tab/bag" class="button button-clear button-small">立即支付</a>
+	</ion-nav-buttons>
+
+	<ion-content class="has-footer bg_gray">
 		<!--商品列表-->
 		<div class="cart havepro">
 			<cartprolist plist="orderplist" pronum="{{orderplist.length}}"></cartprolist>
@@ -113,7 +117,13 @@
 				</form>
 			</div>
 		</div>
-	</ion-content></ion-view>
-	<ion-footer-bar class="row-no-padding bar-subfooter">
-		<button ng-click="suborder()" style="height: 44px;" ng-class="{btn_dis:!loadoff}" ng-disabled="!loadoff" class="fr btn_big btn btn_r block">提交</button>
-	</ion-footer-bar>
+	</ion-content>
+</ion-view>
+<ion-footer-bar class="row-no-padding">
+	<button ng-click="suborder()" ng-class="{btn_dis:!models.loadoff}" ng-disabled="!models.loadoff" class="fr btn_big btn btn_r block" ng-hide="1">提交</button>
+	<div id="cart_act" class="c" ng-class="{havepro:models.loadoff}">
+		<div class="cart_price fl pw">共计：<span ng-bind="oderprice|currency:'￥'"></span>
+		</div>
+		<button class="fr cart_subgo" ng-disabled="!models.loadoff" ng-click="suborder()">立即支付</button>
+	</div>
+</ion-footer-bar>

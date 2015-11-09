@@ -1,11 +1,5 @@
 angular.module('qx.controllers').controller('OrderlistCtrl', function($scope, $http, $state, $ionicLoading, orderact) {
 		//订单列表
-		if (!access_token) {
-			$state.go("login", {
-				from: $state.current.name
-			});
-			return;
-		};
 		//$scope.tabs = localStorage.getItem('ordertype') || 1;
 		$scope.tabs = 1;
 		$scope.curtab = function(t) {
@@ -37,6 +31,7 @@ angular.module('qx.controllers').controller('OrderlistCtrl', function($scope, $h
 		}
 		$ionicLoading.show();
 		$scope.models = {};
+		$scope.models.loadoff = false;
 		$scope.models.olpayType = "qxcardpay"; //默认支付方式,区享卡支付?
 		$scope.models.delivertype = "selfdeliver"; //配送方式，默认送货上门
 		$scope.models.qxabled = $scope.hasqxcard = true; //商品可用区享卡，有区享卡
@@ -124,7 +119,7 @@ angular.module('qx.controllers').controller('OrderlistCtrl', function($scope, $h
 				});
 				return;
 			};
-			$scope.loadoff = true;
+			$scope.models.loadoff = true;
 			//验证区享卡
 			qxcard.checkBalance($scope.oderprice).success(function(data) {
 				if (data.result_code == 0) { //成功

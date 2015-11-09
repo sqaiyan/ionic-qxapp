@@ -1,9 +1,4 @@
 angular.module('qx.controllers').controller('MainCtrl', function($scope, $http, $ionicLoading, $location, $state, updateCart) { //首页
-		if (!access_token) {
-			$state.go("login", {
-				'from': $state.current.name
-			});
-		};
 		$ionicLoading.show();
 		$scope.cart_propronum = 0; //默认购物车没商品
 		$scope.cart_count = 0; //默认金额0
@@ -20,7 +15,7 @@ angular.module('qx.controllers').controller('MainCtrl', function($scope, $http, 
 				$scope.navlist = data.data;
 				$scope.navcur_id = $scope.navcur_id ? $scope.navcur_id : $scope.navlist[0].service_id;
 			} else {
-				artDialog.alert(data.result_dec);
+				//artDialog.alert(data.result_dec);
 			}
 		});
 		$scope.tad = function() {
@@ -95,7 +90,7 @@ angular.module('qx.controllers').controller('MainCtrl', function($scope, $http, 
 							proidlist.push(data.product_id);
 						}
 					});
-					$location.path('tab/suborder');
+					$location.path('suborder');
 					$location.orderlist = proidlist.join(',');
 				} else {
 					artDialog.alert(data.result_dec)

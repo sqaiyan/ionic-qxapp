@@ -226,8 +226,8 @@ angular.module('app.service', [])
 			};
 		}
 	])
-	.factory('updateCart', ['$http',
-		function($http) {
+	.factory('updateCart', ['$http','$ionicLoading',
+		function($http,$ionicLoading) {
 			//更新购物车
 			var updateCart = function(proid, pronum, type) {
 				type = type || 2;
@@ -293,8 +293,13 @@ angular.module('app.service', [])
 						}
 					}
 					var up = updateCart(pro.product_id, (1 + pro.product_amount * 1), (pro.product_amount * 1 > 0 ? 2 : 1));
+					$ionicLoading.show({delay:3,
+						noBackdrop:true,
+						duration:10})
+					console.log("aaaaa");
 					up.success(function(data) {
 						pro.loading = false;
+						$ionicLoading.hide()
 						if (data.result_dec == 'OK') {
 							pro.product_amount = pro.product_amount * 1 + 1;
 						} else {
@@ -302,6 +307,7 @@ angular.module('app.service', [])
 						}
 					}).error(function(a, b, c, d) {
 						pro.loading = false;
+						$ionicLoading.hide()
 					});
 				},
 				//从购物车中删除
@@ -309,19 +315,22 @@ angular.module('app.service', [])
 					if (del) {
 						return updateCart(pro.product_id, 0, 3);
 					}
-					if (pro.loading) return;
-					pro.loading = true;
+					$ionicLoading.show({
+						delay:3,
+						noBackdrop:true,
+						duration:10
+					})
 					if (pro.product_amount == 0) return;
 					var up = updateCart(pro.product_id, (pro.product_amount * 1 - 1), 2);
 					up.success(function(data) {
-						pro.loading = false;
+						$ionicLoading.hide()
 						if (data.result_dec == 'OK') {
 							pro.product_amount = del ? 0 : (pro.product_amount * 1 - 1);
 						} else {
 							artDialog.tips(data.result_dec);
 						}
 					}).error(function(a, b, c, d) {
-						pro.loading = false;
+						$ionicLoading.hide()
 					})
 				},
 				getproFcart: function() {

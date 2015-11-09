@@ -17,12 +17,6 @@ angular.module('qx.controllers').controller('ServiceCtrl', function($scope, $htt
 	})
 	.controller('shangmenctrl', function($scope, $state, $http, $ionicLoading) {
 		//区享上门
-		if (!access_token) {
-			$state.go("login", {
-				'from': $state.current.name
-			});
-			return;
-		}
 		$ionicLoading.show();
 		$http({
 			method: 'get',

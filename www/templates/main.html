@@ -39,16 +39,17 @@
 
 	<!-- 购物车 -->
 	</div>
-</ion-view><div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
-<ion-footer-bar class="row-no-padding bar-subfooter">
+</ion-view>
+<div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
+<ion-footer-bar class="row-no-padding bar-subfooter" style="height: auto;">
 	<!-- 购物车遮罩 -->
-	
+
 	<div id="index_cart_wrap" class="cart" ng-class="{havepro:cart_propronum}">
 		<div id="cart_content">
 			<div id="proinfo_shide" ng-show="is_cart_showdetail">
 				<div id="cart_nothing" ng-hide="cart_propronum>0">购物车是空的</div>
 				<!-- 购物车列表 -->
-				<cartprolist F="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
+				<cartprolist needel="true" plist="prolist" pronum="{{proIncartPropronum}}" ng-show="cart_propronum"></cartprolist>
 			</div>
 			<!-- 信息，操作 -->
 			<div id="cart_act" class="c">

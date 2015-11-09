@@ -15,7 +15,7 @@ table.aui_border, table.aui_dialog { border:0; margin:0; border-collapse:collaps
 .aui_loadfail:after{position: absolute;width: 50px;height: 50px;position: absolute;left: 50%;top: 50%;margin-left: -25px;margin-top: -25px;content: '&#xe603;';font-family: 'qx' !important;color:red;}
 .aui_icon { vertical-align: middle; }
 .aui_icon div { width:48px; height:48px; margin:10px 0 10px 10px; background-position: center center; background-repeat:no-repeat; }
-.aui_buttons { padding:8px; text-align:center; white-space:nowrap; }
+.aui_buttons { padding:10px; text-align:center; white-space:nowrap; }
 .aui_buttons button{margin: 0 5px;}
 .aui_buttons .fl{margin-right: 10px;margin-left: 0;}
 .aui_buttons .fr{margin-left:10px;margin-right: 0;}

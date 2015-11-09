@@ -1,6 +1,4 @@
-angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http, $ionicLoading, $stateParams, $state, user) {
-		//localStorage.setItem('access_token', null);
-		//access_token = null;
+angular.module('qx.controllers').controller('LoginCtrl', function($rootScope,$scope, $http, $ionicLoading, $stateParams, $state, user) {
 		$ionicLoading.hide();
 		$scope.models = {};
 		$scope.models.formtype = $stateParams.formtype || 1;
@@ -8,6 +6,8 @@ angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http,
 		$scope.$watch('models.formtype', function() {
 			$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';
 		});
+//		localStorage.setItem('access_token', '');
+//		access_token = '';
 		$scope.login = function() {
 			$ionicLoading.show('登录中...');
 			$http({
@@ -21,17 +21,16 @@ angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http,
 				$ionicLoading.hide();
 				if (data.result_code == '0') {
 					user.loginmsg(data.data);
-					var from = $stateParams.from || 'tab.main';
+					var from = $rootScope.fromstate|| 'tab.main';
 					console.log(from);
 					$state.go(from);
 				} else {
 					artDialog.alert(data.result_dec + ',请重试！');
-					$scope.models.name = '';
-					$scope.models.pwd = '';
+					$scope.models.name = $scope.models.pwd = '';
 				}
 			}).error(function(a, b, c, d) {
 				$ionicLoading.hide();
-				artDialog.alert('http请求失败'+a+'```'+b+'```'+c);
+				artDialog.tips('http请求失败');
 			});
 		}
 	})
@@ -53,7 +52,6 @@ angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http,
 			}).success(function(data) {
 				if (data.result_code == '0') {
 					artDialog.tips('短信发送成功');
-					$scope.models.code = data.data.validate_Code;
 					$scope.models.seconds = 60;
 					$interval(function() {
 						if ($scope.models.seconds == 0) {
@@ -116,12 +114,6 @@ angular.module('qx.controllers').controller('LoginCtrl', function($scope, $http,
 	})
 	.controller('UserCtrl', function($scope, $http, $ionicLoading, $state, user) {
 		//用户中心
-		if (!access_token) {
-			$state.go("login", {
-				'from': $state.current.name
-			});
-			return;
-		}
 		$http({
 			method: 'get',
 			url: basepath + 'user/info/?access_token=' + access_token

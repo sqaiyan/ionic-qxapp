@@ -1,11 +1,5 @@
-angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $state, $location, updateCart) {
+angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $state, $location,$ionicLoading,updateCart) {
 		//购物袋
-		if (!access_token) {
-			$state.go("login", {
-				'from': $state.current.name
-			});
-			return;
-		};
 		$scope.models = {};
 		$scope.models.cart_count = $scope.models.price_count = 0; //商品数量和总价
 		$scope.checkall = false;
@@ -91,10 +85,16 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 		};
 		$scope.getbagdata = function() {
 			//购物车数据
+			$ionicLoading.show({
+				noBackdrop:true,
+				hideOnStateChange:true,
+				duration:5
+			});
 			$http({
 				method: 'get',
 				url: basepath + 'cart/view3/?access_token=' + access_token
 			}).success(function(data) {
+				$ionicLoading.hide()
 				if (data.result_code == "0") {
 					$scope.models.commonpro = data.data.common_products;
 					$scope.models.weightpro = data.data.weight_products;
@@ -103,8 +103,10 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 					artDialog.alert('获取数据失败，请稍后重试！')
 				}
 			}).error(function(a, b, c, d) {
+				$ionicLoading.hide()
 				artDialog.alert('服务器错误，请稍后重试！')
 			}).finally(function() {
+				$ionicLoading.hide()
 				$scope.$broadcast('scroll.refreshComplete');
 			});
 		};
@@ -122,10 +124,8 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 						proidlist.push(data.product_id);
 					}
 				});
-				//$state.go('tab.suborder')
-				console.log(proidlist.join(','));
-				$location.path('tab/suborder');
 				$location.orderlist = proidlist.join(',');
+				$location.path('suborder');
 			}
 			//添加到购物车
 		$scope.addTocart = function(pro) {
@@ -133,6 +133,12 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 		};
 		//去称重
 		$scope.toWeight = function(pro) {
+			$ionicLoading.show({
+				noBackdrop:true,
+				hideOnStateChange:true,
+				duration:5,
+				delay:2
+			});
 			$http({
 				method: 'get',
 				url: basepath + 'cart/weight/?access_token=' + access_token,
@@ -140,10 +146,13 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 					product_id: pro.product_id,
 				}
 			}).success(function(data) {
+				$ionicLoading.hide();
 				if (data.result_code == '0') {
 					art.dialog.alert('商品称重结束后我们后联系您，请留意信息，若10分钟内没有提交订单，称重结果将取消！')
 					pro.status = '2';
 				}
+			}).error(function(){
+				$ionicLoading.hide();
 			})
 		};
 		//删减选中的商品
@@ -153,7 +162,14 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 		$scope.del_pro = function(pro, protype) {
 			var num = pro.pronum;
 			var dp = updateCart.removeFcart(pro, true);
+			$ionicLoading.show({
+				noBackdrop:true,
+				hideOnStateChange:true,
+				duration:5,
+				delay:3
+			})
 			dp.success(function(d) {
+				$ionicLoading.hide()
 				if (d.result_code != '0') {
 					artDialog.alert(d.result_dec);
 					return;
@@ -165,13 +181,14 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $http, $
 						}
 					}
 				} else {
-					for (var i = 0; i < $scope.weightpro.length; i++) {
+					for (var i = 0; i < $scope.models.weightpro.length; i++) {
 						if ($scope.models.weightpro[i].product_id == pro.product_id) {
 							$scope.models.weightpro.splice(i, 1);
 						}
 					}
 				}
 			}).error(function(a, b, c, d) {
+				$ionicLoading.hide();
 				artDialog.alert('删除失败' + b)
 			})
 		}

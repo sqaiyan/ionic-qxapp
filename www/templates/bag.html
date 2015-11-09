@@ -1,5 +1,5 @@
 <ion-view view-title="购物袋">
-	<ion-content ng-controller="bagCtrl" data-ng-init="getbagdata()">
+	<ion-content class="has-subfooter" data-ng-init="getbagdata()">
 		<ion-refresher on-refresh="getbagdata()">
 		</ion-refresher>
 		<div id="bagpl_wrap">
@@ -8,64 +8,43 @@
 				<div class="dbout_header c">
 					<span class="fl dboh_title">普通商品</span>
 				</div>
-
-				<ion-list can-swipe="true" class='hide'>
-					<ion-item ng-repeat="pro in models.commonpro" class="item-thumbnail-left item-checkbox">
-
-						<img ng-src="{{pro.product_pic}}">
-						<label class="checkbox">
-							<input type="checkbox">
-						</label>
-						<h2>{{pro.product_name}}</h2>
-						<p class="pl_sale_tip">
-							<span ng-if="transtags(pro.tags*1,0)">称重</span>
-							<span ng-if="transtags(pro.tags*1,1)">APP专享价</span>
-							<span ng-if="transtags(pro.tags*1,2)">满减</span>
-							<span ng-if="transtags(pro.tags*1,3)">不支持区享卡</span>
-							<span ng-if="transtags(pro.tags*1,4)">特价</span>
-							<span ng-if="transtags(pro.tags*1,5)">预售</span>
-							<span ng-if="transtags(pro.tags*1,6)">无货</span>
-						</p>
-						<ion-delete-button class="ion-minus-circled">删除</ion-delete-button>
-					</ion-item>
-				</ion-list>
-
 				<div class="dbout_cnt">
-					<ul class="bagplst">
-						<li class="c rc_list rcl_left" ng-repeat="pro in models.commonpro">
-							<checkbox selected="pro.selected"></checkbox>
-							<div class="fr bplst_close" ng-click="del_pro(pro,'common')"><i class="qx qx-roundclose"></i>
-							</div>
-							<div class="bplst_cnt">
-								<div class="pl_promain c">
-									<a class="pl_proimg" ng-style="{'background-image':'url({{pro.thumbnail||pro.product_pic}})'}">
-										<img data-src="{{pro.product_pic}}" class="hide" alt="" />
-									</a>
-									<p class="pl_proname" ng-bind="pro.product_name"></p>
-									<p class="pl_sale_tip">
-										<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
-										<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
-										<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
-										<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
-										<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
-										<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
-									</p>
-								</div>
-								<div class="pl_proprice c">
-									<div class="fl pro_price"><span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
-									<div class="pro_act fr">
-										<button class="del" ng-class="{disabled:pro.product_amount*1==0}" ng-disabled="pro.product_amount*1==0" ng-class="{disabled:pro.pronum*1==0}" ng-disabled="pro.pronum*1==0" ng-click="removeFcart(pro)">
-											<i class="qx qx-del"></i>
-										</button>
-										<span class="number" ng-class="{disabled:pro.product_amount*1==0}" ng-bind="pro.product_amount"></span>
-										<button class="add" ng-click="addTocart(pro)">
-											<i class="qx qx-add"></i>
-										</button>
+					<ion-list class='bagplst'>
+						<ion-item ng-repeat="pro in models.commonpro">
+							<div class="c rcl_left">
+								<checkbox selected="pro.selected"></checkbox>
+								<div class="bplst_cnt">
+									<div class="pl_promain c">
+										<a class="pl_proimg" ng-style="{'background-image':'url({{(pro.thumbnail||pro.product_pic)||('img/erro.png')}})'}">
+											<img data-src="{{pro.product_pic}}" class="hide" alt="" />
+										</a>
+										<div class="pl_proname" ng-bind="pro.product_name"></div>
+										<div class="pl_sale_tip">
+											<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
+											<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
+											<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
+											<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
+											<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
+											<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
+										</div>
+									</div>
+									<div class="pl_proprice c">
+										<div class="fl pro_price"><span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
+										<div class="pro_act fr">
+											<button class="del" ng-class="{disabled:pro.product_amount*1==0}" ng-disabled="pro.product_amount*1==0" ng-class="{disabled:pro.pronum*1==0}" ng-disabled="pro.pronum*1==0" ng-click="removeFcart(pro)">
+												<i class="qx qx-del"></i>
+											</button>
+											<span class="number" ng-class="{disabled:pro.product_amount*1==0}" ng-bind="pro.product_amount"></span>
+											<button class="add" ng-click="addTocart(pro)">
+												<i class="qx qx-add"></i>
+											</button>
+										</div>
 									</div>
 								</div>
 							</div>
-						</li>
-					</ul>
+							<ion-option-button class=" button-assertive" ng-click="del_pro(pro,'common')">删除</ion-delete-button>
+						</ion-item>
+					</ion-list>
 				</div>
 			</div>
 
@@ -75,57 +54,58 @@
 					<b onclick="weighinfo()" class="qx qx-warn"></b>
 				</div>
 				<div class="dbout_cnt">
-					<ul class="bagplst">
-						<li class="c rc_list rcl_left" ng-repeat="pro in models.weightpro">
-							<!-- 选择框checkbox,needw<3时为需称重和待称重，禁用 -->
-							<checkbox selected="pro.selected" disvalue="{{pro.status!=3}}"></checkbox>
-							<div class="fr bplst_close" ng-click="del_pro(pro,'weight')"><i class="qx qx-roundclose"></i>
-							</div>
-							<div class="bplst_cnt">
-								<div class="pl_promain c">
-									<a class="pl_proimg" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
-										<img ng-src="{{pro.product_pic}}" class="hide" alt="" />
-									</a>
-									<p class="pl_proname" ng-bind="pro.product_name"></p>
-									<p class="pl_sale_tip">
-										<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
-										<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
-										<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
-										<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
-										<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
-										<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
-									</p>
-								</div>
-								<div class="pl_proprice c">
-									<div class="fl pro_price">
-										<span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
-									<div class="pro_act fr">
-										<a ng-click="toWeight(pro)" ng-if="pro.status==1" class="btn btn_msg_r fr">马上订购</a>
+					<ion-list class='bagplst'>
+						<ion-item ng-repeat="pro in models.weightpro">
+							<div class="c rcl_left">
+								<!-- 选择框checkbox,needw<3时为需称重和待称重，禁用 -->
+								<checkbox selected="pro.selected" disvalue="{{pro.status!=3}}"></checkbox>
+								<div class="bplst_cnt">
+									<div class="pl_promain c">
+										<a class="pl_proimg" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
+											<img ng-src="{{pro.product_pic}}" class="hide" alt="" />
+										</a>
+										<div class="pl_proname" ng-bind="pro.product_name"></div>
+										<div class="pl_sale_tip">
+											<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
+											<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
+											<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
+											<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
+											<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
+											<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
+										</div>
+									</div>
+									<div class="pl_proprice c">
+										<div class="fl pro_price">
+											<span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
+										<div class="pro_act fr">
+											<a ng-click="toWeight(pro)" ng-if="pro.status==1" class="btn btn_msg_r fr btn_small">马上订购</a>
 
-										<span class="btn fr fc_r btn_msg_o" ng-if="pro.status==2">称重中</span>
-										<span ng-if="pro.status==3" class="fc_r fr price_count">
+											<span class="btn fr fc_r btn_msg_o btn_small" ng-if="pro.status==2">称重中</span>
+											<span ng-if="pro.status==3" class="fc_r fr price_count">
 										约{{pro.product_amount}}{{pro.product_unit}} {{pro.product_amount*1*pro.product_price|currency:'￥'}}</span>
+										</div>
 									</div>
 								</div>
 							</div>
-						</li>
-					</ul>
+							<ion-option-button class="button-assertive" ng-click="del_pro(pro,'wei')">删除</ion-delete-button>
+						</ion-item>
+					</ion-list>
 				</div>
 			</div>
 		</div>
 	</ion-content>
-	<ion-footer-bar class="row-no-padding bar-subfooter">
-		<div id="index_cart_wrap" class="cart c" ng-class="{havepro:models.cart_count}">
-			<div id="cart_act" class="c rc_list">
-				<div class="rc_wrap fl">
-					<i class="qx qx-roundcheckfill" ng-if="checkall"></i>
-					<i class="qx qx-roundcheck" ng-if="!checkall"></i>
-					<input type="button" ng-click="selectall()" />
-				</div>
-				<div class="cart_price fl pw">商品总额：<span ng-bind="models.price_count|currency:'￥'"></span>
-				</div>
-				<button class="fr cart_subgo" ng-disabled="!models.cart_count" ng-click="toSuborder()">结算</button>
-			</div>
-		</div>
-	</ion-footer-bar>
 </ion-view>
+<div class="row-no-padding bar-subfooter bar bar-footer has-tabs">
+	<div id="index_cart_wrap" class="cart c" ng-class="{havepro:models.cart_count}">
+		<div id="cart_act" class="c rc_list">
+			<div class="rc_wrap fl">
+				<i class="qx qx-roundcheckfill" ng-if="models.checkall"></i>
+				<i class="qx qx-roundcheck" ng-if="!models.checkall"></i>
+				<input type="button" ng-click="selectall()" />
+			</div>
+			<div class="cart_price fl pw">商品总额：<span ng-bind="models.price_count|currency:'￥'"></span>
+			</div>
+			<button class="fr cart_subgo" ng-disabled="!models.cart_count" ng-click="toSuborder()">结算</button>
+		</div>
+	</div>
+</div>

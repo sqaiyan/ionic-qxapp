@@ -1,10 +1,18 @@
 var basepath = "http://115.159.93.15/scframe/";
 var postion = '';
-angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
+var checkroute = ['tab.main', 'tab.account', 'tab-orderlist', 'tab-service']
+angular.module('starter', ['ionic', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
 	.run(function($rootScope, $state, $ionicPlatform) {
 		$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
-			//console.log('tostate：' + toState.name);
-			//console.log('fromstate：' + fromState.name);
+			$rootScope.fromstate = fromState.name;
+			$rootScope.tostate = toState.name;
+			if (!access_token) {
+				angular.forEach(checkroute, function(data, i) {
+					if (data == $rootScope.tostate) {
+						$state.go("login");
+					}
+				})
+			};
 			var list = art.dialog.list;
 			for (var i in list) {
 				list[i].close();
@@ -118,7 +126,8 @@ angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
 				cache: false,
 				views: {
 					'tab-bag': {
-						templateUrl: 'templates/bag.html'
+						templateUrl: 'templates/bag.html',
+						controller: 'bagCtrl'
 					}
 				}
 			})
@@ -131,15 +140,11 @@ angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
 						controller: 'OrderlistCtrl'
 					}
 				}
-			}).state('tab.suborder', {
+			}).state('suborder', {
 				url: '/suborder',
 				cache: false,
-				views: {
-					'tab-orderlist': {
-						templateUrl: 'templates/order/suborder.html',
-						controller: 'SuborderCtrl'
-					}
-				}
+				templateUrl: 'templates/order/suborder.html',
+				controller: 'SuborderCtrl'
 
 			}).state('tab.address', {
 				url: '/address',
@@ -164,4 +169,4 @@ angular.module('starter', ['ionic','ngIOS9UIWebViewPatch', 'qx.controllers'])
 			});
 		$urlRouterProvider.otherwise('/tab/main');
 	});
-	angular.module('qx.controllers', ['ionic', 'app.service']);
+angular.module('qx.controllers', ['ionic', 'app.service']);
