@@ -18,22 +18,10 @@
 
 				<boxinner needtoggle='1' boxtitle="{{d.distri_worker_name}}" class="bg_f" ng-repeat="sub in d.subList">
 					<ul class="bdt_list">
-						<li class="c fs_2" ng-repeat="p in sub.subList"><span class="fl">{{p.product_name}}</span><span class="fr fc_gray fs_1 ml">{{p.product_price|currency:'￥'}}*{{p.product_amount}}</span>
+						<li class="c fs_2" ng-repeat="p in sub.subList"><span class="fl">{{p.product_name}}</span><span class="fr fc_gray fs_1 ml">{{p.product_price|currency:'￥'}}*{{p.product_amount|number}}</span>
 						</li>
 					</ul>
 				</boxinner>
-
-				<div class="orderlist hide" ng-repeat="sub in d.subList">
-					<div class="order_title"><span class="odt_name"><i class="qx qx-time"></i>{{sub.create_time}}</span>
-					</div>
-					<div class="order_cnt bg_gray">
-						<ul class="bdt_list">
-							<li class="c pw" ng-repeat="p in sub.subList"><span class="fl">{{p.product_name}}</span><span class="fr fc_gray fs_1 ml">{{p.product_price|currency:'￥'}}*{{p.product_amount}}</span>
-							</li>
-						</ul>
-					</div>
-				</div>
-
 			</li>
 		</ul>
 	</ion-content>

@@ -1,7 +1,7 @@
 var basepath = "http://115.159.93.15/scframe/";
 var postion = '';
-var checkroute = ['tab.main', 'tab.account', 'tab-orderlist', 'tab-service']
-angular.module('starter', ['ionic', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
+var checkroute = ['tab.main', 'tab.account', 'tab-orderlist', 'tab-service'];
+angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
 	.run(function($rootScope, $state, $ionicPlatform) {
 		$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
 			$rootScope.fromstate = fromState.name;
@@ -34,6 +34,17 @@ angular.module('starter', ['ionic', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
 		$ionicConfigProvider.platform.android.tabs.position('standard');
 		$ionicConfigProvider.views.swipeBackEnabled(false);
 		$ionicConfigProvider.navBar.alignTitle('center');
+		$ionicConfigProvider.backButton.icon('qx-back').text('返回');
+		//app rate
+//		var prefs = {
+//			language: 'en',
+//			appName: 'MY APP',
+//			iosURL: '<my_app_id>',
+//			androidURL: 'market://details?id=<package_name>',
+//			windowsURL: 'ms-windows-store:Review?name=<...>'
+//		};
+//
+//		$cordovaAppRateProvider.setPreferences(prefs)
 		$stateProvider
 			.state('tab', {
 				url: '/tab',
@@ -109,6 +120,14 @@ angular.module('starter', ['ionic', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
 					'tab-account': {
 						templateUrl: 'templates/user.html',
 						controller: 'UserCtrl'
+					}
+				}
+			}).state('tab.testplugins', {
+				url: '/testplugins',
+				views: {
+					'tab-account': {
+						templateUrl: 'templates/testplugins.html',
+						controller: 'testPluginsCtrl'
 					}
 				}
 			})

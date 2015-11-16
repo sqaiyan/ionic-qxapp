@@ -6,7 +6,7 @@
 		<a href="#/tab/search" class="btn pw btn_r">
 			<i class="icon qx-search"></i></a>
 	</ion-nav-buttons>
-	<div id="top_msglist" class="has-header" ng-class="{msg_smore:openmsg}" ng-if="ad.length">
+	<div id="top_msglist" class="has-header" ng-class="{msg_smore:openmsg}">
 		<div id="msg_overlay" ng-click="tad()"></div>
 		<div id="msg_list">
 			<dl><i class="qx fr qx-unfold" ng-click="tad()"></i>
@@ -18,7 +18,7 @@
 			</dl>
 		</div>
 	</div>
-	<div id="main_cnt_wrap">
+	<div id="main_cnt_wrap" class="has-subheader">
 		<!-- 主商品列表 -->
 		<ion-scroll id="pl_nav">
 			<div>
@@ -39,6 +39,19 @@
 
 	<!-- 购物车 -->
 	</div>
+	<script id="proinfo.html" type="text/ng-template">
+		<div class="modal">
+			<ion-header-bar class="bar-assertive">
+				<div class="buttons buttons-left"><span class="left-buttons">
+		<b class="btn no-padding-w ng-binding"><i class="qx qx-close fs_4"></i></b>
+	</span></div>
+				<h1 class="title">{{product_name}}</h1>
+			</ion-header-bar>
+			<ion-content>
+				{{picture}}
+			</ion-content>
+		</div>
+	</script>
 </ion-view>
 <div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
 <ion-footer-bar class="row-no-padding bar-subfooter" style="height: auto;">

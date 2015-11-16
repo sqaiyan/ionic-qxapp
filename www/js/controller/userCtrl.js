@@ -1,40 +1,84 @@
-angular.module('qx.controllers').controller('LoginCtrl', function($rootScope,$scope, $http, $ionicLoading, $stateParams, $state, user) {
+angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $scope, $http, $ionicLoading, $stateParams, $state,$interval,user) {
 		$ionicLoading.hide();
 		$scope.models = {};
 		$scope.models.formtype = $stateParams.formtype || 1;
-		$scope.models.formsg = $scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';;
+		$scope.models.formsg = $scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '快捷登录';;
 		$scope.$watch('models.formtype', function() {
-			$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';
+			$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '快捷登录';
 		});
-//		localStorage.setItem('access_token', '');
-//		access_token = '';
+		//获取验证码
+		$scope.getcode = function() {
+			user.getcode($scope.models.regtel).success(function(data) {
+				if (data.result_code == '0') {
+					artDialog.tips('短信发送成功');
+					$scope.models.seconds = 60;
+					$interval(function() {
+						if ($scope.models.seconds == 0) {
+							return;
+						}
+						$scope.models.seconds--;
+					}, 1000)
+				} else {
+					artDialog.tips(data.result_dec);
+					$scope.models.seconds = 0;
+				}
+			}).error(function() {
+				artDialog.alert('获取验证码异常，请稍后重试！');
+			});
+		};
 		$scope.login = function() {
 			$ionicLoading.show('登录中...');
-			$http({
-				method: 'post',
-				url: basepath + 'oauth2/access_token/',
-				data: {
-					username: $scope.models.name,
-					password: $scope.models.pwd
-				}
-			}).success(function(data) {
-				$ionicLoading.hide();
-				if (data.result_code == '0') {
-					user.loginmsg(data.data);
-					var from = $rootScope.fromstate|| 'tab.main';
-					console.log(from);
-					$state.go(from);
-				} else {
-					artDialog.alert(data.result_dec + ',请重试！');
-					$scope.models.name = $scope.models.pwd = '';
-				}
-			}).error(function(a, b, c, d) {
-				$ionicLoading.hide();
-				artDialog.tips('http请求失败');
-			});
+			if($scope.models.formtype == 1) {
+				$http({
+					method: 'post',
+					url: basepath + 'oauth2/access_token/',
+					data: {
+						username: $scope.models.name,
+						password: $scope.models.pwd
+					}
+				}).success(function(data) {
+					$ionicLoading.hide();
+					if (data.result_code == '0') {
+						user.loginmsg(data.data);
+						var from = $rootScope.fromstate || 'tab.main';
+						console.log(from);
+						$state.go(from);
+					} else {
+						artDialog.alert(data.result_dec + ',请重试！');
+						$scope.models.name = $scope.models.pwd = '';
+					}
+				}).error(function(a, b, c, d) {
+					$ionicLoading.hide();
+					artDialog.tips('网络请求失败');
+				});
+			} else {
+				$http({
+					method: 'post',
+					url: basepath + 'user/phoneLogin/',
+					data: {
+						phone: $scope.models.regtel,
+						vcode: $scope.models.regcode
+					}
+				}).success(function(data) {
+					$ionicLoading.hide();
+					if (data.result_code == '0') {
+						user.loginmsg(data.data);
+						var from = $rootScope.fromstate || 'tab.main';
+						console.log(from);
+						$state.go(from);
+					} else {
+						artDialog.alert(data.result_dec + ',请重试！');
+						$scope.models.regtel = $scope.models.regcode = '';
+					}
+				}).error(function(a, b, c, d) {
+					$ionicLoading.hide();
+					artDialog.tips('网络请求失败');
+				});
+			}
+
 		}
 	})
-	.controller('resetpwdCtrl', function($scope, $http, $interval) {
+	.controller('resetpwdCtrl', function($scope, $http, $interval, user) {
 		//重置密码
 		$scope.models = {};
 		$scope.models.seconds = 0;
@@ -46,10 +90,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope,$sc
 		}
 		//获取验证码
 		$scope.getcode = function() {
-			$http({
-				method: 'get',
-				url: basepath + 'common/getVCode/?mobile=' + $scope.models.username
-			}).success(function(data) {
+			user.getcode($scope.models.username).success(function(data) {
 				if (data.result_code == '0') {
 					artDialog.tips('短信发送成功');
 					$scope.models.seconds = 60;

@@ -54,7 +54,7 @@ function setoboxpwd(t) {
 }
 var access_token = localStorage.getItem('access_token');
 var winw = window.screen.width;
-angular.module('app.service', [])
+angular.module('app.service', ['ionic'])
 	.factory('user', ['$http', '$location',
 		function($http, $location) {
 			return {
@@ -74,13 +74,19 @@ angular.module('app.service', [])
 						data: data
 					})
 				},
-				getcommunity: function() {}
+				getcommunity: function() {},
+				getcode: function(tel) {
+					return $http({
+						method: 'get',
+						url: basepath + 'common/getVCode/?mobile=' + tel + '&r=' + new Date()
+					})
+				}
 			}
 		}
 	]).factory('share', ['$ionicActionSheet',
 		function($ionicActionSheet) {
 			return {
-				share: function(title, des, url,imgurl, success, fail) {
+				share: function(title, des, url, imgurl, success, fail) {
 					var hideSheet = $ionicActionSheet.show({
 						buttons: [{
 							text: '分享给好友'
@@ -226,8 +232,8 @@ angular.module('app.service', [])
 			};
 		}
 	])
-	.factory('updateCart', ['$http','$ionicLoading',
-		function($http,$ionicLoading) {
+	.factory('updateCart', ['$http', '$ionicLoading', '$ionicModal',
+		function($http, $ionicLoading, $ionicModal) {
 			//更新购物车
 			var updateCart = function(proid, pronum, type) {
 				type = type || 2;
@@ -244,12 +250,18 @@ angular.module('app.service', [])
 			return {
 				//商品详情
 				proinfo: function(pro) {
-					artDialog.open(pro.description_url, {
-						title: pro.product_name,
-						width: 300,
-						padding: 10,
-						height: '80%'
+					$ionicModal.fromTemplateUrl('proinfo.html', {
+						scope: pro,
+						animation: 'slide-in-up'
+					}).then(function(modal) {
+						//$scope.modal = modal;
 					});
+					//					artDialog.open(pro.description_url, {
+					//						title: pro.product_name,
+					//						width: 300,
+					//						padding: 10,
+					//						height: '80%'
+					//					});
 				},
 				//添加到购物车
 				addTcart: function(pro, t) {
@@ -293,9 +305,11 @@ angular.module('app.service', [])
 						}
 					}
 					var up = updateCart(pro.product_id, (1 + pro.product_amount * 1), (pro.product_amount * 1 > 0 ? 2 : 1));
-					$ionicLoading.show({delay:3,
-						noBackdrop:true,
-						duration:10})
+					$ionicLoading.show({
+						delay: 3,
+						noBackdrop: true,
+						duration: 10
+					})
 					console.log("aaaaa");
 					up.success(function(data) {
 						pro.loading = false;
@@ -316,9 +330,9 @@ angular.module('app.service', [])
 						return updateCart(pro.product_id, 0, 3);
 					}
 					$ionicLoading.show({
-						delay:3,
-						noBackdrop:true,
-						duration:10
+						delay: 3,
+						noBackdrop: true,
+						duration: 10
 					})
 					if (pro.product_amount == 0) return;
 					var up = updateCart(pro.product_id, (pro.product_amount * 1 - 1), 2);
@@ -384,8 +398,8 @@ angular.module('app.service', [])
 
 			}
 		}
-	]).directive('prolist', ['$http', 'updateCart',
-		function($http, updateCart) {
+	]).directive('prolist', ['$http', '$ionicModal', 'updateCart',
+		function($http, $ionicModal, updateCart) {
 			//商品列表指令
 			return {
 				restrict: 'EA',
@@ -395,9 +409,16 @@ angular.module('app.service', [])
 				},
 				templateUrl: 'js/tpl/prolist.html', //商品列表模板
 				link: function(scope, element, attr) {
+					
 					//商品详情
 					scope.proinfo = function(pro) {
-						updateCart.proinfo(pro);
+						$ionicModal.fromTemplateUrl('proinfo.html', {
+							scope: pro,
+							animation: 'slide-in-up'
+						}).then(function(modal) {
+							modal.show();
+						});
+						//						updateCart.proinfo(pro);
 					};
 					scope.transtags = function(o, i) {
 							return o & (1 << i);

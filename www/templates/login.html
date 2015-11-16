@@ -1,7 +1,7 @@
 <ion-view view-title="{{models.formsg}}">
 	<ion-content>
 		<div class="tab">
-			<a ng-click="models.formtype='1'" ng-class="{cur:models.formtype==1}">登录</a><a ng-click="models.formtype='2'" ng-class="{cur:models.formtype==2}">注册</a>
+			<a ng-click="models.formtype='1'" ng-class="{cur:models.formtype==1}">登录</a><a ng-click="models.formtype='2'" ng-class="{cur:models.formtype==2}">快捷登录</a>
 		</div>
 		<div class="text_form">
 			<!-- 手机号登录 -->
@@ -9,31 +9,32 @@
 				<form ng-submit="login()" name="loginform">
 					<ul>
 						<li><i class="qx qx-phone"></i>
-							<input type="text" ng-model="models.name" name="name" autofocus="autofocus" required="required" placeholder="用户名/手机号/邮箱" />
+							<input type="text" max-length="11" ng-model="models.name" name="name" autofocus="autofocus" required="required" placeholder="用户名/手机号/邮箱" />
 						</li>
-						<li class="prbtn"><i class="qx qx-password"></i>
+						<li class="prbtn" style="padding-right: 5rem;"><i class="qx qx-password"></i>
 							<input type="password" ng-model="models.pwd" name="pwd" required="required" placeholder="用户密码" />
 							<a href="#/resetpwd" class="btn btn_big" style="padding-right: 0; color: blue; text-decoration: underline;">忘记密码?</a>
 						</li>
 						<li class="c">
-							<button type="submit" style="width: 100%;" ng-class="{btn_dis:!loginform.$valid}" class="fr btn btn_r block btn_big">登　录</button>
+							<button type="submit" style="width: 100%;" ng-class="{btn_dis:!loginform.$valid}" class="fr btn btn_r block btn_big">{{models.formsg}}</button>
 						</li>
 					</ul>
 				</form>
 			</div>
 
 			<div class="tab_cnt" id="login_phone" ng-show="models.formtype==2">
-				<form ng-submit="register()" name="regform">
+				<form ng-submit="login()" name="regform">
 					<ul>
 						<li><i class="qx qx-phone"></i>
-							<input type="tel" ng-model="models.regtel" name="regtel" required="required" placeholder="请输入您的手机号码" />
+							<input maxlength="11" type="tel" ng-model="models.regtel" name="regtel" required="required" placeholder="请输入您的手机号码" />
 						</li>
 						<li class="prbtn"><i class="qx qx-password"></i>
 							<input type="text" ng-model='models.regcode' required placeholder="请输入短信验证码" />
-							<a ng-click="getcode()" ng-class="{btn_dis:!regform.regtel.$valid}" class="btn btn_o btn_big">发送验证码</a>
+							<a ng-click="getcode()" ng-show="!models.seconds" ng-class="{btn_dis:!regform.regtel.$valid}" class="btn btn_o btn_big">发送验证码</a>
+							<span class="btn btn_dis btn_big" ng-show="models.seconds">重新获取({{models.seconds}})s</span>
 						</li>
 						<li>
-							<button type="submit" style="width: 100%;" ng-class="{btn_dis:!regform.$valid}" class="btn btn_r block  btn_big">注册</button>
+							<button type="submit" style="width: 100%;" ng-class="{btn_dis:!regform.$valid}" class="btn btn_r block  btn_big">{{models.formsg}}</button>
 						</li>
 					</ul>
 				</form>
