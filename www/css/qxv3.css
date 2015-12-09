@@ -9,8 +9,10 @@ code, kbd, pre, samp { font-family: courier new, courier, monospace; } /* 统一
 small { font-size: 12px; } /* 小于 12px 的中文很难阅读，让 small 正常化 */
 a { text-decoration: none;outline: none; }
 a:hover { text-decoration: none; }
+a, img {-webkit-touch-callout: none; /*禁止长按链接与图片弹出菜单*/}
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill{box-shadow:inset 0 0 0 1000px #fff;/*使用box-shadow改变(挡住)表单自动填充后的黄色*/}
 img { border: 0;outline: none;max-width: 100%; } /* img 搭车：让链接里的 img 无边框 */
-button, input, select, textarea { font-size: 100%; border-radius: 0; box-shadow: none; -webkit-appearance: none; } /* 使得表单元素在 ie 下能继承字体大小 */
+button, input, select, textarea { font-size: 100%; border-radius: 0; box-shadow: none; -webkit-appearance: none; }
 input[type='radio'],input[type='checkbox']{margin-right: 5px;border: none;}
 input{border: 1px solid #ddd;}
 table { border-collapse: collapse; border-spacing: 0; }
@@ -18,22 +20,22 @@ address, cite, dfn, em, var,i,b{font-weight: normal;font-style: normal;}
 html{font-size:100%;height: 100%;}
 a:hover,input:focus,textarea:focus,button:active,button:focus{outline: none;}
 img,input,textarea,select,button{vertical-align: middle}
-body,input,textarea,select,button,a{font-size: 12px;font-size:.75rem ;color: #545454;font-family:sans-serif Helvetica,STHeiti STXihei,Microsoft JhengHei,Microsoft YaHei,Arial;}
+body,input,textarea,select,button,a{font-size: 14px;font-size:.75rem ;color: #545454;font-family: "Helvetica Neue", Helvetica, STHeiTi, sans-serif,STHeiti,STXihei,Microsoft JhengHei,Microsoft YaHei,Arial;}
 body{max-width: 100%;margin: 0 auto;line-height: 1.6}
 .fl{float: left;}.fr{float: right;}
 .icon{vertical-align:;font-weight: 300;font-family: "qx" !important}
 .c:after{content: '\20';clear: both;display: block;height: 0;}
 #loading{position: fixed;left: 0;width: 0;z-index: 999;background: url(../images/loading.gif) center center rgba(0,0,0,.5) no-repeat;width: 100%;height: 100%;top: 0;}
 /*按钮*/
-.bd_input{border: 1px solid #ddd;padding: 10px; box-sizing: border-box;}
+.bd_input{border: 1px solid #ddd;padding: 10px;}
 .btn{display: inline-block;vertical-align: middle;padding:8px 1em;border: none;line-height:1;border-radius: 2px;text-align: center;font-size: 14px;font-size: .875rem;}
 a.btn,button.btn{cursor: pointer;}
 .btn_o{color: #fff;background-color: #ff8a00;}
 .btn_r{color: #fff;background-color: #ef473a;}
-.btn_g{color: #444;background-color: #eee;}
+.btn_g{color: #999;background-color: #eee;}
 .btn_blue{color: #fff;background-color: #5daffb;}
-.btn_big{font-size: 14px;font-size: .875rem;line-height: 1;padding: 12px 1.5em;}
-.btn_black{background-color: #313030;color: #fff;border-radius: 5px;}
+.btn_big{font-size: 14px;font-size: .875rem;line-height: 1.2;padding: 12px 1.5em;}
+.btn_black{background-color: #303030;color: #fff;border-radius: 5px;}
 .btn_small{padding: 4px .5em}
 .btn_dis{background-color: #eee;color: #aaa;cursor: none;box-shadow: none;}
 	/*btn-msg*/
@@ -154,8 +156,8 @@ background-size: 100% auto;}
 .icon_navlist{background-color: #fff;}
 .icon_navlist a{display: block;}
 .icon_navlist dl{padding:10px;overflow: hidden;border-bottom: 1px solid #ddd;}
-.icon_navlist dl:hover{background-color: #fafafa;}
-.icon_navlist dt{float: left;}
+.icon_navlist a:hover,.icon_navlist a:active,.icon_navlist a.activated{background-color: #fafafa;}
+.icon_navlist dt{float: left;margin-right: 10px;width: 40px;}
 .icon_navlist img{width: 2.5rem;}
 .icon_navlist .nav_icon .qx{font-size:2.2rem;color: #ef473a;display: inline-block;width:44px;height: 44px;text-align: center;line-height:44px;border-radius: 3px;margin-right: 10px;}
 .icon_navlist dd{color: #999;}
@@ -556,5 +558,5 @@ background-size: cover; background-image: url(../images/erro.png);}
 .has-subfooter {
   bottom: 93px; }
   .bar-subfooter{ overflow: visible;}
-  .bar .button.button-clear .icon:before, .bar .button.button-clear.icon:before, .bar .button.button-clear.icon-left:before, .bar .button.button-clear.icon-right:before{font-size:1rem;padding: 0;margin: 0;margin-right: -5px;}
+  .bar .button.button-clear .icon:before, .bar .button.button-clear.icon:before, .bar .button.button-clear.icon-left:before, .bar .button.button-clear.icon-right:before{font-size:1rem;padding: 0;margin: 0;margin-right:0;}
  .bar .button.button-clear,.bar .buttons span{font-size: 14px;font-size: .875rem;}

@@ -1,0 +1,22 @@
+<ion-view view-title="绑定手机">
+	<ion-content>
+		<div class="text_form">
+			<form ng-submit="bindtel()" name="checkcode" method="post">
+				<ul class="tab_cnt">
+					<li><i class="qx qx-phone"></i>
+						<input type="tel" name="username" required="required" ng-model="models.username" placeholder="手机号码" />
+					</li>
+					<li class="prbtn"><i class="qx qx-password"></i>
+						<input type="text" placeholder="请输入验证码" required="required" name="code" ng-model="models.code" />
+						<a ng-click="getcode()" ng-show="!models.seconds" ng-class="{btn_dis:!checkcode.username.$valid}" class="btn btn_o btn_big">发送验证码</a>
+						<span class="btn btn_dis btn_big" ng-show="models.seconds">重新获取({{models.seconds}})s</span>
+					</li>
+					<li>
+						<button type="submit" class="btn btn_r btn_big block" ng-class="{btn_dis:!checkcode.$valid}" ng-disabled="!checkcode.$valid">绑定并登录</button>
+					</li>
+				</ul>
+			</form>
+			<p class="pd"><a href="" class="fc_r">收不到短信验证码？</a></p>
+		</div>
+	</ion-content>
+</ion-view>

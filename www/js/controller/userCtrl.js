@@ -1,4 +1,4 @@
-angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $scope, $http, $ionicLoading, $stateParams, $state,$interval,user) {
+angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $scope, $http, $ionicLoading, $stateParams, $state, $interval, $location, user, wechatService) {
 		$ionicLoading.hide();
 		$scope.models = {};
 		$scope.models.formtype = $stateParams.formtype || 1;
@@ -12,8 +12,9 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 				if (data.result_code == '0') {
 					artDialog.tips('短信发送成功');
 					$scope.models.seconds = 60;
-					$interval(function() {
+					$scope.interval = $interval(function() {
 						if ($scope.models.seconds == 0) {
+							$interval.cancel($scope.interval)
 							return;
 						}
 						$scope.models.seconds--;
@@ -27,8 +28,18 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 			});
 		};
 		$scope.login = function() {
+			$http({
+				url: basepath + 'user/weixinBind/',
+				data: {
+					phone: "13382761314",
+					vcode: "897921",
+					openid: "oCjbss-6nQjiXdfw-1WYs_ME5Gq0"
+				}
+			}).success(function(data) {
+				console.log(data);
+			})
 			$ionicLoading.show('登录中...');
-			if($scope.models.formtype == 1) {
+			if ($scope.models.formtype == 1) {
 				$http({
 					method: 'post',
 					url: basepath + 'oauth2/access_token/',
@@ -76,26 +87,101 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 				});
 			}
 
+		};
+		//微信登陆
+		$scope.loginBwechat = function(channel) {
+			Wechat.auth("snsapi_userinfo", function(response) {
+				$ionicLoading.show()
+				console.log(response.code);
+				wechatService.getopenid(response.code).success(function(data) {
+					console.log(data.openid);
+					$http({
+						method: 'post',
+						url: basepath + "user/weixinLogin/",
+						data: {
+							openid: data.openid
+						}
+					}).success(function(d) {
+						$ionicLoading.hide();
+						console.log(d);
+						var from = $rootScope.fromstate || 'tab.main';
+						if (d.result_code == '0') {
+							user.loginmsg(d.data);
+							$state.go(from);
+						} else if (d.result_code == '1') {
+							$location.gourl = from;
+							$location.openid = response.code
+							$state.go('bindtel');
+						} else {
+							artDialog.alert(d.result_dec);
+						}
+					}).error(function(a, b, c, d) {
+						$ionicLoading.hide();
+						artDialog.alert(b);
+					})
+				})
+			})
+		}
+	})
+	.controller('BindTel', function($scope, $http, $state, $location, $ionicLoading, $interval, user) {
+		$scope.models = {};
+		$scope.models.seconds = 0;
+		$scope.getcode = function() {
+			user.getcode($scope.models.username).success(function(data) {
+				if (data.result_code == '0') {
+					artDialog.tips('短信发送成功');
+					$scope.models.seconds = 60;
+					$scope.interval = $interval(function() {
+						if ($scope.models.seconds == 0) {
+							$interval.cancel($scope.interval)
+							return;
+						}
+						$scope.models.seconds--;
+					}, 1000)
+				} else {
+					artDialog.tips(data.result_dec);
+					$scope.models.seconds = 0;
+				}
+			}).error(function() {
+				artDialog.alert('获取验证码异常，请稍后重试！');
+			});
+		};
+		$scope.bindtel = function() {
+			$http({
+				method: 'post',
+				url: basepath + 'user/weixinBind/',
+				data: {
+					openid: $location.openid,
+					phone: $scope.models.username,
+					vcode: $scope.models.code
+				}
+			}).success(function(data) {
+				console.log(data);
+				if (data.result_code == '0') {
+					user.loginmsg(data.data);
+					$state.go($location.gourl);
+				} else {
+					artDialog.alert(data.result_dec + ',请重试！');
+					$scope.models.username = $scope.models.code = '';
+				}
+			})
 		}
 	})
 	.controller('resetpwdCtrl', function($scope, $http, $interval, user) {
 		//重置密码
 		$scope.models = {};
 		$scope.models.seconds = 0;
-		$scope.models.cnt = 2; //
-		$scope.models.haslogin = false;
-		if (access_token) {
-			$scope.models.haslogin = true;
-			$scope.models.cnt = 1;
-		}
+		$scope.models.cnt = access_token ? 1 : 2; //
+		$scope.models.haslogin = access_token ? true : false;
 		//获取验证码
 		$scope.getcode = function() {
 			user.getcode($scope.models.username).success(function(data) {
 				if (data.result_code == '0') {
 					artDialog.tips('短信发送成功');
 					$scope.models.seconds = 60;
-					$interval(function() {
+					$scope.interval = $interval(function() {
 						if ($scope.models.seconds == 0) {
+							$interval.cancel($scope.interval)
 							return;
 						}
 						$scope.models.seconds--;

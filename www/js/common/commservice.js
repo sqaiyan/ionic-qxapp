@@ -232,6 +232,16 @@ angular.module('app.service', ['ionic'])
 			};
 		}
 	])
+	.factory('wechatService', ['$http', '$ionicLoading', function($http, $ionicLoading) {
+		return {
+			getopenid: function(code) {
+				return $http.get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx23af185f64e0712c&secret=71a367da83b0e848882c1c4c4af67b0c&code=" + code + "&grant_type=authorization_code");
+			},
+			getuserinfo: function(token, openid) {
+				$http.get('https://api.weixin.qq.com/sns/userinfo?access_token=' + token + '&openid=' + openid);
+			}
+		}
+	}])
 	.factory('updateCart', ['$http', '$ionicLoading', '$ionicModal',
 		function($http, $ionicLoading, $ionicModal) {
 			//更新购物车
@@ -409,7 +419,7 @@ angular.module('app.service', ['ionic'])
 				},
 				templateUrl: 'js/tpl/prolist.html', //商品列表模板
 				link: function(scope, element, attr) {
-					
+
 					//商品详情
 					scope.proinfo = function(pro) {
 						$ionicModal.fromTemplateUrl('proinfo.html', {

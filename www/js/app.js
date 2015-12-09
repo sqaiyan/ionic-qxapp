@@ -9,6 +9,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 			if (!access_token) {
 				angular.forEach(checkroute, function(data, i) {
 					if (data == $rootScope.tostate) {
+						console.log(data);
 						$state.go("login");
 					}
 				})
@@ -35,16 +36,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 		$ionicConfigProvider.views.swipeBackEnabled(false);
 		$ionicConfigProvider.navBar.alignTitle('center');
 		$ionicConfigProvider.backButton.icon('qx-back').text('返回');
-		//app rate
-//		var prefs = {
-//			language: 'en',
-//			appName: 'MY APP',
-//			iosURL: '<my_app_id>',
-//			androidURL: 'market://details?id=<package_name>',
-//			windowsURL: 'ms-windows-store:Review?name=<...>'
-//		};
-//
-//		$cordovaAppRateProvider.setPreferences(prefs)
 		$stateProvider
 			.state('tab', {
 				url: '/tab',
@@ -97,6 +88,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 					formtype: '2'
 				},
 				controller: 'LoginCtrl'
+			})
+			.state('bindtel', {
+				url: '/bindtel',
+				cache: 'false',
+				templateUrl: 'templates/bindtel.html',
+				controller: 'BindTel'
 			})
 			.state('resetpwd', {
 				url: '/resetpwd',
@@ -188,4 +185,4 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 			});
 		$urlRouterProvider.otherwise('/tab/main');
 	});
-angular.module('qx.controllers', ['ionic', 'app.service']);
+angular.module('qx.controllers', ['ionic','ngCordova', 'app.service']);

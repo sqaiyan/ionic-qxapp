@@ -5,11 +5,16 @@ angular.module('qx.controllers').controller('AddressCtrl', function($scope, $htt
 		if (ionic.Platform.isAndroid()) {
 			try {
 				window.LocationPlugin.getLocation(function(pos) {
-					$scope.map.centerAndZoom(new BMap.Point(pos.longitude, pos.latitude), 18);
+				//window.locationService.getCurrentPosition(function(pos){
+					console.log(pos);
+					alert(pos.longitude)
+				$scope.map.centerAndZoom(new BMap.Point(pos.longitude, pos.latitude), 18);
+				//$scope.map.centerAndZoom(new BMap.Point(pos.coords.longitude, pos.coords.latitude), 18);
 				}, function(msg) {
 					console.log("错误消息：" + msg);
 				});
 			} catch (e) {
+				console.log(e);
 				//alert(e + '异常')
 			}
 		} else {

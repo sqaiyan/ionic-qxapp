@@ -19,7 +19,12 @@
     "cordova-plugin-console",
     "cordova-plugin-whitelist",
     "cordova-plugin-splashscreen",
-    "com.ionic.keyboard"
+    "com.ionic.keyboard",
+    "com.qtong.cordova.bdlocation",
+    {
+      "locator": "https://github.com/mrwutong/cordova-qdc-alipay.git",
+      "id": "com.qdc.plugins.alipay"
+    }
   ],
   "cordovaPlatforms": [
     "android",

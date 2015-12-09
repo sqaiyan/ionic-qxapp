@@ -1,5 +1,5 @@
-angular.module('qx.controllers').controller('testPluginsCtrl', ['$scope', '$http', '$cordovaToast', '$cordovaBarcodeScanner', '$cordovaMedia', '$cordovaBadge', '$cordovaDialogs', '$cordovaSpinnerDialog', '$cordovaPinDialog', '$cordovaCamera', '$cordovaContacts', '$cordovaTouchID', '$cordovaLocalNotification', '$cordovaClipboard', '$cordovaAppRate', '$cordovaImagePicker',
-	function($scope, $http, $cordovaToast, $cordovaBarcodeScanner, $cordovaMedia, $cordovaBadge, $cordovaDialogs, $cordovaSpinnerDialog, $cordovaPinDialog, $cordovaCamera, $cordovaContacts, $cordovaTouchID, $cordovaLocalNotification, $cordovaClipboard, $cordovaAppRate, $cordovaImagePicker) {
+angular.module('qx.controllers').controller('testPluginsCtrl', ['$scope', '$http', '$cordovaToast', '$cordovaBarcodeScanner', '$cordovaMedia', '$cordovaBadge', '$cordovaDialogs', '$cordovaSpinnerDialog', '$cordovaPinDialog', '$cordovaCamera', '$cordovaContacts', '$cordovaTouchID', '$cordovaLocalNotification', '$cordovaClipboard', '$cordovaAppRate', '$cordovaImagePicker', '$ionicLoading',
+	function($scope, $http, $cordovaToast, $cordovaBarcodeScanner, $cordovaMedia, $cordovaBadge, $cordovaDialogs, $cordovaSpinnerDialog, $cordovaPinDialog, $cordovaCamera, $cordovaContacts, $cordovaTouchID, $cordovaLocalNotification, $cordovaClipboard, $cordovaAppRate, $cordovaImagePicker, $ionicLoading) {
 		$scope.clipboard = function() {
 			$cordovaClipboard.copy('text to copy').then(function() {
 				alert('复制成功')
@@ -7,7 +7,54 @@ angular.module('qx.controllers').controller('testPluginsCtrl', ['$scope', '$http
 				alert('复制失败')
 			});
 		};
-		//点赞提示
+		$scope.pay = function() {
+			try {
+
+
+				$ionicLoading.show()
+				$http.get('https://dev1.meiguoyouxian.com/version/2110/api/newapp/place_order_new_v220.php?goods_list=[[490,1],[586,1],[637,1],[638,1]]&amount=13.30&name=%E6%B5%8B%E8%AF%95&tel=13382761314&address=%E6%B1%89%E4%B8%AD%E8%B7%AF27%E5%8F%B7cshi&remark=%E7%95%99%E8%A8%80%E5%A4%87%E6%B3%A8&mobile=13382761314&freight=0&shipping_time=%E4%B8%80%E5%91%A8%E4%B9%8B%E5%86%85%E5%85%A8%E5%A4%A9%E5%8F%AF%E6%94%B6%E8%B4%A7&shipping_type=%E9%85%8D%E9%80%81%E4%B8%8A%E9%97%A8&payment=weixin&device_id=undefined&city=%E5%8D%97%E4%BA%AC%E5%B8%82&district=%E7%8E%84%E6%AD%A6%E5%8C%BA&area=%E5%8D%97%E4%BA%AC%E6%96%B0%E8%A1%97%E5%8F%A3%E5%88%86%E6%8B%A3%E4%B8%AD%E5%BF%83&delivery_time=1%E5%B0%8F%E6%97%B6%E6%9E%81%E9%80%9F%E8%BE%BE&saletype=').success(function(data) {
+					console.log(data.data);
+					$ionicLoading.hide();
+					var p = data.data;
+					Wechat.sendPaymentRequest({
+						appid:p.appid,
+						mch_id: p.partnerid, // merchant id
+						prepay_id: p.prepayid, // prepay id
+						nonce: p.noncestr, // nonce
+						timestamp: p.timestamp, // timestamp
+						sign: p.sign, // signed string
+					}, function() {
+						alert("Success");
+					}, function(reason) {
+						alert("Failed: " + reason);
+					});
+				}).error(function() {
+					$ionicLoading.hide();
+					alert("qingqiu shibai")
+				})
+			} catch (e) {
+				console.log(e);
+			}
+
+		};
+		$scope.login = function() {
+				var scope = "snsapi_userinfo";
+				Wechat.auth(scope, function(response) {
+					// you may use response.code to get the access token.
+					//获取token
+					$http.get("https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx23af185f64e0712c&secret=71a367da83b0e848882c1c4c4af67b0c&code=" + response.code + "&grant_type=authorization_code").success(function(d) {
+						console.log(d);
+						$http.get('https://api.weixin.qq.com/sns/userinfo?access_token=' + d.access_token + '&openid=' + d.openid).success(function(c) {
+							console.log(c);
+							$scope.user=c;
+							$scope.$apply();
+						})
+					})
+				}, function(reason) {
+					alert("Failed: " + reason);
+				});
+			}
+			//点赞提示
 		$scope.apprate = function() {
 			$cordovaAppRate.promptForRating(true).then(function(result) {
 				console.log(result);

@@ -1,0 +1,115 @@
+<ion-view view-title="测试插件">
+	<ion-content >
+		<div class="icon_navlist">
+			<ul>
+				<li>
+					<dl ng-click="dialog()">
+						<dd class="nav_name">Dialogs</dd>
+						<dd class="nav_des">系统对话框</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="pindialog()">
+						<dd class="nav_name">PinDialog</dd>
+						<dd class="nav_des"></dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="camera()">
+						<dd class="nav_name">camera</dd>
+						<dd class="nav_des">摄像头</dd>
+					</dl>
+				</li>
+				<li>
+					<dl>
+						<dd class="nav_name">capture</dd>
+						<dd class="nav_des"></dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="clipboard()">
+						<dd class="nav_name">Clipboard</dd>
+						<dd class="nav_des">粘贴板</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="contact()">
+						<dd class="nav_name">contacts</dd>
+						<dd class="nav_des">联系人</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="spinnerdialog()">
+						<dd class="nav_name">SpinnerDialog</dd>
+						<dd class="nav_des">A dialog with a spinner wheel.</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="toast()">
+						<dd class="nav_name">Toast</dd>
+						<dd class="nav_des">系统Toast </dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="iostouchid()">
+						<dd class="nav_name">TouchID</dd>
+						<dd class="nav_des">iOS TouchID</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="apprate()">
+						<dd class="nav_name">AppRate</dd>
+						<dd class="nav_des">提示用户点赞</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="bage()">
+						<dd class="nav_name">Badge</dd>
+						<dd class="nav_des">app图标上提示信息数量显示</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="scanner()">
+						<dd class="nav_name">BarcodeScanner</dd>
+						<dd class="nav_des">二维码解析</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="scanner_encode()">
+						<dd class="nav_name">BarcodeScanner encode</dd>
+						<dd class="nav_des">二维码生成</dd>
+					</dl>
+				</li>
+				<li>
+					<dl ng-click="localnotification()">
+						<dd class="nav_name">LocalNotification</dd>
+						<dd class="nav_des">本地推送</dd>
+					</dl>
+				</li>
+				<li ng-click="media()">
+					<dl>
+						<dd class="nav_name">Media</dd>
+						<dd class="nav_des">播放，录音</dd>
+					</dl>
+				</li>
+				<li ng-click="pay()">
+					<dl>
+						<dd class="nav_name">微信支付</dd>
+						<dd class="nav_des">建议微信用户使用</dd>
+					</dl>
+				</li>
+				<li ng-click="login()">
+					<dl>
+						<dd class="nav_name">微信登陆</dd>
+						<dd class="nav_des">建议微信用户使用</dd>
+					</dl>
+				</li>
+			</ul>
+		</div>
+		<img src="" id="myImage" alt="" />
+		<div id="a">
+			<p>用户名:{{user.nickname}}</p>
+			<p><img src="{{user.headimgurl}}" alt="" /></p>
+		</div>
+	</ion-content>
+</ion-view>

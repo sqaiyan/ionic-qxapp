@@ -26,10 +26,10 @@
 				<form ng-submit="login()" name="regform">
 					<ul>
 						<li><i class="qx qx-phone"></i>
-							<input maxlength="11" type="tel" ng-model="models.regtel" name="regtel" required="required" placeholder="请输入您的手机号码" />
+							<input maxlength="11" type="tel" ng-model="models.regtel" name="regtel" required="required" ng-pattern="/^1\d{10}$/" placeholder="请输入您的手机号码" />
 						</li>
 						<li class="prbtn"><i class="qx qx-password"></i>
-							<input type="text" ng-model='models.regcode' required placeholder="请输入短信验证码" />
+							<input type="text" ng-pattern="/\d{}$/" ng-model='models.regcode' required placeholder="请输入短信验证码" />
 							<a ng-click="getcode()" ng-show="!models.seconds" ng-class="{btn_dis:!regform.regtel.$valid}" class="btn btn_o btn_big">发送验证码</a>
 							<span class="btn btn_dis btn_big" ng-show="models.seconds">重新获取({{models.seconds}})s</span>
 						</li>
@@ -47,13 +47,13 @@
 		<div id="olist_title">使用第三方账号登录</div>
 		<div id="olist_cnt">
 			<ul>
-				<li><a href=""><i class="qx qx-roundwx icon-wx"></i><span>微信账号</span></a>
+				<li><a ng-click="loginBwechat()"><i class="qx qx-roundwx icon-wx"></i><span>微信账号</span></a>
 				</li>
-				<li><a href=""><i class="qx qx-roundqq icon-qq"></i><span>QQ账号</span></a>
+				<li><a ng-click="loginBqq()"><i class="qx qx-roundqq icon-qq"></i><span>QQ账号</span></a>
 				</li>
-				<li><a href=""><i class="qx qx-roundwb icon-wb"></i><span>微博账号</span></a>
+				<li><a ng-click="loginBwb()"><i class="qx qx-roundwb icon-wb"></i><span>微博账号</span></a>
 				</li>
-				<li><a href=""><i class="qx qx-roundaplipay icon-alipay"></i><span>支付宝账号</span></a>
+				<li><a ng-click="loginBalipay()"><i class="qx qx-roundaplipay icon-alipay"></i><span>支付宝账号</span></a>
 				</li>
 			</ul>
 		</div>

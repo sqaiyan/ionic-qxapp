@@ -1,9 +1,9 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.qx832492" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="Youxieren.youxieren" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>区享</name>
     <description>区域共赢，享你所想
     </description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">
+    <author email="sqaiyan@126.com" href="http://sqaiyan.com/">
       sqaiyan@126.com
     </author>
     <content src="index.html" />

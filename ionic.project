@@ -1,11 +1,5 @@
 {
-  "name": "qx",
+  "name": "区享",
   "app_id": "",
-  "browsers": [
-    {
-      "platform": "android",
-      "browser": "crosswalk",
-      "version": "12.41.296.5"
-    }
   ]
 }
