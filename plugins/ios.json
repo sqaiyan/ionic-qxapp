@@ -1,0 +1,82 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "com.qdc.plugins.alipay": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "com.qtong.cordova.bdlocation": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "com.synconset.imagepicker": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-file-transfer": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-geolocation": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-network-information": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-touchid": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "org.apache.cordova.camera": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "org.apache.cordova.dialogs": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "org.apache.cordova.globalization": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "org.apache.cordova.media": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "org.pushandplay.cordova.apprate": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "phonegap-plugin-barcodescanner": {
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        },
+        "xu.li.cordova.wechat": {
+            "WECHATAPPID": "wx23af185f64e0712c",
+            "PACKAGE_NAME": "Youxieren.youxieren"
+        }
+    },
+    "dependent_plugins": {}
+}

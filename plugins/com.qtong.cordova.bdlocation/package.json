@@ -1,0 +1,17 @@
+{
+    "version": "1.0.0",
+    "name": "com.qtong.cordova.bdlocation",
+    "cordova_name": "LocationPlugin",
+    "description": "Cordova Location Plugin Powerd by Baidu",
+    "license": "Apache 2.0",
+    "repo": "https://github.com/kaixinhupo/cordova_location.git",
+    "issue": "https://github.com/kaixinhupo/cordova_location/issues",
+    "keywords": [
+        "cordova",
+        "location"
+    ],
+    "platforms": [
+        "android"
+    ],
+    "engines": []
+}
