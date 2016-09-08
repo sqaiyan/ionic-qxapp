@@ -293,11 +293,6 @@ angular.module('app.service', ['ionic'])
 						scope.cart_propronum=scope.cart_propronum+i.amount*1
 					})
 					})
-					
-					scope.$watch('protypesize', function() {
-						scope.scrollStep = scope.scrollStep < (4 - scope.protypesize) ? (4 - scope.protypesize) : scope.scrollStep;
-						scope.scrollStep = scope.scrollStep >= 0 ? 0 : scope.scrollStep;
-					});
 					//向左滚动
 					scope.prosL = function() {
 							scope.scrollStep -= scope.minsize;
@@ -335,7 +330,6 @@ angular.module('app.service', ['ionic'])
 					
 					scope.cartlist.$watch(function(){
 						if(!scope.prolist)return;
-						console.log(scope.cartlist);
 						scope.prolist.forEach(function(i){
 							i.cart=null
 							scope.cartlist.forEach(function(j){
@@ -446,7 +440,7 @@ angular.module('app.service', ['ionic'])
 			templateUrl: 'js/tpl/checkbox.html',
 			link: function(scope, element, attr) {
 				scope.checktoogle = function() {
-					scope.selected = scope.selected == 'false' ? 'true' : 'false';
+					scope.selected = !scope.selected;
 				}
 			}
 		}
