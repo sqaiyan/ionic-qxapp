@@ -1,31 +1,46 @@
 var basepath = "http://115.159.93.15/scframe/";
 var postion = '';
-var checkroute = ['tab.main', 'tab.account', 'tab-orderlist', 'tab-service'];
-angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.controllers'])
-	.run(function($rootScope, $state, $ionicPlatform) {
+var ref="";
+var authObj;
+var wdurl="https://shopvue.wilddogio.com/";
+var checkroute = ['tab.account', 'tab.orderlist', 'tab.service',"tab.account"];
+angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.controllers', "wilddog"])
+	.run(function($rootScope, $state, $ionicPlatform,$wilddogAuth) {
+		ref = new Wilddog("https://shopvue.wilddogio.com");
+   		authObj = $wilddogAuth(ref);
+		authObj.$onAuth(function(authData) {
+			if(authData) {
+				console.log("Logged in as:", authData.uid);
+				access_token=authData.uid;
+			} else {
+				console.log("Logged out");
+				access_token=null;
+				$state.go("tab.main");
+			}
+		});
 		$rootScope.$on('$stateChangeSuccess', function(event, toState, toStateParams, fromState, fromStateParams) {
 			$rootScope.fromstate = fromState.name;
 			$rootScope.tostate = toState.name;
-			if (!access_token) {
+			if(!access_token) {
 				angular.forEach(checkroute, function(data, i) {
-					if (data == $rootScope.tostate) {
+					if(data == $rootScope.tostate) {
 						console.log(data);
 						$state.go("login");
 					}
 				})
 			};
 			var list = art.dialog.list;
-			for (var i in list) {
+			for(var i in list) {
 				list[i].close();
 			};
 		});
 		$ionicPlatform.ready(function() {
-			if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+			if(window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
 				localStorage.setItem('device', cordova.device());
 				cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 				cordova.plugins.Keyboard.disableScroll(true);
 			}
-			if (window.StatusBar) {
+			if(window.StatusBar) {
 				StatusBar.styleLightContent();
 			}
 		});
@@ -79,6 +94,12 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 				},
 				templateUrl: 'templates/login.html',
 				controller: 'LoginCtrl'
+			})
+			.state('product', {
+				url: '/product',
+				cache: 'false',
+				templateUrl: 'templates/addproduct.html',
+				controller: 'productController'
 			})
 			.state('register', {
 				url: '/register',
@@ -185,4 +206,4 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 			});
 		$urlRouterProvider.otherwise('/tab/main');
 	});
-angular.module('qx.controllers', ['ionic','ngCordova', 'app.service']);
+angular.module('qx.controllers', ['ionic', 'ngCordova', 'app.service']);

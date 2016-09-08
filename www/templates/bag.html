@@ -1,16 +1,11 @@
 <ion-view view-title="购物袋">
-	<ion-content class="has-subfooter" data-ng-init="getbagdata()">
-		<ion-refresher on-refresh="getbagdata()">
-		</ion-refresher>
+	<ion-content class="has-subfooter">
 		<div id="bagpl_wrap">
-			<div class="pd txt-c fr_gray fz_4 hide" ng-class="{block:!models.commonpro.length&&!models.weightpro.length}">暂无数据</div>
-			<div class="drawerbox_outer openout hide" ng-class="{block:models.commonpro.length}">
-				<div class="dbout_header c">
-					<span class="fl dboh_title">普通商品</span>
-				</div>
+			<div class="pd txt-c fr_gray fz_4" ng-hide="models.prolist.length">暂无数据</div>
+			<div class="drawerbox_outer openout">
 				<div class="dbout_cnt">
 					<ion-list class='bagplst'>
-						<ion-item ng-repeat="pro in models.commonpro">
+						<ion-item ng-repeat="pro in models.prolist">
 							<div class="c rcl_left">
 								<checkbox selected="pro.selected"></checkbox>
 								<div class="bplst_cnt">
@@ -19,14 +14,6 @@
 											<img data-src="{{pro.product_pic}}" class="hide" alt="" />
 										</a>
 										<div class="pl_proname" ng-bind="pro.product_name"></div>
-										<div class="pl_sale_tip">
-											<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
-											<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
-											<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
-											<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
-											<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
-											<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
-										</div>
 									</div>
 									<div class="pl_proprice c">
 										<div class="fl pro_price"><span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
@@ -34,7 +21,7 @@
 											<button class="del" ng-class="{disabled:pro.product_amount*1==0}" ng-disabled="pro.product_amount*1==0" ng-class="{disabled:pro.pronum*1==0}" ng-disabled="pro.pronum*1==0" ng-click="removeFcart(pro)">
 												<i class="qx qx-del"></i>
 											</button>
-											<span class="number" ng-class="{disabled:pro.product_amount*1==0}" ng-bind="pro.product_amount"></span>
+											<span class="number" ng-class="{disabled:!pro.amount}" ng-bind="pro.amount"></span>
 											<button class="add" ng-click="addTocart(pro)">
 												<i class="qx qx-add"></i>
 											</button>
@@ -42,52 +29,7 @@
 									</div>
 								</div>
 							</div>
-							<ion-option-button class=" button-assertive" ng-click="del_pro(pro,'common')">删除</ion-delete-button>
-						</ion-item>
-					</ion-list>
-				</div>
-			</div>
-
-			<div class="drawerbox_outer openout hide" ng-class="{block:models.weightpro.length}" ng-if="models.weightpro.length">
-				<div class="dbout_header c">
-					<span class="fl dboh_title">称重商品</span>
-					<b onclick="weighinfo()" class="qx qx-warn"></b>
-				</div>
-				<div class="dbout_cnt">
-					<ion-list class='bagplst'>
-						<ion-item ng-repeat="pro in models.weightpro">
-							<div class="c rcl_left">
-								<!-- 选择框checkbox,needw<3时为需称重和待称重，禁用 -->
-								<checkbox selected="pro.selected" disvalue="{{pro.status!=3}}"></checkbox>
-								<div class="bplst_cnt">
-									<div class="pl_promain c">
-										<a class="pl_proimg" ng-style="{'background-image':'url('+(pro.thumbnail||pro.product_pic)+')'}">
-											<img ng-src="{{pro.product_pic}}" class="hide" alt="" />
-										</a>
-										<div class="pl_proname" ng-bind="pro.product_name"></div>
-										<div class="pl_sale_tip">
-											<span ng-if="transtags(pro.tags*1,3)" class="tag-card">不支持区享卡</span>
-											<span ng-if="transtags(pro.tags*1,4)" class="tag-tj">特价</span>
-											<span ng-if="transtags(pro.tags*1,1)" class='tag-app'>APP专享</span>
-											<span ng-if="transtags(pro.tags*1,5)" class="tag-ys">预售</span>
-											<span ng-if="transtags(pro.tags*1,6)" class="tag-wh">无货</span>
-											<span ng-if="transtags(pro.tags*1,2)" class="tag-mj" ng-click="mjinfo(pro)">满减</span>
-										</div>
-									</div>
-									<div class="pl_proprice c">
-										<div class="fl pro_price">
-											<span class="fc_r" ng-bind="pro.product_price|currency:'￥'"></span>/{{pro.product_unit}}</div>
-										<div class="pro_act fr">
-											<a ng-click="toWeight(pro)" ng-if="pro.status==1" class="btn btn_msg_r fr btn_small">马上订购</a>
-
-											<span class="btn fr fc_r btn_msg_o btn_small" ng-if="pro.status==2">称重中</span>
-											<span ng-if="pro.status==3" class="fc_r fr price_count">
-										约{{pro.product_amount}}{{pro.product_unit}} {{pro.product_amount*1*pro.product_price|currency:'￥'}}</span>
-										</div>
-									</div>
-								</div>
-							</div>
-							<ion-option-button class="button-assertive" ng-click="del_pro(pro,'wei')">删除</ion-delete-button>
+							<ion-option-button class=" button-assertive" ng-click="models.prolist.$remove(pro)">删除</ion-delete-button>
 						</ion-item>
 					</ion-list>
 				</div>

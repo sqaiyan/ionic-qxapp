@@ -1,0 +1,50 @@
+<ion-view view-title="商品编辑">
+	<ion-content>
+		<div class="text_form">
+			<div class="tab_cnt">
+				<form ng-submit="subpro()" name="proform">
+					<ul>
+						<li><span>商品名称：</span>
+							<input type="text"  ng-model="models.product_name" name="name" autofocus="autofocus" required="required" placeholder="商品名" />
+						</li>
+						<li><span>商品价格：</span>
+							<input type="text"  ng-model="models.product_price" required="required" placeholder="价格" />
+						</li>
+						<li><span>库存单位：</span>
+							<input type="text"  ng-model="models.product_unit" required="required" placeholder="单位" />
+						</li>
+						<li><span>商品标签：</span>
+							<input type="text"  ng-model="models.product_tags" required="required" placeholder="标签" />
+						</li>
+						<li><span>　缩略图：</span>
+							<input type="text"  ng-model="models.product_thumbnail" required="required" placeholder="缩略图" />
+						</li>
+						<li><span>商品图片：</span>
+							<input type="text"  ng-model="models.product_pic" required="required" placeholder="图片" />
+						</li>
+						<li><span>商品库存：</span>
+							<input type="text"  ng-model="models.product_amount" required="required" placeholder="库存" />
+						</li>
+						<li><span>商品品类：</span>
+							<select ng-model="models.service_id">
+								<option value="{{t.$id}}" ng-repeat="t in navlist">{{t.service_name}}</option>
+							</select>
+						</li>
+						<li class="c">
+							<button type="submit" style="width: 100%;" ng-class="{btn_dis:!proform.$valid}" class="fr btn btn_r block btn_big">确定</button>
+						</li>
+					</ul>
+				</form>
+			</div>
+			
+			<div class="tab_cnt">
+				<form ng-submit="subtype()" name="typeform">
+					<ul>
+						<li><span>商品类目名称：</span><input type="text" ng-model="t.service_name" /></li>
+						<li><button type="submit" style="width: 100%;" ng-class="{btn_dis:!typeform.$valid}" class="fr btn btn_r block btn_big">确定</button></li>
+					</ul>
+				</form>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

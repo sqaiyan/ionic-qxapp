@@ -1,94 +1,74 @@
-angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $scope, $http, $ionicLoading, $stateParams, $state, $interval, $location, user, wechatService) {
+angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $scope, $http, $ionicLoading, $stateParams, $state, $interval,$wilddogAuth, $location, user, wechatService) {
 		$ionicLoading.hide();
 		$scope.models = {};
+		var from = $rootScope.fromstate || 'tab.main';
 		$scope.models.formtype = $stateParams.formtype || 1;
-		$scope.models.formsg = $scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '快捷登录';;
-		$scope.$watch('models.formtype', function() {
-			$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '快捷登录';
+		$scope.models.formsg = ($scope.models.formtype == 1) ? '登录' : '注册';;
+		$scope.toggleRL = function(t) {
+			$scope.models.formtype = t;
+			$scope.models.formsg = (t == 1) ? '登录' : '注册';
+		}
+		authObj.$onAuth(function(authData) {
+			if(authData) {
+				console.log("Logged in as:", authData.uid);
+				access_token=authData.uid;
+				user.loginmsg(authData.uid);
+				$state.go(from);
+			}
 		});
-		//获取验证码
-		$scope.getcode = function() {
-			user.getcode($scope.models.regtel).success(function(data) {
-				if (data.result_code == '0') {
-					artDialog.tips('短信发送成功');
-					$scope.models.seconds = 60;
-					$scope.interval = $interval(function() {
-						if ($scope.models.seconds == 0) {
-							$interval.cancel($scope.interval)
-							return;
-						}
-						$scope.models.seconds--;
-					}, 1000)
-				} else {
-					artDialog.tips(data.result_dec);
-					$scope.models.seconds = 0;
-				}
-			}).error(function() {
-				artDialog.alert('获取验证码异常，请稍后重试！');
-			});
-		};
 		$scope.login = function() {
-			$http({
-				url: basepath + 'user/weixinBind/',
-				data: {
-					phone: "13382761314",
-					vcode: "897921",
-					openid: "oCjbss-6nQjiXdfw-1WYs_ME5Gq0"
-				}
-			}).success(function(data) {
-				console.log(data);
-			})
-			$ionicLoading.show('登录中...');
-			if ($scope.models.formtype == 1) {
-				$http({
-					method: 'post',
-					url: basepath + 'oauth2/access_token/',
-					data: {
-						username: $scope.models.name,
-						password: $scope.models.pwd
-					}
-				}).success(function(data) {
+			$ionicLoading.show();
+			//登录
+			if($scope.models.formtype == 1) {
+				authObj.$authWithPassword({
+					email: $scope.models.name,
+					password: $scope.models.pwd
+				}).then(function(authData) {
+					console.log("Logged in as:", authData.uid);
 					$ionicLoading.hide();
-					if (data.result_code == '0') {
-						user.loginmsg(data.data);
-						var from = $rootScope.fromstate || 'tab.main';
-						console.log(from);
-						$state.go(from);
-					} else {
-						artDialog.alert(data.result_dec + ',请重试！');
-						$scope.models.name = $scope.models.pwd = '';
-					}
-				}).error(function(a, b, c, d) {
+					user.loginmsg(authData.uid);
+					$state.go(from);
+				}).catch(function(error) {
+					console.error("Authentication failed:", error);
 					$ionicLoading.hide();
-					artDialog.tips('网络请求失败');
+					artDialog.tips(error);
 				});
 			} else {
-				$http({
-					method: 'post',
-					url: basepath + 'user/phoneLogin/',
-					data: {
-						phone: $scope.models.regtel,
-						vcode: $scope.models.regcode
-					}
-				}).success(function(data) {
+				//注册
+				authObj.$createUser({
+					email: $scope.models.name,
+					password: $scope.models.pwd
+				}).then(function(userData) {
+					console.log("User " + userData.uid + " created successfully!");
+					return authObj.$authWithPassword({
+						email: $scope.models.name,
+						password: $scope.models.pwd
+					});
+				}).then(function(authData) {
+					console.log("Logged in as:", authData.uid);
 					$ionicLoading.hide();
-					if (data.result_code == '0') {
-						user.loginmsg(data.data);
-						var from = $rootScope.fromstate || 'tab.main';
-						console.log(from);
-						$state.go(from);
-					} else {
-						artDialog.alert(data.result_dec + ',请重试！');
-						$scope.models.regtel = $scope.models.regcode = '';
-					}
-				}).error(function(a, b, c, d) {
+					user.loginmsg(authData.uid);
+					$state.go(from);
+				}).catch(function(error) {
+					console.error("Authentication failed:", error);
 					$ionicLoading.hide();
-					artDialog.tips('网络请求失败');
+					artDialog.tips(error);
 				});
 			}
 
 		};
-		//微信登陆
+		$scope.loginBwb = function() {
+				authObj.$authWithOAuthRedirect("weibo").then(function(authData) {
+					console.log("Logged in as:", authData.uid);
+					user.loginmsg(authData.uid);
+					$state.go(from);
+				}).catch(function(error) {
+					console.error("Authentication failed:", error);
+					$ionicLoading.hide();
+					artDialog.tips(error);
+				});
+			}
+			//微信登陆
 		$scope.loginBwechat = function(channel) {
 			Wechat.auth("snsapi_userinfo", function(response) {
 				$ionicLoading.show()
@@ -105,10 +85,10 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 						$ionicLoading.hide();
 						console.log(d);
 						var from = $rootScope.fromstate || 'tab.main';
-						if (d.result_code == '0') {
+						if(d.result_code == '0') {
 							user.loginmsg(d.data);
 							$state.go(from);
-						} else if (d.result_code == '1') {
+						} else if(d.result_code == '1') {
 							$location.gourl = from;
 							$location.openid = response.code
 							$state.go('bindtel');
@@ -128,11 +108,11 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 		$scope.models.seconds = 0;
 		$scope.getcode = function() {
 			user.getcode($scope.models.username).success(function(data) {
-				if (data.result_code == '0') {
+				if(data.result_code == '0') {
 					artDialog.tips('短信发送成功');
 					$scope.models.seconds = 60;
 					$scope.interval = $interval(function() {
-						if ($scope.models.seconds == 0) {
+						if($scope.models.seconds == 0) {
 							$interval.cancel($scope.interval)
 							return;
 						}
@@ -157,7 +137,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 				}
 			}).success(function(data) {
 				console.log(data);
-				if (data.result_code == '0') {
+				if(data.result_code == '0') {
 					user.loginmsg(data.data);
 					$state.go($location.gourl);
 				} else {
@@ -176,11 +156,11 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 		//获取验证码
 		$scope.getcode = function() {
 			user.getcode($scope.models.username).success(function(data) {
-				if (data.result_code == '0') {
+				if(data.result_code == '0') {
 					artDialog.tips('短信发送成功');
 					$scope.models.seconds = 60;
 					$scope.interval = $interval(function() {
-						if ($scope.models.seconds == 0) {
+						if($scope.models.seconds == 0) {
 							$interval.cancel($scope.interval)
 							return;
 						}
@@ -198,7 +178,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 		$scope.checkcodef = function() {
 			console.log("checkcode");
 			$http.get(basepath + 'common/checkVCode/?mobile=' + $scope.models.username + '&code=' + $scope.models.code).success(function(data) {
-				if (data.result_code == '0') {
+				if(data.result_code == '0') {
 					$scope.models.codeok = true;
 				} else {
 					artDialog.tips(data.result_dec);
@@ -211,7 +191,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 		//提交密码
 		$scope.subnewpwd = function() {
 			console.log($scope.models.newpwd + '````' + $scope.models.renewpwd);
-			if ($scope.models.newpwd == '' || ($scope.models.newpwd != $scope.models.renewpwd)) {
+			if($scope.models.newpwd == '' || ($scope.models.newpwd != $scope.models.renewpwd)) {
 				artDialog.alert('请输入新密码');
 				return false;
 			}
@@ -226,7 +206,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 					newPassword: $scope.models.renewpwd
 				}
 			}).success(function(data) {
-				if (data.result_code == '0') {
+				if(data.result_code == '0') {
 					artDialog.tips('密码重置成功！');
 					$timeout(function() {
 						$stat.go('login');
@@ -241,60 +221,30 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 	})
 	.controller('UserCtrl', function($scope, $http, $ionicLoading, $state, user) {
 		//用户中心
-		$http({
-			method: 'get',
-			url: basepath + 'user/info/?access_token=' + access_token
-		}).success(function(data) {
-			if (data.result_code == '0') {
-				$scope.info = data.data;
-			} else {
-				artDialog.alert(data.result_dec)
-			}
-		}).error(function() {});
-		$scope.logout = function() {
-			$ionicLoading.show('退出中...');
-			$http({
-				method: 'get',
-				url: basepath + 'user/logout/?access_token=' + access_token
-			}).success(function(data) {
-				$ionicLoading.hide();
-				user.logout();
-				if (data.result_code == '0') {
-					user.logout();
-				} else {
-					artDialog.alert(data.result_dec)
-				}
-			}).error(function() {
-				$ionicLoading.hide();
-				user.logout();
-			});
-		};
-		$scope.update_user_info = function() {
-			var data = {
-				nick: '紫烟薄旭',
-				email: 'sqaiyan@126.com',
-				sign: '当只有在你的心里仍停留的我的青春还正如山般葱茏水般澄清',
-				avatar: 'http://p4.music.126.net/nBLDewqHLaMfzgQrVwzgqA==/7698780418596809.jpg',
-				bgpic: 'url("http://p1.music.126.net/fF4jCB9KMiWFEmTT3vAD7g==/2054987232330223.jpg")',
-				sex: 1
-			}
-			user.setuserinfo(data).success(function(data) {
-				console.log(data);
-			})
+		$scope.info = {
+			nick: '紫烟薄旭',
+			email: 'sqaiyan@126.com',
+			sign: '当只有在你的心里仍停留的我的青春还正如山般葱茏水般澄清',
+			avatar: 'http://p4.music.126.net/nBLDewqHLaMfzgQrVwzgqA==/7698780418596809.jpg',
+			bgpic: 'url("http://p1.music.126.net/fF4jCB9KMiWFEmTT3vAD7g==/2054987232330223.jpg")',
+			sex: 1
 		}
+		$scope.logout = function() {
+			authObj.$unauth();
+		};
 	}).controller('CardCtrl', function($scope, $http) {
 		//quxiangka
 		$http({
 			method: 'get',
 			url: basepath + 'qxcard/list/?access_token=' + access_token + '&type=1'
 		}).success(function(data) {
-			if (data.result_code == '0' && data.data.length) {
+			if(data.result_code == '0' && data.data.length) {
 				$scope.cards = data.data;
 			}
 		}).error(function() {});
 		$scope.jh = function() {
-			artDialog.prompt('请输入16位区享卡密码', function(v) {
-				if (v.length == 16) {
+			artDialog.prompt('请输入16位卡密码', function(v) {
+				if(v.length == 16) {
 					$http({
 						method: 'post',
 						url: basepath + 'qxcard/activate/?access_token=' + access_token,
@@ -302,7 +252,7 @@ angular.module('qx.controllers').controller('LoginCtrl', function($rootScope, $s
 							qxcard_cdkey: v
 						}
 					}).success(function(data) {
-						if (data.result_code == '0') {
+						if(data.result_code == '0') {
 							artDialog.tips('激活成功');
 						} else {
 							artDialog.tips(data.result_dec, 20)

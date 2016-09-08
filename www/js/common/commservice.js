@@ -23,13 +23,13 @@ var browser = {
 function GetQueryString(name) {
 	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
 	var r = window.location.search.substr(1).match(reg);
-	if (r != null) return (r[2]);
+	if(r != null) return(r[2]);
 	return null;
 };
 var thecard_inputpwd = '<div id="enterpaypwd" class="pt"><input type="number" maxlength=6 oninput="setoboxpwd(0)" autofocus="autofocus" autocomplete="off" autofocus="autofocus"/><ul><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li><li><span>．</span></li></div>';
 
 function js_check(t, text) {
-	switch (t) {
+	switch(t) {
 		case "card":
 			return text.test('')
 			break;
@@ -42,12 +42,12 @@ function setoboxpwd(t) {
 	var pwd = $("#enterpaypwd input ").val();
 	pwd = pwd.substring(0, 6);
 	$("#enterpaypwd input ").val(parseInt(pwd))
-	if (t) {
+	if(t) {
 		return pwd;
 	}
 	$("#enterpaypwd li ").each(function(i, e) {
 		$(e).removeClass();
-		if (i < pwd.length) {
+		if(i < pwd.length) {
 			$(e).addClass('cur');
 		}
 	});
@@ -59,8 +59,8 @@ angular.module('app.service', ['ionic'])
 		function($http, $location) {
 			return {
 				loginmsg: function(data) {
-					localStorage.setItem('access_token', data.access_token);
-					access_token = data.access_token;
+					localStorage.setItem('access_token', data);
+					access_token = data;
 				},
 				logout: function() {
 					localStorage.setItem('access_token', '');
@@ -132,7 +132,7 @@ angular.module('app.service', ['ionic'])
 					return $http({
 						method: 'post',
 						url: basepath + 'qxcard/checkBalance/?access_token=' + access_token,
-						data: { //"result_code": 0, 【0 成功1 无区享卡 2 余额不足 3 满足条件但未设置区享卡密码】
+						data: {
 							price: price
 						}
 					});
@@ -170,7 +170,7 @@ angular.module('app.service', ['ionic'])
 					});
 				},
 				wxpay: function(orderid, ok, fail) { //微信支付
-					if (typeof WeixinJSBridge == "undefined") {
+					if(typeof WeixinJSBridge == "undefined") {
 						artDialog.alert('请在微信环境中打开并支付');
 						return;
 					}
@@ -181,7 +181,7 @@ angular.module('app.service', ['ionic'])
 							order_serial: orderid
 						}
 					}).success(function(data) {
-						if ("0" == data.result_code) {
+						if("0" == data.result_code) {
 							WeixinJSBridge.invoke(
 								'getBrandWCPayRequest', {
 									"appId": data.appId,
@@ -192,7 +192,7 @@ angular.module('app.service', ['ionic'])
 									"paySign": data.paySign
 								},
 								function(res) {
-									if (res.err_msg == "get_brand_wcpay_request:ok") {
+									if(res.err_msg == "get_brand_wcpay_request:ok") {
 										callback();
 									} else {
 										artDialog.alert(res.err_msg);
@@ -242,21 +242,10 @@ angular.module('app.service', ['ionic'])
 			}
 		}
 	}])
-	.factory('updateCart', ['$http', '$ionicLoading', '$ionicModal',
-		function($http, $ionicLoading, $ionicModal) {
+	.factory('updateCart', ['$http', '$ionicLoading', '$ionicModal', "$wilddogArray", "$wilddogObject", "$state",
+		function($http, $ionicLoading, $ionicModal, $wilddogArray, $wilddogObject, $state) {
 			//更新购物车
-			var updateCart = function(proid, pronum, type) {
-				type = type || 2;
-				return $http({
-					method: 'POST',
-					url: basepath + 'cart/operation/?access_token=' + access_token,
-					data: {
-						'product_id': proid, //商品id
-						'product_amount': pronum, //商品数量
-						'op_type': type //【1 添加 2 修改 3 删除】
-					}
-				});
-			};
+
 			return {
 				//商品详情
 				proinfo: function(pro) {
@@ -264,98 +253,12 @@ angular.module('app.service', ['ionic'])
 						scope: pro,
 						animation: 'slide-in-up'
 					}).then(function(modal) {
-						//$scope.modal = modal;
+						$scope.modal = modal;
 					});
-					//					artDialog.open(pro.description_url, {
-					//						title: pro.product_name,
-					//						width: 300,
-					//						padding: 10,
-					//						height: '80%'
-					//					});
 				},
 				//添加到购物车
 				addTcart: function(pro, t) {
-					//可选值大于剩余量时返回
-					if (pro.loading) return;
-					pro.loading = true;
-					if (pro.product_amount * 1 >= pro.amount * 1) return;
-					//product_amount>0为修改，否则为添加
-					if (t) {
-						var cart = $('#indexcart');
-						cart.removeClass("shopCartAnimate")
-						if (browser.versions.android) {
-							console.log("1");
-							cart.addClass('shopCartAnimate');
-							cart.on("webkitAnimationEnd",
-								function() {
-									cart.removeClass("shopCartAnimate")
-								})
-						} else {
-							$('#indexcart').removeClass('shopCartAnimate');
-							$('<span class="cart-fly"/>').appendTo('body').fly({
-								start: {
-									left: t.pageX - 20,
-									top: t.clientY
-								},
-								end: {
-									left: 15,
-									top: window.innerHeight - 95
-								},
-								speed: 1.8,
-								onEnd: function() {
-									this.destroy();
-									cart.addClass('shopCartAnimate');
-									cart.on("webkitAnimationEnd",
-											function() {
-												cart.removeClass("shopCartAnimate")
-											})
-										//e.addCartAnimate()
-								}
-							})
-						}
-					}
-					var up = updateCart(pro.product_id, (1 + pro.product_amount * 1), (pro.product_amount * 1 > 0 ? 2 : 1));
-					$ionicLoading.show({
-						delay: 3,
-						noBackdrop: true,
-						duration: 10
-					})
-					console.log("aaaaa");
-					up.success(function(data) {
-						pro.loading = false;
-						$ionicLoading.hide()
-						if (data.result_dec == 'OK') {
-							pro.product_amount = pro.product_amount * 1 + 1;
-						} else {
-							artDialog.tips(data.result_dec);
-						}
-					}).error(function(a, b, c, d) {
-						pro.loading = false;
-						$ionicLoading.hide()
-					});
-				},
-				//从购物车中删除
-				removeFcart: function(pro, del) {
-					if (del) {
-						return updateCart(pro.product_id, 0, 3);
-					}
-					$ionicLoading.show({
-						delay: 3,
-						noBackdrop: true,
-						duration: 10
-					})
-					if (pro.product_amount == 0) return;
-					var up = updateCart(pro.product_id, (pro.product_amount * 1 - 1), 2);
-					up.success(function(data) {
-						$ionicLoading.hide()
-						if (data.result_dec == 'OK') {
-							pro.product_amount = del ? 0 : (pro.product_amount * 1 - 1);
-						} else {
-							artDialog.tips(data.result_dec);
-						}
-					}).error(function(a, b, c, d) {
-						$ionicLoading.hide()
-					})
+
 				},
 				getproFcart: function() {
 					return $http({
@@ -372,16 +275,25 @@ angular.module('app.service', ['ionic'])
 				restrict: 'EA',
 				scope: {
 					plist: "=plist",
-					protypesize: "@pronum"
 				},
 				templateUrl: 'js/tpl/cartprolist.html', //购物车商品列表模板
 				link: function(scope, element, attr) {
 					scope.needel = attr.needel;
 					scope.scrollStep = 0;
 					scope.plst = attr.plist;
-					scope.minsize = 4;
+					scope.protypesize = scope.plist.length;
 					scope.lih = (winw - 5) / scope.minsize;
-					scope.sbwidth = winw / scope.minsize;
+					scope.sbwidth = winw / 4;
+					
+					scope.plist.$watch(function(){
+						scope.cart_propronum=0;
+						scope.cart_count=0
+						scope.plist.forEach(function(i){
+						scope.cart_count=scope.cart_count+i.product_price*i.amount;
+						scope.cart_propronum=scope.cart_propronum+i.amount*1
+					})
+					})
+					
 					scope.$watch('protypesize', function() {
 						scope.scrollStep = scope.scrollStep < (4 - scope.protypesize) ? (4 - scope.protypesize) : scope.scrollStep;
 						scope.scrollStep = scope.scrollStep >= 0 ? 0 : scope.scrollStep;
@@ -400,55 +312,110 @@ angular.module('app.service', ['ionic'])
 					scope.proinfo = function(proid, proname) {
 						updateCart.proinfo(proid, proname);
 					};
-					//删减选中的商品
-					scope.removeFcart = function(pro) {
-						updateCart.removeFcart(pro)
-					};
 				}
 
 			}
 		}
-	]).directive('prolist', ['$http', '$ionicModal', 'updateCart',
-		function($http, $ionicModal, updateCart) {
+	]).directive('prolist', ['$http', '$ionicModal', '$wilddogObject', "$ionicLoading","$state",
+		function($http, $ionicModal, $wilddogObject, $ionicLoading,$state) {
 			//商品列表指令
 			return {
 				restrict: 'EA',
 				scope: {
 					prolist: "=plst",
+					cartlist: "=cartlist",
 					navcur: "@navcur" //父类id，用于根据父id筛选显示商品
 				},
 				templateUrl: 'js/tpl/prolist.html', //商品列表模板
 				link: function(scope, element, attr) {
-
 					//商品详情
 					scope.proinfo = function(pro) {
-						$ionicModal.fromTemplateUrl('proinfo.html', {
-							scope: pro,
-							animation: 'slide-in-up'
-						}).then(function(modal) {
-							modal.show();
-						});
-						//						updateCart.proinfo(pro);
+						//updateCart.proinfo(pro);
 					};
-					scope.transtags = function(o, i) {
-							return o & (1 << i);
+					
+					scope.cartlist.$watch(function(){
+						if(!scope.prolist)return;
+						console.log(scope.cartlist);
+						scope.prolist.forEach(function(i){
+							i.cart=null
+							scope.cartlist.forEach(function(j){
+								if(i.$id==j.$id){
+									i.cart=j
+								}
+							})
+						})
+					})
+					var cart = $('#indexcart'),
+					ct=window.innerHeight - 95
+					//添加到购物车动画
+					scope.cartanimate = function(t) {
+						$('#indexcart').removeClass('shopCartAnimate');
+						$('<span class="cart-fly"/>').appendTo("body").show().fly({
+							start: {
+								left: t.pageX - 20,
+								top: t.clientY
+							},
+							end: {
+								left: 15,
+								top: ct
+							},
+							speed: 1.8,
+							onEnd: function() {
+								this.destroy()
+								cart.addClass('shopCartAnimate');
+								cart.on("webkitAnimationEnd",
+									function() {
+										cart.removeClass("shopCartAnimate")
+									})
+							}
+						})
+					};
+					//更新购物车
+					scope.updatecart = function(c, cartlist, pro, t) {
+						if(!access_token) {
+							$state.go("login");
+							return;
 						}
-						//添加到购物车
-					scope.addTocart = function(pro, e) {
-						updateCart.addTcart(pro, e)
+						if(c.amount >= pro.product_amount) return;
+						c.amount = c.amount + 1;
+						cartlist.$save(c).then(function() {
+							scope.cartanimate(t);
+						}, function(a) {
+							alert(a)
+						})
+					};
+					//添加到购物车
+					scope.addTocart = function(pro, t) {
+						//验证登录
+						if(!access_token) {
+							$state.go("login");
+							return;
+						}
+						var bagpro = $wilddogObject(ref.child("/bag/" + access_token + "/" + pro.$id));
+						bagpro.$loaded().then(function() {
+							//可选值大于剩余量时返回
+							if(pro.product_amount * 1 >= pro.amount * 1) return;
+							bagpro.service_id = pro.service_id;
+							bagpro.amount = 1;
+							bagpro.product_name = pro.product_name;
+							bagpro.product_pic = pro.product_pic;
+							bagpro.product_price = pro.product_price;
+							bagpro.product_thumbnail = pro.product_thumbnail;
+							bagpro.product_unit = pro.product_unit;
+							bagpro.$save(bagpro).then(function(e) {
+								console.log("add-suc:", e);
+								scope.cartanimate(t);
+							},function(a,b){
+								alert("添加失败",a,b)
+							})
+						})
 					};
 					//删减选中的商品
-					scope.removeFcart = function(pro) {
-						updateCart.removeFcart(pro)
+					scope.removeFcart = function(c, cartlist) {
+						c.cart.amount = c.cart.amount - 1;
+						console.log(c.cart.amount);
+						c.cart.amount?cartlist.$save(c.cart): cartlist.$remove(c.cart).then(function(){c.cart=null})
 					};
-					scope.mjinfo = function(pro) {
-						console.log(pro);
-						art.dialog({
-							title: "满减说明",
-							width: '92%',
-							content: "<p class='fs_2 mb'>" + pro.product_name + "</p><span class='fc_r fs_2'>满 " + pro.wholesale_price.split('|')[0] + " 减 " + pro.wholesale_price.split('|')[1] + " 元"
-						})
-					}
 				}
 			}
 		}
@@ -533,7 +500,7 @@ angular.module('app.service', ['ionic'])
 				templateUrl: 'js/tpl/orderlist.html',
 				link: function(scope, element, attr) {
 					scope.paytype = function(type) {
-						switch (type) {
+						switch(type) {
 							case '11':
 								return "现金支付";
 								break;
@@ -561,14 +528,14 @@ angular.module('app.service', ['ionic'])
 						scope.status = status[type];
 						var is = 0;
 						angular.forEach(scope.status, function(v) {
-							if (orderstatus == v) {
+							if(orderstatus == v) {
 								is = 1;
 							}
 						});
 						return is;
 					};
 					scope.stardworker = function() { //快递员点赞
-						if (scope.order.distri_worker_isPraised == '1') {
+						if(scope.order.distri_worker_isPraised == '1') {
 							artDialog.tips('您已经点过赞了');
 							return;
 						}
@@ -580,7 +547,7 @@ angular.module('app.service', ['ionic'])
 								order_serial: scope.order.order_serial
 							}
 						}).success(function(data) {
-							if (data.result_code == '0') {
+							if(data.result_code == '0') {
 								scope.order.distri_worker_isPraised = 1;
 								scope.order.distri_worker_praise++;
 							} else {
@@ -630,12 +597,12 @@ angular.module('app.service', ['ionic'])
 						var mj = 0;
 						angular.forEach(scope.order.products, function(v) {
 							payinfo += "<li class='c pw'><span class='fl'>" + (v.product_name) + "</span><span class='fr fc_gray fs_1'>" + '￥' + $filter('number')(v.product_price) + '<b>*' + $filter('number')(v.product_amount) + "</b></span></li>";
-							if (v.payoff_price != '') {
+							if(v.payoff_price != '') {
 								mj += Math.floor(v.payoff_price);
 							}
 						});
 						//payinfo += "</ul><ul class='bdt_list payproinfo'>";
-						if (mj) {
+						if(mj) {
 							payinfo += "<li class='c pw'><span class='fl fc_r'>满减优惠</span><span class='fr fc_r'>-￥" + mj + "</span></li>";
 						}
 						payinfo += "<li class='c bold pw'><span class='fl'>合计</span><span class='fr fc_r'>￥" + $filter('number')(scope.order.order_price) + "</span></li></ul>";
@@ -647,15 +614,15 @@ angular.module('app.service', ['ionic'])
 						})
 					};
 					scope.topay = function() { //支付订单
-						if (scope.order.order_status != '21') return; //不是未支付取消
-						if (scope.order.pay_type_ext == '23') {
+						if(scope.order.order_status != '21') return; //不是未支付取消
+						if(scope.order.pay_type_ext == '23') {
 							orderact.wxpay(scope.order.order_serial, function() { //微信支付
 							})
-						} else if (scope.order.pay_type_ext == '22') { //支付宝支付
+						} else if(scope.order.pay_type_ext == '22') { //支付宝支付
 							console.log(scope.order.pay_type_ext);
 							orderact.alipay(scope.order.order_serial)
 
-						} else if (scope.order.pay_type_ext == '21') { //区享卡支付
+						} else if(scope.order.pay_type_ext == '21') { //区享卡支付
 
 						}
 					}
