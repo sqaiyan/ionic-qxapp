@@ -55,9 +55,7 @@
 		</div>
 	</script>
 </ion-view>
-<div id="cart_overlay" ng-click="is_cart_showdetail=!is_cart_showdetail" ng-show="is_cart_showdetail"></div>
 <ion-footer-bar class="row-no-padding bar-subfooter" style="height: auto;">
-	<cartprolist needel="true" plist="baglist"></cartprolist>
+	<cartprolist needel="true" cartpcount="{{models.cart_count}}" cartpnum="{{models.cart_propronum}}" plist="baglist"></cartprolist>
 	<!-- 购物车遮罩 -->
-	
 </ion-footer-bar>

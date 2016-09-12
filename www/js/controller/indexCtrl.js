@@ -1,17 +1,29 @@
 angular.module('qx.controllers').controller('MainCtrl', function($scope, $http, $ionicLoading, $location, $state, $wilddogArray, updateCart) { //首页
-	//$ionicLoading.show();
-	$scope.cart_propronum = 0; //默认购物车没商品
-	$scope.cart_count = 0; //默认金额0
-	$scope.is_cart_showdetail = false; //默认不显示购物车里商品，点击图标显示
-	$scope.openmsg = false; //信息开关
 	$scope.navcur_id = 0; //当前被选择的类别
-	$scope.proIncartPropronum = 0; //购物车中商品类别数量
-
+	$scope.models = {
+		cart_propronum:0,
+		cart_count:0
+	}
 	$scope.ad = $wilddogArray(ref.child("adv")); //广告
 	var prolist = $wilddogArray(ref.child("prolist")); //商品列表
 	$scope.navlist = $wilddogArray(ref.child("protype")); //类别
 	$scope.baglist = $wilddogArray(ref.child("bag/" + access_token));
-	$scope.baglist.$loaded();
+	$scope.baglist.$loaded().then(function() {
+		$scope.models.cart_propronum=0;
+		$scope.models.cart_count=0;
+		$scope.baglist.forEach(function(i) {
+			$scope.models.cart_count = $scope.models.cart_count + i.product_price * i.amount;
+			$scope.models.cart_propronum = $scope.models.cart_propronum + i.amount * 1
+		})
+	});
+	$scope.baglist.$watch(function(){
+		$scope.models.cart_propronum=0;
+		$scope.models.cart_count=0;
+		$scope.baglist.forEach(function(i) {
+			$scope.models.cart_count = $scope.models.cart_count + i.product_price * i.amount;
+			$scope.models.cart_propronum = $scope.models.cart_propronum + i.amount * 1
+		})
+	})
 	$scope.pl = prolist;
 	$scope.navlist.$loaded().then(function(data) {
 		$scope.navcur_id = data[0].$id;

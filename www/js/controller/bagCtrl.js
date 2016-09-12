@@ -17,7 +17,7 @@ angular.module('qx.controllers').controller('bagCtrl', function($scope, $state, 
 			}
 		})
 		console.log($scope.models.price_count);
-	})
+	},true)
 		//全选
 	$scope.selectall = function() {
 		if(!$scope.models.checkall) {

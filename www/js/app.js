@@ -59,7 +59,6 @@ angular.module('starter', ['ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'qx.con
 			})
 			.state('tab.main', {
 				url: '/main',
-				cache: false,
 				views: {
 					'tab-main': {
 						templateUrl: 'templates/main.html',

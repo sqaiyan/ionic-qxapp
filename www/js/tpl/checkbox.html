@@ -1,5 +1,4 @@
 <div class="rc_wrap" ng-class="{disabled:disvalue=='true'}">
-	<i class="qx qx-roundcheckfill" ng-if="selected"></i>
-	<i class="qx qx-roundcheck" ng-if="!selected"></i>
+	<i class="qx " ng-class="{'qx-roundcheckfill':selected,'qx-roundcheck':!selected}"></i>
 	<input type="checkbox" ng-click="checktoogle()" ng-disabled="disvalue=='true'" />
 </div>

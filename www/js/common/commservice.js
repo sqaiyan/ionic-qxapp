@@ -155,79 +155,15 @@ angular.module('app.service', ['ionic'])
 		function($http) {
 			return {
 				topay: function(params) { //提交订单
-					return $http({
-						method: 'post',
-						url: basepath + 'order/submit3/?access_token=' + access_token,
-						data: params
-					});
 				},
 				alipay: function(orderid) {
-					$http({
-						method: 'get',
-						url: basepath + 'order/toPay/?access_token=' + access_token + '&order_serial=' + orderid
-					}).success(function(data) {
-						console.log(data.paystr);
-					});
 				},
-				wxpay: function(orderid, ok, fail) { //微信支付
-					if(typeof WeixinJSBridge == "undefined") {
-						artDialog.alert('请在微信环境中打开并支付');
-						return;
-					}
-					$http({
-						method: 'post',
-						url: basepath + '/wxpay',
-						data: {
-							order_serial: orderid
-						}
-					}).success(function(data) {
-						if("0" == data.result_code) {
-							WeixinJSBridge.invoke(
-								'getBrandWCPayRequest', {
-									"appId": data.appId,
-									"timeStamp": data.timestamp,
-									"nonceStr": data.noncestr,
-									"package": data.package_str,
-									"signType": data.signType,
-									"paySign": data.paySign
-								},
-								function(res) {
-									if(res.err_msg == "get_brand_wcpay_request:ok") {
-										callback();
-									} else {
-										artDialog.alert(res.err_msg);
-										fail();
-									}
-								});
-						} else {
-							artDialog.alert(data.result_dec);
-							fail();
-						}
-
-					}).error(function(a, b, c, d) {
-						fail();
-					});
-				},
+				
 				ordercancel: function(id) { //取消订单，订单id
-					return $http({
-						method: 'post',
-						url: basepath + 'order/cancel/access_token=' + access_token,
-						data: {
-							order_serial: id
-						}
-					});
 				},
 				orderdetail: function(orderid) { //订单详情
-					return $http({
-						method: 'get',
-						url: basepath + 'order/view3/?access_token=' + access_token + '&order_serial=' + orderid
-					});
 				},
 				orderlist: function(type, size) { //订单列表
-					return $http({
-						method: 'get',
-						url: basepath + "order/list3/?access_token=" + access_token + '&index=1&size=' + size + '&type=' + type
-					});
 				}
 			};
 		}
@@ -275,27 +211,23 @@ angular.module('app.service', ['ionic'])
 				restrict: 'EA',
 				scope: {
 					plist: "=plist",
+					cart_propronum:"@cartpnum",
+					cart_count:"@cartpcount"
 				},
 				templateUrl: 'js/tpl/cartprolist.html', //购物车商品列表模板
 				link: function(scope, element, attr) {
 					scope.needel = attr.needel;
 					scope.scrollStep = 0;
 					scope.plst = attr.plist;
+					scope.minsize=4;
 					scope.protypesize = scope.plist.length;
 					scope.lih = (winw - 5) / scope.minsize;
 					scope.sbwidth = winw / 4;
-					
-					scope.plist.$watch(function(){
-						scope.cart_propronum=0;
-						scope.cart_count=0
-						scope.plist.forEach(function(i){
-						scope.cart_count=scope.cart_count+i.product_price*i.amount;
-						scope.cart_propronum=scope.cart_propronum+i.amount*1
-					})
-					})
 					//向左滚动
 					scope.prosL = function() {
+						console.log(scope.scrollStep,scope.minsize);
 							scope.scrollStep -= scope.minsize;
+							console.log(scope.scrollStep);
 							scope.scrollStep = scope.scrollStep < (scope.minsize - scope.protypesize) ? (scope.minsize - scope.protypesize) : scope.scrollStep
 						}
 						//向右滚动
